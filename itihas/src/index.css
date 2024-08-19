@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root {
+	--background: #fff;
+	--warning: #ff9800;
+	--error: #e83f3f;
+	--success: #4caf50;
+	--blur: grayscale(1) blur(3px);
+	--background: #222629;
+	--foreground: #ffffff;
+	--secondary: #191a1b;
+	--secondary-foreground: #b3b5b8;
+	--accent: #86c232;
+	--primary: #61892f;
+	--border-color: #ffffff;
+	--border: 2px;
+	--border-radius: 8px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	color: var(--foreground);
+	transition: all 200ms;
+}
+
+main {
+	border-color: var(--border-color);
+	font-family: 'Inter', sans-serif;
+	letter-spacing: 0px;
+}
+
+textarea {
+	color: var(--foreground) !important;
+}
+
+a button {
+	width: 100%;
+}
+
+h1 {
+	@apply text-3xl;
+}
