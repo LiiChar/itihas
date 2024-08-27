@@ -4,7 +4,13 @@ import {
 	generateComments,
 	generateSimilar,
 } from '../entities/history/history.factory';
-import { generatePage, generateVariable } from '../entities/page/page.factory';
+import {
+	generatePage,
+	generateVariable,
+	generatePagePoint,
+	generateWallpaper,
+	generateLayout,
+} from '../entities/page/page.factory';
 import { generateUsers } from '../entities/user/user.factory';
 
 export type StatusFactoryType = {
@@ -17,10 +23,13 @@ export type StatusFactoryType = {
 (async () => {
 	console.log(`Начало создания`);
 	await Promise.all([
+		await generateLayout(),
 		await generateUsers(),
+		await generateWallpaper(),
 		await generateHistory(),
 		await generateGenre(),
 		await generatePage(),
+		await generatePagePoint(),
 		await generateVariable(),
 		await generateComments(),
 		await generateSimilar(),

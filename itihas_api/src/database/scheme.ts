@@ -17,6 +17,8 @@ import {
 	pagesRelations,
 	variables,
 	variablesRelations,
+	wallpapers,
+	layouts,
 } from '../entities/page/model/page';
 import {
 	histories,
@@ -44,6 +46,8 @@ import {
 } from '../entities/history/model/history';
 export {
 	dignity,
+	wallpapers,
+	layouts,
 	users,
 	dignityRelations,
 	usersRelations,

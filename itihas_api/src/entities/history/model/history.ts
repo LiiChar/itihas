@@ -6,7 +6,7 @@ import {
 	primaryKey,
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/user';
-import { pages } from '../../page/model/page';
+import { layouts, pages, wallpapers } from '../../page/model/page';
 
 export const histories = sqliteTable('histories', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -24,16 +24,28 @@ export const histories = sqliteTable('histories', {
 	type: text('type', { enum: ['free', 'paid'] })
 		.notNull()
 		.default('free'),
-	wallpaper: text('image'),
+	layoutId: integer('layout_id')
+		.notNull()
+		.references(() => layouts.id)
+		.default(1),
+	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id),
 	sound: text('sound').default('/public/assets/default.mp3'),
 	minAge: integer('min_age'),
-	rate: integer('rate').default(0),
+	rate: integer('rate').notNull().default(0),
 	created_at: text('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const historiesRelations = relations(histories, ({ many, one }) => ({
+	layout: one(layouts, {
+		fields: [histories.layoutId],
+		references: [layouts.id],
+	}),
+	wallpaper: one(wallpapers, {
+		fields: [histories.wallpaperId],
+		references: [wallpapers.id],
+	}),
 	points: many(historyPoints),
 	pages: many(pages),
 	comments: many(comments),
@@ -205,7 +217,7 @@ export const comments = sqliteTable('comments', {
 	userId: integer('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	rate: integer('rate'),
+	rate: integer('rate').notNull().default(0),
 	content: text('content').notNull(),
 	createdAt: text('created_at')
 		.notNull()
@@ -235,7 +247,7 @@ export const commentsToComments = sqliteTable('comments_to_comments', {
 	userId: integer('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	rate: integer('rate'),
+	rate: integer('rate').notNull().default(0),
 	content: text('content').notNull(),
 	createdAt: text('created_at')
 		.notNull()

@@ -7,6 +7,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/user';
 import { histories } from '../../history/model/history';
+import { layoutComponents } from '../type/layout';
 
 export const pages = sqliteTable('pages', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -14,9 +15,11 @@ export const pages = sqliteTable('pages', {
 	historyId: integer('history_id')
 		.notNull()
 		.references(() => histories.id, { onDelete: 'cascade' }),
+	layoutId: integer('layout_id').references(() => layouts.id),
 	image: text('photo').notNull().default('/public/assets/guest.png'),
 	sound: text('sound'),
 	script: text('script'),
+	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id),
 	views: integer('views').notNull().default(0),
 	type: text('type', { enum: ['start', 'end', 'default'] }).default('default'),
 	description: text('description'),
@@ -25,6 +28,36 @@ export const pages = sqliteTable('pages', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
 	updatedAt: text('updated_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const pagesRelations = relations(pages, ({ many, one }) => ({
+	layout: one(layouts, {
+		fields: [pages.layoutId],
+		references: [layouts.id],
+	}),
+	wallpaper: one(wallpapers, {
+		fields: [pages.wallpaperId],
+		references: [wallpapers.id],
+	}),
+	points: many(pagePoints),
+	history: one(histories, {
+		fields: [pages.historyId],
+		references: [histories.id],
+	}),
+}));
+
+export const wallpapers = sqliteTable('wallpapers', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull(),
+	alt: text('alt'),
+	rate: integer('rate').notNull().default(0),
+	source: text('source').notNull(),
+	width: integer('width'),
+	height: integer('height'),
+	description: text('description'),
+	createdAt: text('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
 });
@@ -47,14 +80,6 @@ export const likePagesRelations = relations(likePages, ({ one }) => ({
 	page: one(pages, {
 		fields: [likePages.pageId],
 		references: [pages.id],
-	}),
-}));
-
-export const pagesRelations = relations(pages, ({ many, one }) => ({
-	points: many(pagePoints),
-	history: one(histories, {
-		fields: [pages.historyId],
-		references: [histories.id],
 	}),
 }));
 
@@ -108,7 +133,7 @@ export const pageComments = sqliteTable('page_comments', {
 	userId: integer('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	rate: integer('rate'),
+	rate: integer('rate').notNull().default(0),
 	content: text('content').notNull(),
 	createdAt: text('created_at')
 		.notNull()
@@ -143,7 +168,7 @@ export const pageCommentsToPageComments = sqliteTable(
 		userId: integer('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		rate: integer('rate'),
+		rate: integer('rate').notNull().default(0),
 		content: text('content').notNull(),
 		createdAt: text('created_at')
 			.notNull()
@@ -167,3 +192,17 @@ export const commentsToCommentsPageRelations = relations(
 		}),
 	})
 );
+
+export const layouts = sqliteTable('layouts', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull(),
+	description: text('description'),
+	layout: text('layout', { mode: 'json' }).$type<layoutComponents>().notNull(),
+	rate: integer('rate').notNull().default(0),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: text('updated_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
