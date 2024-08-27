@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { CommentWithUser } from '../../../shared/type/comment';
-import { Textarea } from '@material-tailwind/react';
 import { Comment } from './Comment';
+import { Textarea } from '@/shared/ui/textarea';
 
 export const Comments = memo(
 	({ comments }: { comments: CommentWithUser[] }) => {

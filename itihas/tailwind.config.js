@@ -1,70 +1,77 @@
-const withMT = require('@material-tailwind/react/utils/withMT');
-const plugin = require('tailwindcss/plugin');
 /** @type {import('tailwindcss').Config} */
-export default withMT({
-	content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-	theme: {
-		extend: {
-			colors: {
-				foreground: 'var(--foreground)',
-				background: 'var(--background)',
-				warning: 'var(--warning)',
-				error: 'var(--error)',
-				secondary: 'var(--secondary)',
-				'secondary-foreground': 'var(--secondary-foreground)',
-				accent: 'var(--accent)',
-				primary: 'var(--primary)',
-				'border-color': 'var(--border-color)',
-			},
-		},
-	},
-	plugins: [
-		plugin(function ({ addUtilities }) {
-			const directions = {
-				t: 'to top',
-				tr: 'to top right',
-				r: 'to right',
-				br: 'to bottom right',
-				b: 'to bottom',
-				bl: 'to bottom left',
-				l: 'to left',
-				tl: 'to top left',
-			};
-
-			const steps = [
-				'0%',
-				'10%',
-				'20%',
-				'30%',
-				'40%',
-				'50%',
-				'60%',
-				'70%',
-				'80%',
-				'90%',
-			];
-
-			const utilities = Object.entries(directions).reduce(
-				(result, [shorthand, direction]) => {
-					const variants = steps.map(step => {
-						const className = `.gradient-mask-${shorthand}-${step}`;
-						return {
-							[className]: {
-								maskImage: `linear-gradient(${direction}, rgba(0, 0, 0, 1.0) ${step}, transparent 100%)`,
-							},
-						};
-					});
-
-					const stepClasses = Object.assign(...variants);
-					return {
-						...result,
-						...stepClasses,
-					};
-				},
-				{}
-			);
-
-			addUtilities(utilities);
-		}),
-	],
-});
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
+  prefix: "",
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}

@@ -1,5 +1,6 @@
 .git
-*/node_modules
+itihas/node_modules
+itihas_api/node_modules
 
 .env
 /assets

@@ -3,7 +3,7 @@ import { getFullUrl } from '../../../shared/lib/image';
 
 type WallpaperProps = {
 	className?: HTMLProps<HTMLDivElement>['className'];
-	attributes?: React.HTMLAttributes<HTMLAnchorElement>;
+	attributes?: React.HTMLAttributes<HTMLDivElement>;
 	src: string;
 };
 

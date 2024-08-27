@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { HistoryPages } from '../../../shared/type/history';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Minus, Plus } from 'lucide-react';
-import { Button } from '@material-tailwind/react';
+import { Button } from '@/shared/ui/button';
 
 export const Similar = memo(({ history }: { history: HistoryPages }) => {
 	return (
@@ -11,8 +11,8 @@ export const Similar = memo(({ history }: { history: HistoryPages }) => {
 				<h4>Похожее</h4>
 				<div>
 					<Button
-						variant='text'
-						className='font-normal text-accent normal-case'
+						variant='link'
+						className='font-normal text-primary normal-case'
 					>
 						Добавить
 					</Button>
