@@ -1,11 +1,11 @@
 .git
-itihas/node_modules
-itihas_api/node_modules
 
 .env
 /assets
 # dependencies
 /node_modules
+/*/node_modules
+/itihas_api/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
