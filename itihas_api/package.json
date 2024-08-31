@@ -7,6 +7,7 @@
 		"start": "node dist/index.js",
 		"dev": "nodemon src/index.ts",
 		"seed": "ts-node src/factory/factory.ts",
+		"test::custom": "ts-node src/test/index.ts",
 		"refresh": "rm database.sqlite & npx drizzle-kit generate & npx drizzle-kit push & npm run seed"
 	},
 	"keywords": [],

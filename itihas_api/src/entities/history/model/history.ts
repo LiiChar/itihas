@@ -13,6 +13,7 @@ export const histories = sqliteTable('histories', {
 	name: text('name').notNull().unique(),
 	image: text('image').notNull().default('/public/assets/guest.png'),
 	description: text('description'),
+	globalAction: text('global_action'),
 	authorId: integer('author_id').references(() => users.id, {
 		onDelete: 'set null',
 	}),

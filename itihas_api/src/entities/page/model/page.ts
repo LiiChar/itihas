@@ -23,6 +23,8 @@ export const pages = sqliteTable('pages', {
 	views: integer('views').notNull().default(0),
 	type: text('type', { enum: ['start', 'end', 'default'] }).default('default'),
 	description: text('description'),
+	mountAction: text('mount_action'),
+	unmountAction: text('unmount_action'),
 	content: text('content').notNull(),
 	createdAt: text('created_at')
 		.notNull()
@@ -46,6 +48,7 @@ export const pagesRelations = relations(pages, ({ many, one }) => ({
 		fields: [pages.historyId],
 		references: [histories.id],
 	}),
+	tags: many(tagsToPages),
 }));
 
 export const wallpapers = sqliteTable('wallpapers', {
@@ -61,6 +64,35 @@ export const wallpapers = sqliteTable('wallpapers', {
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const tags = sqliteTable('tags', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull(),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const tagsToPages = sqliteTable('tags_pages', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	pageId: integer('page_id')
+		.notNull()
+		.references(() => pages.id, { onDelete: 'cascade' }),
+	tagId: integer('tag_id')
+		.notNull()
+		.references(() => tags.id, { onDelete: 'cascade' }),
+});
+
+export const tagsToPagesRelations = relations(tagsToPages, ({ one }) => ({
+	page: one(pages, {
+		fields: [tagsToPages.pageId],
+		references: [pages.id],
+	}),
+	tag: one(tags, {
+		fields: [tagsToPages.tagId],
+		references: [tags.id],
+	}),
+}));
 
 export const likePages = sqliteTable('like_pages', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

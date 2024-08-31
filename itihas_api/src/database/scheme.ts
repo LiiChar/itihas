@@ -19,6 +19,9 @@ import {
 	variablesRelations,
 	wallpapers,
 	layouts,
+	tags,
+	tagsToPages,
+	tagsToPagesRelations,
 } from '../entities/page/model/page';
 import {
 	histories,
@@ -53,6 +56,9 @@ export {
 	usersRelations,
 	histories,
 	historiesRelations,
+	tags,
+	tagsToPages,
+	tagsToPagesRelations,
 	comments,
 	commentsRelations,
 	commentsToComments,

@@ -11,7 +11,7 @@ import {
 import { randomRangeInt } from '../../lib/num';
 import { layoutComponents } from './type/layout';
 
-export const generatePage = async () => {
+export const generatePage = async (pagesDefault?: PageInsertType[]) => {
 	await db.delete(pages);
 	const createRandomPage = (): PageInsertType => {
 		return {
@@ -21,9 +21,11 @@ export const generatePage = async () => {
 			content: 'Ваше имя {=name} и сейчас начинается ваше приключение',
 		};
 	};
-	const pageArray = faker.helpers.multiple(createRandomPage, {
-		count: 10,
-	});
+	const pageArray =
+		pagesDefault ||
+		faker.helpers.multiple(createRandomPage, {
+			count: 10,
+		});
 
 	try {
 		const idx: number[] = [];
@@ -69,6 +71,14 @@ export const generateVariable = async () => {
 		count: 10,
 	});
 
+	variableArray.push({
+		data: '100',
+		type: 'number',
+		historyId: 1,
+		userId: 1,
+		variable: 'hp',
+	});
+
 	try {
 		const idx: number[] = [];
 		variableArray.forEach(async variable => {
@@ -100,11 +110,13 @@ export const generateVariable = async () => {
 	}
 };
 
-export const generatePagePoint = async () => {
+export const generatePagePoint = async (
+	pagePointDefault?: (typeof pagePoints.$inferInsert)[]
+) => {
 	const table = pagePoints;
 	const name = 'поитов страницы';
 	await db.delete(table);
-	let id = 1;
+	let id = 20;
 	const createRandom = (): typeof table.$inferInsert => {
 		return {
 			id,
@@ -113,9 +125,11 @@ export const generatePagePoint = async () => {
 			action: `set(name,${faker.person.firstName()});move(${++id});`,
 		};
 	};
-	const array = faker.helpers.multiple(createRandom, {
-		count: 50,
-	});
+	const array =
+		pagePointDefault ||
+		faker.helpers.multiple(createRandom, {
+			count: 50,
+		});
 
 	try {
 		const idx: number[] = [];

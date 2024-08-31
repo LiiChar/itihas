@@ -6,6 +6,7 @@ import { pagePoints, pages } from './model/page';
 import { histories } from '../history/model/history';
 import { layoutComponents } from './type/layout';
 import { executeAction } from './lib/action';
+import { pageInsertSchema, pagePointInsertScheme } from './page.scheme';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,
@@ -99,7 +100,6 @@ export const executeActionPage = async (id: number, user: UserType) => {
 	if (!point) {
 		throw Error('Не найдено пункта по id - ' + id);
 	}
-	console.log(point.action);
 
 	const pageId = await executeAction(point.page.historyId, user, point.action);
 
@@ -110,4 +110,27 @@ export const executeActionPage = async (id: number, user: UserType) => {
 	);
 
 	return page;
+};
+
+export const createPage = async (id: number, data: pageInsertSchema) => {
+	const value = {
+		content: data.content,
+		historyId: id,
+		name: data.name,
+		description: data.description ? data.description : undefined,
+		image: data.image ? data.image : undefined,
+		sound: data.sound ? data.sound : undefined,
+	};
+	await db.insert(pages).values(value);
+};
+
+export const createPagePoint = async (
+	pageId: number,
+	data: pagePointInsertScheme
+) => {
+	await db.insert(pagePoints).values({
+		action: data.action,
+		name: data.name,
+		pageId: pageId,
+	});
 };

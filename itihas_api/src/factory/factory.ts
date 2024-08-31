@@ -12,6 +12,7 @@ import {
 	generateLayout,
 } from '../entities/page/page.factory';
 import { generateUsers } from '../entities/user/user.factory';
+import { pagesContent, pointsPageContent } from './content/page';
 
 export type StatusFactoryType = {
 	status: boolean;
@@ -28,8 +29,8 @@ export type StatusFactoryType = {
 		await generateWallpaper(),
 		await generateHistory(),
 		await generateGenre(),
-		await generatePage(),
-		await generatePagePoint(),
+		await generatePage(pagesContent),
+		await generatePagePoint(pointsPageContent),
 		await generateVariable(),
 		await generateComments(),
 		await generateSimilar(),

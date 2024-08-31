@@ -3,6 +3,21 @@ import { PointPage } from './point';
 import { Variable } from './variable';
 import { Wallpaper } from './wallpaper';
 
+export type PageInsert = {
+	name: string;
+	description?: string;
+	action: string;
+	image?: string;
+	content: string;
+	sound?: string;
+};
+
+export type PagePointInsert = {
+	name: string;
+	action: string;
+	script: string;
+};
+
 export type Page = {
 	id: number;
 	name: string;

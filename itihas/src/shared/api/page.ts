@@ -1,5 +1,5 @@
 import { URL } from '../const/const';
-import { ReadPage } from '../type/page';
+import { PageInsert, PagePointInsert, ReadPage } from '../type/page';
 import { axi } from './axios/axios';
 
 export const getCurrentPage = async (id: number, page: number) => {
@@ -10,4 +10,20 @@ export const getCurrentPage = async (id: number, page: number) => {
 export const resolveAction = async (actionId: number) => {
 	const pageData = await axi.get<ReadPage>(URL + '/page/action/' + actionId);
 	return pageData.data;
+};
+
+export const createPage = async (
+	historyId: number,
+	pageId: number,
+	data: PageInsert
+) => {
+	await axi.put(`${URL}/page/${historyId}/${pageId}`, data);
+};
+
+export const createPagePoint = async (
+	historyId: number,
+	pageId: number,
+	data: PagePointInsert
+) => {
+	await axi.put(`${URL}/page/${historyId}/${pageId}/point`, data);
 };
