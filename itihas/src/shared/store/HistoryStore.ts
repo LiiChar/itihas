@@ -1,4 +1,4 @@
-import { createStore } from 'zustand';
+import { create, createStore } from 'zustand';
 import { History } from '../type/history';
 
 export interface HistoryStore {
@@ -6,7 +6,7 @@ export interface HistoryStore {
 	history: History | null;
 }
 
-const useHistoryStore = createStore<HistoryStore>(() => ({
+const useHistoryStore = create<HistoryStore>(() => ({
 	histories: [],
 	history: null,
 }));

@@ -19,6 +19,12 @@ export type History = {
 	rate: number | null;
 };
 
+export type HistoryAll = History & {
+	genres: {
+		genre: Genre;
+	}[];
+};
+
 type HistoryPage = Page & {
 	points: PointPage[];
 };

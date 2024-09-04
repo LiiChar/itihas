@@ -61,6 +61,15 @@ export const getHistory = async (id: number, user: UserType) => {
 };
 
 export const getHistories = async () => {
-	const histories = await db.query.histories.findMany();
+	const histories = await db.query.histories.findMany({
+		with: {
+			genres: {
+				with: {
+					genre: true,
+				},
+				limit: 1,
+			},
+		},
+	});
 	return histories;
 };

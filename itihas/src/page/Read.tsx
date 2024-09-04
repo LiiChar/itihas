@@ -1,7 +1,17 @@
-import { useQuery } from '@siberiacancode/reactuse';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+	useQuery,
+	useMount,
+	useUnmount,
+	useEvent,
+} from '@siberiacancode/reactuse';
+import {
+	Link,
+	useLocation,
+	useParams,
+	useSearchParams,
+} from 'react-router-dom';
 import { getCurrentPage, resolveAction } from '../shared/api/page';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { LayoutComponent } from '../shared/type/layout';
 import { ReadPage } from '../shared/type/page';
 import {
@@ -10,14 +20,32 @@ import {
 	usePageStore,
 } from '../shared/store/PageStore';
 import { Button } from '@/shared/ui/button';
+import { setHeader, setVisibleFooter } from '@/shared/store/LayoutStore';
+import { AsideHeader } from '@/component/layout/aside';
+import { Header } from '@/component/layout/header';
 
 export const Read = () => {
 	const { id } = useParams();
-	useQuery(() => fetchCurrentStore(+id!, currentPage), {
-		keys: ['currentPage'],
+	const [searchParams, _setSearchParams] = useSearchParams();
+	useQuery(
+		() =>
+			fetchCurrentStore(
+				+id!,
+				searchParams.has('page') ? +searchParams.get('page')! : currentPage
+			),
+		{
+			keys: ['currentPage'],
+		}
+	);
+	useMount(() => {
+		setVisibleFooter(false);
+		setHeader(AsideHeader);
+	});
+	useUnmount(() => {
+		setVisibleFooter(true);
+		setHeader(Header);
 	});
 	const { currentPage, page } = usePageStore();
-
 	if (!page) {
 		return 'Loading..';
 	}

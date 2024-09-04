@@ -1,9 +1,9 @@
 import { URL } from '../const/const';
-import { History, HistoryPages } from '../type/history';
+import { History, HistoryAll, HistoryPages } from '../type/history';
 import { axi } from './axios/axios';
 
 export const getHistories = async () => {
-	const histories = await axi.get<History[]>(URL + '/history');
+	const histories = await axi.get<HistoryAll[]>(URL + '/history');
 	return histories;
 };
 

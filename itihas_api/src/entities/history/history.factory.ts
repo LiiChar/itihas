@@ -24,17 +24,18 @@ export const generateHistory = async () => {
 	const createRandomHistory = (): HistoryInsertType => {
 		return {
 			name: faker.person.firstName(),
-			image: '/uploads/image/10c4175d9c7f128e1d8b1eeb682eabeb.jpg',
+			image: faker.image.url(),
 			description: faker.lorem.text(),
 			authorId: 1,
 		};
 	};
 	const historyArray = faker.helpers.multiple(createRandomHistory, {
-		count: 10,
+		count: 100,
 	});
 
 	try {
 		const idx: number[] = [];
+		('/uploads/image/10c4175d9c7f128e1d8b1eeb682eabeb.jpg');
 		historyArray.forEach(async history => {
 			const { id } = (
 				await db.insert(histories).values(history).returning()
@@ -79,9 +80,15 @@ export const generateGenre = async () => {
 		const idx: number[] = [];
 		genreArray.forEach(async genre => {
 			const { id } = (await db.insert(genres).values(genre).returning())[0];
-			await db.insert(genresToHistories).values({ genreId: id, historyId: 1 });
+
 			idx.push(id);
 		});
+		for (let i = 1; i <= 100; i++) {
+			await db.insert(genresToHistories).values({
+				genreId: randomRangeInt(1, 10),
+				historyId: i,
+			});
+		}
 		return {
 			factory: 'Создание жарнов',
 			status: true,

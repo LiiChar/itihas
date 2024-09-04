@@ -1,13 +1,21 @@
-import React, { ReactElement } from 'react';
-import { Header } from './header';
-import { Footer } from './footer';
+import { ReactElement } from 'react';
+import { useLayoutStore } from '@/shared/store/LayoutStore';
 
 export const Layout = ({ children }: { children: ReactElement }) => {
+	const { Footer, Header, Components, footerVisible, headerVisible } =
+		useLayoutStore();
 	return (
-		<div>
-			<Header />
+		<>
+			{headerVisible && <Header />}
 			{children}
-			<Footer />
-		</div>
+			{footerVisible && <Footer />}
+			{Components.map(c => {
+				if (!c) {
+					return;
+				}
+				const Component = c.Component;
+				return <Component key={c.id} />;
+			})}
+		</>
 	);
 };
