@@ -31,7 +31,7 @@ export const setPage = (page: NonNullable<PageStore['page']>) => {
 };
 
 export const fetchCurrentStore = async (id: number, currentPage: number) => {
-	getCurrentPage(id, currentPage).then(page =>
-		usePageStore.setState({ page, currentPage: page.id })
-	);
+	const page = await getCurrentPage(id, currentPage);
+	usePageStore.setState({ page, currentPage: page.id });
+	return page;
 };

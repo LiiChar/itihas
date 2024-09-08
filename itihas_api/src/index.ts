@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { route } from './entities/route';
 import path from 'path';
+import { cookiesMiddleware } from './middleware/cookieMiddleware';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(
 		optionsSuccessStatus: 204,
 	})
 );
+app.use(cookiesMiddleware);
 app.use(bodyParser.json());
 app.use('/api', route);
 

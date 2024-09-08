@@ -1,4 +1,10 @@
-import { useQuery } from '@siberiacancode/reactuse';
+import {
+	useDidUpdate,
+	useEvent,
+	useMount,
+	useQuery,
+	useUnmount,
+} from '@siberiacancode/reactuse';
 import { useParams, Link } from 'react-router-dom';
 import { getHistory } from '../shared/api/history';
 import { getYear } from '../shared/lib/data';
@@ -9,11 +15,26 @@ import { Info } from '../component/pages/History/Info';
 import { Comments } from '../component/pages/History/Comments';
 import { Similar } from '../component/pages/History/Similar';
 import { Button } from '@/shared/ui/button';
+import { useAudioStore } from '@/shared/store/AudioStore';
+import { addComponent, removeComponent } from '@/shared/store/LayoutStore';
+import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const History = () => {
 	const { id } = useParams();
-	const { data, isLoading } = useQuery(() => getHistory(+id!));
+	const { setAudio } = useAudioStore();
+	const { data, isLoading } = useQuery(() => getHistory(+id!), {
+		onSuccess: data => {
+			if (!data.sound) return;
+			setAudio(getFullUrl(data.sound), 'background');
+		},
+	});
 
+	useMount(() => {
+		addComponent(5, AudioMenu as unknown as () => JSX.Element);
+	});
+	useUnmount(() => {
+		removeComponent(5, AudioMenu as unknown as () => JSX.Element);
+	});
 	if (!data) {
 		return;
 	}

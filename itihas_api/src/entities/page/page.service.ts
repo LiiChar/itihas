@@ -24,7 +24,9 @@ export const getCurrentPageByHistoryId = async (
 		with: {
 			points: true,
 			history: {
-				columns: {},
+				columns: {
+					sound: true,
+				},
 				with: {
 					wallpaper: true,
 					layout: true,

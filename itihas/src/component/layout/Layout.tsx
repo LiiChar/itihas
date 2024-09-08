@@ -7,15 +7,19 @@ export const Layout = ({ children }: { children: ReactElement }) => {
 	return (
 		<>
 			{headerVisible && <Header />}
-			{children}
+			<div className='w-full h-full relative '>
+				{Components.map(c => {
+					if (!c) {
+						return;
+					}
+					console.log(c.id);
+
+					const Component = c.Component;
+					return <Component key={c.id} />;
+				})}
+				{children}
+			</div>
 			{footerVisible && <Footer />}
-			{Components.map(c => {
-				if (!c) {
-					return;
-				}
-				const Component = c.Component;
-				return <Component key={c.id} />;
-			})}
 		</>
 	);
 };

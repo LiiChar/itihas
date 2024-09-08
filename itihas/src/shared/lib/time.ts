@@ -6,6 +6,28 @@ export const getDaysFromYear = (year: number) => {
 	return (year % 4 === 0 && year % 100 > 0) || year % 400 == 0 ? 366 : 365;
 };
 
+export const getTime = (sec: number): string => {
+	let time = '';
+	if (sec / 360 >= 1) {
+		time += Math.floor(sec / 360);
+		time += ':';
+		sec = sec % 360;
+	}
+	if (sec / 60 >= 1) {
+		time += Math.floor(sec / 60);
+		time += ':';
+		sec = sec % 60;
+	} else {
+		time += 0;
+		time += ':';
+	}
+	if (sec <= 10) {
+		time += 0;
+	}
+	time += Math.trunc(sec);
+	return time;
+};
+
 export const getMonthDayFromDayOfYear = (year: number, dayOfYear: number) => {
 	// Создаем новый объект Date, передавая в конструктор год, 0-й месяц и день (также можно передать 1-е января года)
 	var date = new Date(year, 0, 3); // 0-й день отсчитывается от 1970 года, так что это день перед 1 января year года
@@ -56,7 +78,6 @@ export const timer = async (time: number) => {
 		}, time);
 	});
 };
-
 
 export const getDayOfYear = (dates: Date | string) => {
 	const date = new Date(dates);

@@ -18,6 +18,7 @@ import {
 	similarHistories,
 } from './model/history';
 import { randomRangeInt } from '../../lib/num';
+import { randomInt } from 'crypto';
 
 export const generateHistory = async () => {
 	await db.delete(histories);
@@ -26,6 +27,8 @@ export const generateHistory = async () => {
 			name: faker.person.firstName(),
 			image: faker.image.url(),
 			description: faker.lorem.text(),
+			sound: '/uploads/sound/default/Apocryphos-Simulacrum-of-Stone.mp3',
+			rate: randomInt(0, 5),
 			authorId: 1,
 		};
 	};
@@ -35,7 +38,6 @@ export const generateHistory = async () => {
 
 	try {
 		const idx: number[] = [];
-		('/uploads/image/10c4175d9c7f128e1d8b1eeb682eabeb.jpg');
 		historyArray.forEach(async history => {
 			const { id } = (
 				await db.insert(histories).values(history).returning()

@@ -35,6 +35,7 @@ export type ReadPage = Page & {
 	variables: Variable[];
 	points: PointPage[];
 	history: {
+		sound: string;
 		wallpaper: Wallpaper;
 		layout: Layout;
 	};

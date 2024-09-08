@@ -27,6 +27,11 @@ export const generatePage = async (pagesDefault?: PageInsertType[]) => {
 			count: 10,
 		});
 
+	pageArray[2] = {
+		...pageArray[2],
+		sound: '/uploads/sound/default/Shoot-sound.mp3',
+	};
+
 	try {
 		const idx: number[] = [];
 		pageArray.forEach(async page => {

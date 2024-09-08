@@ -9,8 +9,15 @@ export const authificationMiddleware = (
 	next: NextFunction
 ) => {
 	try {
-		const auth = req.headers.authorization;
-		if (!auth) {
+		let auth = req.headers.authorization;
+		const cookiesAuth = res.locals.cookie['token'] as string;
+		if (!auth && !cookiesAuth) {
+			return res
+				.status(StatusCodes.UNAUTHORIZED)
+				.json({ error: 'Internal Server Error' });
+		} else if (cookiesAuth) {
+			auth = cookiesAuth;
+		} else {
 			return res
 				.status(StatusCodes.UNAUTHORIZED)
 				.json({ error: 'Internal Server Error' });

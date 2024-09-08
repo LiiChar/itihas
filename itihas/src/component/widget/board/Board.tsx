@@ -191,10 +191,13 @@ export const Board = () => {
 								return;
 							}
 							var bounds = layerRef.current!.getBoundingClientRect();
-							console.log({ x: e.clientX, y: e.clientY }, bounds, n.position);
+							// console.log({ x: e.clientX, y: e.clientY }, bounds, n.position);
 
 							var x = e.clientX - layerRef.current!.offsetLeft;
 							var y = e.clientY - layerRef.current!.offsetTop;
+							console.log('x', x);
+							console.log('y', y);
+
 							setNodes(prev => {
 								prev[i].position = {
 									x: x,

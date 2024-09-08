@@ -5,7 +5,7 @@ import { UserType } from '../database/db';
 import { response } from 'express';
 
 export const getJwtToken = (user: jwtData): string => {
-	const token = jwt.sign(user, process.env.JWT_SECRET!);
+	const token = jwt.sign(user, process.env.JWT_SECRET ?? 'itihas');
 	return token;
 };
 

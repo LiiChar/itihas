@@ -4,11 +4,21 @@ import { History } from './page/History';
 import { Read } from './page/Read';
 import { PageEditBoard } from './page/Read/EditBoard';
 import { HistoryEditBoard } from './page/History/EditBoard';
+import { Login } from './page/auth/Login';
+import { Register } from './page/auth/Register';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <Main />,
+	},
+	{
+		path: '/auth/login',
+		element: <Login />,
+	},
+	{
+		path: '/auth/register',
+		element: <Register />,
 	},
 	{
 		path: '/history/:id',

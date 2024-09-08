@@ -72,7 +72,15 @@ export const registerUser = async (req: Request, res: Response) => {
 
 	const token = getJwtToken(user);
 
-	await sendVerifyEmail(email, token);
+	// await sendVerifyEmail(email, token);
+
+	res.setHeader('authorization', token);
+
+	res.cookie('token', token, {
+		httpOnly: true,
+		maxAge: 60 * 60 * 24 * 30,
+		sameSite: true,
+	});
 
 	return res.status(StatusCodes.OK).json({
 		name: user.name,
