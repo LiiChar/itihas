@@ -1,0 +1,271 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.genresToHistoriesRelations = exports.genresToHistories = exports.genresRelations = exports.genres = exports.commentsToCommentsRelations = exports.commentsToComments = exports.commentsRelations = exports.comments = exports.historyPointsRelations = exports.historyPoints = exports.similarHistoriesRelation = exports.similarHistories = exports.charactersToUsersRelations = exports.charactersToUsers = exports.charactersRelation = exports.characters = exports.bookmarksRelations = exports.bookmarksToHistoriesRelations = exports.bookmarksToHistories = exports.bookmarks = exports.historiesRelations = exports.histories = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const sqlite_core_1 = require("drizzle-orm/sqlite-core");
+const user_1 = require("../../user/user");
+const page_1 = require("../../page/model/page");
+exports.histories = (0, sqlite_core_1.sqliteTable)('histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name').notNull().unique(),
+    image: (0, sqlite_core_1.text)('image').notNull().default('/public/assets/guest.png'),
+    description: (0, sqlite_core_1.text)('description'),
+    globalAction: (0, sqlite_core_1.text)('global_action'),
+    authorId: (0, sqlite_core_1.integer)('author_id').references(() => user_1.users.id, {
+        onDelete: 'set null',
+    }),
+    status: (0, sqlite_core_1.text)('status', {
+        enum: ['complete', 'write', 'frozen', 'announcement'],
+    })
+        .notNull()
+        .default('announcement'),
+    type: (0, sqlite_core_1.text)('type', { enum: ['free', 'paid'] })
+        .notNull()
+        .default('free'),
+    layoutId: (0, sqlite_core_1.integer)('layout_id')
+        .notNull()
+        .references(() => page_1.layouts.id)
+        .default(1),
+    wallpaperId: (0, sqlite_core_1.integer)('wallpaper_id').references(() => page_1.wallpapers.id),
+    sound: (0, sqlite_core_1.text)('sound').default('/public/assets/default.mp3'),
+    minAge: (0, sqlite_core_1.integer)('min_age'),
+    rate: (0, sqlite_core_1.integer)('rate').notNull().default(0),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.historiesRelations = (0, drizzle_orm_1.relations)(exports.histories, ({ many, one }) => ({
+    layout: one(page_1.layouts, {
+        fields: [exports.histories.layoutId],
+        references: [page_1.layouts.id],
+    }),
+    wallpaper: one(page_1.wallpapers, {
+        fields: [exports.histories.wallpaperId],
+        references: [page_1.wallpapers.id],
+    }),
+    points: many(exports.historyPoints),
+    pages: many(page_1.pages),
+    comments: many(exports.comments),
+    similarHistories: many(exports.similarHistories, { relationName: 'similar' }),
+    genres: many(exports.genresToHistories),
+    bookmarks: many(exports.bookmarksToHistories),
+    author: one(user_1.users, {
+        fields: [exports.histories.authorId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.bookmarks = (0, sqlite_core_1.sqliteTable)('bookmarks', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name').notNull(),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    description: (0, sqlite_core_1.text)('description'),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.bookmarksToHistories = (0, sqlite_core_1.sqliteTable)('bookmarks_to_histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    bookmarkId: (0, sqlite_core_1.integer)('bookmark_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.bookmarksToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.bookmarksToHistories, ({ one }) => ({
+    bookmark: one(exports.bookmarks, {
+        fields: [exports.bookmarksToHistories.bookmarkId],
+        references: [exports.bookmarks.id],
+    }),
+    history: one(exports.histories, {
+        fields: [exports.bookmarksToHistories.historyId],
+        references: [exports.histories.id],
+    }),
+}));
+exports.bookmarksRelations = (0, drizzle_orm_1.relations)(exports.bookmarks, ({ one }) => ({
+    user: one(user_1.users, {
+        fields: [exports.bookmarks.userId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.characters = (0, sqlite_core_1.sqliteTable)('characters', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name').notNull(),
+    rarity: (0, sqlite_core_1.text)('rarity', {
+        enum: [
+            'handmade',
+            'common',
+            'uncommon',
+            'rare',
+            'epic',
+            'legendary',
+            'mythic',
+            'transcendent',
+        ],
+    }).default('handmade'),
+    rank: (0, sqlite_core_1.integer)('rank').notNull().default(0),
+    description: (0, sqlite_core_1.text)('description'),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+    updatedAt: (0, sqlite_core_1.text)('updated_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.charactersRelation = (0, drizzle_orm_1.relations)(exports.characters, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.characters.historyId],
+        references: [exports.histories.id],
+    }),
+}));
+exports.charactersToUsers = (0, sqlite_core_1.sqliteTable)('characters_to_users', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    characterId: (0, sqlite_core_1.integer)('character_id')
+        .notNull()
+        .references(() => exports.characters.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+});
+exports.charactersToUsersRelations = (0, drizzle_orm_1.relations)(exports.charactersToUsers, ({ one }) => ({
+    character: one(exports.characters, {
+        fields: [exports.charactersToUsers.characterId],
+        references: [exports.characters.id],
+    }),
+    user: one(user_1.users, {
+        fields: [exports.charactersToUsers.userId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.similarHistories = (0, sqlite_core_1.sqliteTable)('similar_histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    similarHistoryId: (0, sqlite_core_1.integer)('similar_history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    similar: (0, sqlite_core_1.integer)('similar'),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.similarHistoriesRelation = (0, drizzle_orm_1.relations)(exports.similarHistories, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.similarHistories.historyId],
+        references: [exports.histories.id],
+        relationName: 'history',
+    }),
+    similarHistory: one(exports.histories, {
+        fields: [exports.similarHistories.similarHistoryId],
+        references: [exports.histories.id],
+        relationName: 'similar',
+    }),
+}));
+exports.historyPoints = (0, sqlite_core_1.sqliteTable)('history_points', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    name: (0, sqlite_core_1.text)('name').notNull(),
+    action: (0, sqlite_core_1.text)('action').notNull(),
+});
+exports.historyPointsRelations = (0, drizzle_orm_1.relations)(exports.historyPoints, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.historyPoints.historyId],
+        references: [exports.histories.id],
+    }),
+}));
+exports.comments = (0, sqlite_core_1.sqliteTable)('comments', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    rate: (0, sqlite_core_1.integer)('rate').notNull().default(0),
+    content: (0, sqlite_core_1.text)('content').notNull(),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+    updatedAt: (0, sqlite_core_1.text)('updated_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.commentsRelations = (0, drizzle_orm_1.relations)(exports.comments, ({ one, many }) => ({
+    history: one(exports.histories, {
+        fields: [exports.comments.historyId],
+        references: [exports.histories.id],
+    }),
+    user: one(user_1.users, {
+        fields: [exports.comments.userId],
+        references: [user_1.users.id],
+    }),
+    comments: many(exports.commentsToComments),
+}));
+exports.commentsToComments = (0, sqlite_core_1.sqliteTable)('comments_to_comments', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    commentId: (0, sqlite_core_1.integer)('comment_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    rate: (0, sqlite_core_1.integer)('rate').notNull().default(0),
+    content: (0, sqlite_core_1.text)('content').notNull(),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+    updatedAt: (0, sqlite_core_1.text)('updated_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.commentsToCommentsRelations = (0, drizzle_orm_1.relations)(exports.commentsToComments, ({ one }) => ({
+    comment: one(exports.comments, {
+        fields: [exports.commentsToComments.commentId],
+        references: [exports.comments.id],
+    }),
+    user: one(user_1.users, {
+        fields: [exports.commentsToComments.userId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.genres = (0, sqlite_core_1.sqliteTable)('genres', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name').notNull().unique(),
+});
+exports.genresRelations = (0, drizzle_orm_1.relations)(exports.genres, ({ many }) => ({
+    histories: many(exports.histories),
+    genresToHistories: many(exports.genresToHistories),
+}));
+exports.genresToHistories = (0, sqlite_core_1.sqliteTable)('genres_to_histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    genreId: (0, sqlite_core_1.integer)('genre_id')
+        .notNull()
+        .references(() => exports.genres.id, { onDelete: 'cascade' }),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.genresToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.genresToHistories, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.genresToHistories.historyId],
+        references: [exports.histories.id],
+    }),
+    genre: one(exports.genres, {
+        fields: [exports.genresToHistories.genreId],
+        references: [exports.genres.id],
+    }),
+}));
