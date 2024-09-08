@@ -1,13 +1,4 @@
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from '@/shared/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet';
 import { Button } from '@/shared/ui/button';
 import { MenuIcon } from 'lucide-react';
 import { Avatar } from '../widget/user/avatar';
@@ -15,7 +6,7 @@ import { useUserStore } from '@/shared/store/UserStore';
 import { SoundBar } from '../widget/sound/SoundBar';
 
 export const AsideHeader = () => {
-	const { isAuthorize, user } = useUserStore();
+	const { user } = useUserStore();
 	return (
 		<Sheet>
 			<SheetTrigger asChild>

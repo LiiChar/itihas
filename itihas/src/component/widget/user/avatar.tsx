@@ -1,5 +1,5 @@
 import { User } from '@/shared/type/user';
-import React, { HTMLAttributes, HTMLProps } from 'react';
+import { HTMLProps } from 'react';
 import { Avatar as Ava, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { getFullUrl } from '@/shared/lib/image';
 

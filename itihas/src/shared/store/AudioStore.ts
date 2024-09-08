@@ -145,9 +145,9 @@ export const useAudioStore = create<AudioStore>()(
 				const stope = stoped ? stoped : !lay.stoped;
 				lay.stoped = stope;
 				if (stope) {
-					state.layers[layer].audio.play();
+					state.layers[layer].audio!.play();
 				} else {
-					state.layers[layer].audio.pause();
+					state.layers[layer].audio!.pause();
 				}
 			});
 		},

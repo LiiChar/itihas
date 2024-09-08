@@ -4,7 +4,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '../../../shared/ui/dropdown-menu';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { SoundBar } from './SoundBar';
 
 export const AudioMenu = memo(() => {

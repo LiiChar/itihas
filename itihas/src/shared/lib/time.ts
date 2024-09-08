@@ -72,7 +72,7 @@ export const getTimeAgo = (date: Date | string) => {
 };
 
 export const timer = async (time: number) => {
-	return new Promise((res, rej) => {
+	return new Promise((res, _rej) => {
 		setTimeout(() => {
 			res('');
 		}, time);
@@ -89,7 +89,7 @@ export const getDayOfYear = (dates: Date | string) => {
 	return dayOfYear;
 };
 
-export const formatDate = (inputDate: string) => {
+export const formatDate = (inputDate: string, short: boolean = false) => {
 	// Создаем объект Date из входной строки
 	const date = new Date(inputDate);
 
@@ -129,7 +129,8 @@ export const formatDate = (inputDate: string) => {
 	const year = date.getFullYear();
 
 	// Собираем строку в нужном формате
-	const formattedDate = day + ' ' + months[monthIndex] + ' ' + year + ' г.';
+	const formattedDate =
+		day + ' ' + (short ? shortMonths : months)[monthIndex] + ' ' + year + ' г.';
 
 	return formattedDate;
 };

@@ -1,5 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import Draggable from 'react-draggable';
+import React, { useEffect, useRef, useState } from 'react';
 
 type Node = {
 	id: number;
@@ -60,12 +59,6 @@ function calculatePath(start: Point, end: Point) {
       T ${end.x},${end.y}
     `;
 }
-
-const getValueFromCss = (string: any): number => {
-	const regex = /(px|wh|vh|em|rem|%)/g;
-	string = string.replace(regex, '');
-	return parseInt(string);
-};
 
 export const Board = () => {
 	const [nodes, setNodes] = useState(Nodes);
@@ -190,7 +183,6 @@ export const Board = () => {
 							if (!active) {
 								return;
 							}
-							var bounds = layerRef.current!.getBoundingClientRect();
 							// console.log({ x: e.clientX, y: e.clientY }, bounds, n.position);
 
 							var x = e.clientX - layerRef.current!.offsetLeft;

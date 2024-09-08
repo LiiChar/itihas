@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { HistoryPages } from '../../../shared/type/history';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Minus, Plus } from 'lucide-react';

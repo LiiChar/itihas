@@ -1,5 +1,4 @@
 import { HistoryPages } from '../../../shared/type/history';
-import { Info } from './Info';
 import { Genres } from './Genres';
 import { memo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';

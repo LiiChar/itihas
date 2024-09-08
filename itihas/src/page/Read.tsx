@@ -2,20 +2,10 @@ import {
 	useQuery,
 	useMount,
 	useUnmount,
-	useEvent,
-	useKeysPressed,
 	useKeyboard,
-	useParallax,
 } from '@siberiacancode/reactuse';
-import {
-	Link,
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from 'react-router-dom';
-import { getCurrentPage, resolveAction } from '../shared/api/page';
-import { Suspense, useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { resolveAction } from '../shared/api/page';
 import { LayoutComponent } from '../shared/type/layout';
 import { ReadPage } from '../shared/type/page';
 import {
@@ -126,7 +116,6 @@ export const ContentLayout = ({ page }: ComponentLayoutDic) => {
 	return <div className='text-pretty'>{page.content}</div>;
 };
 export const PointLayout = ({ page }: ComponentLayoutDic) => {
-	let [searchParams, setSearchParans] = useSearchParams();
 	const navigate = useNavigate();
 	useKeyboard({
 		onKeyDown: async event => {
@@ -158,7 +147,7 @@ export const PointLayout = ({ page }: ComponentLayoutDic) => {
 		</div>
 	);
 };
-export const CustomLayout = ({ page }: ComponentLayoutDic) => {
+export const CustomLayout = ({}: ComponentLayoutDic) => {
 	return 'custom';
 };
 

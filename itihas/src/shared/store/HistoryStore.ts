@@ -1,4 +1,4 @@
-import { create, createStore } from 'zustand';
+import { create } from 'zustand';
 import { History } from '../type/history';
 
 export interface HistoryStore {

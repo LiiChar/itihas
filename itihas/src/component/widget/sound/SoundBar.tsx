@@ -1,5 +1,5 @@
 import { getTime } from '@/shared/lib/time';
-import { Layer, useAudioStore } from '@/shared/store/AudioStore';
+import { useAudioStore } from '@/shared/store/AudioStore';
 import { Slider } from '@/shared/ui/slider';
 import { useInterval, useMount } from '@siberiacancode/reactuse';
 import { PauseIcon, PlayIcon } from 'lucide-react';

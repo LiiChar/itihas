@@ -1,10 +1,4 @@
-import {
-	useDidUpdate,
-	useEvent,
-	useMount,
-	useQuery,
-	useUnmount,
-} from '@siberiacancode/reactuse';
+import { useMount, useQuery, useUnmount } from '@siberiacancode/reactuse';
 import { useParams, Link } from 'react-router-dom';
 import { getHistory } from '../shared/api/history';
 import { getYear } from '../shared/lib/data';
@@ -22,7 +16,7 @@ import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 export const History = () => {
 	const { id } = useParams();
 	const { setAudio } = useAudioStore();
-	const { data, isLoading } = useQuery(() => getHistory(+id!), {
+	const { data } = useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			if (!data.sound) return;
 			setAudio(getFullUrl(data.sound), 'background');

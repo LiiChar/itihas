@@ -1,12 +1,11 @@
 import { ReactNode, useState } from 'react';
-import { History, HistoryAll } from '../../../shared/type/history';
+import { HistoryAll } from '../../../shared/type/history';
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 } from '../../../shared/ui/carousel';
-import { AspectRatio } from '@/shared/ui/aspect-ratio';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getFullUrl } from '@/shared/lib/image';
 
 type Slider = {
@@ -26,18 +25,8 @@ type Slider = {
 	setSlides?: (slides: HistoryAll[]) => void;
 };
 
-export const Slider = ({
-	link,
-	onClickSlide,
-	onHoverSlide,
-	histories,
-	addSlide,
-	removeSlide,
-	startSlide,
-	title,
-}: Slider) => {
-	const [slides, setSlides] = useState<HistoryAll[]>(histories);
-	const [currentSlide, setCurrentSlide] = useState(0);
+export const Slider = ({ link, histories, title }: Slider) => {
+	const [slides, _setSlides] = useState<HistoryAll[]>(histories);
 	const navigate = useNavigate();
 
 	return (

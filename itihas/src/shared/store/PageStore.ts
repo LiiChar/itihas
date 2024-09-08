@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 import { ReadPage } from '../type/page';
 import { preloadImage } from '../lib/image';

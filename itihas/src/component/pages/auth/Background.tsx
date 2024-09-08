@@ -1,4 +1,8 @@
 import { useParallax } from '@siberiacancode/reactuse';
+import LayerBase from '@/assets/auth/layer-base.png';
+import LayerMiddle from '@/assets/auth/layer-base.png';
+
+import LayerFrond from '@/assets/auth/layer-base.png';
 
 import { CSSProperties } from 'react';
 
@@ -44,21 +48,9 @@ export const Background = ({ text }: { text: string[] }) => {
 					</div>
 				))}
 			</div>
-			<img
-				style={layer0}
-				src='/public/image/auth/layer-base.png'
-				alt='layer0'
-			/>
-			<img
-				style={layer1}
-				src='/public/image/auth/layer-middle.png'
-				alt='layer1'
-			/>
-			<img
-				style={layer2}
-				src='/public/image/auth/layer-front.png'
-				alt='layer2'
-			/>
+			<img style={layer0} src={LayerBase} alt='layer0' />
+			<img style={layer1} src={LayerMiddle} alt='layer1' />
+			<img style={layer2} src={LayerFrond} alt='layer2' />
 		</div>
 	);
 };

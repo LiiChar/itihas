@@ -1,5 +1,5 @@
 import { URL } from '../const/const';
-import { History, HistoryAll, HistoryPages } from '../type/history';
+import { HistoryAll, HistoryPages } from '../type/history';
 import { axi } from './axios/axios';
 
 export const getHistories = async () => {

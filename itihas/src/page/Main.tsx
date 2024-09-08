@@ -1,11 +1,9 @@
-import React from 'react';
 import { getHistories } from '../shared/api/history';
 import { useQuery } from '@siberiacancode/reactuse';
-import { Link } from 'react-router-dom';
 import { Slider } from '@/component/pages/Main/Slider';
 
 export const Main = () => {
-	const { data, isLoading } = useQuery(() => getHistories());
+	const { data } = useQuery(() => getHistories());
 	if (!data) {
 		return 'Loading...';
 	}

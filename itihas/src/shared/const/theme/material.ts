@@ -1,4 +1,6 @@
+// @ts-ignore
 import { lightGreen } from '@mui/material/colors';
+// @ts-ignore
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({

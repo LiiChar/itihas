@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { HistoryPages } from '../../../shared/type/history';
 
 export const Genres = memo(({ history }: { history: HistoryPages }) => {
