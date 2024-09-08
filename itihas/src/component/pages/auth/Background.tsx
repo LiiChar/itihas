@@ -1,9 +1,7 @@
 import { useParallax } from '@siberiacancode/reactuse';
 import LayerBase from '@/assets/auth/layer-base.png';
 import LayerMiddle from '@/assets/auth/layer-base.png';
-
 import LayerFrond from '@/assets/auth/layer-base.png';
-
 import { CSSProperties } from 'react';
 
 export const Background = ({ text }: { text: string[] }) => {
