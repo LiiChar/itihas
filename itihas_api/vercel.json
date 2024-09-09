@@ -1,9 +1,1 @@
-{
-	"version": 2,
-	"builds": [
-		{
-			"src": "./dist/src/index.js",
-			"use": "@now/node"
-		}
-	]
-}
+{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
