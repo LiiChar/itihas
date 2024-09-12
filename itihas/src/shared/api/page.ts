@@ -1,5 +1,5 @@
 import { URL } from '../const/const';
-import { PageInsert, PagePointInsert, ReadPage } from '../type/page';
+import { Page, PageInsert, PagePointInsert, ReadPage } from '../type/page';
 import { axi } from './axios/axios';
 
 export const getCurrentPage = async (id: number, page: number) => {
@@ -26,4 +26,8 @@ export const createPagePoint = async (
 	data: PagePointInsert
 ) => {
 	await axi.put(`${URL}/page/${historyId}/${pageId}/point`, data);
+};
+
+export const updatePage = async (pageId: number, data: Partial<Page>) => {
+	await axi.put(`${URL}/page/${pageId}`, data);
 };

@@ -126,6 +126,15 @@ export const createPage = async (id: number, data: pageInsertSchema) => {
 	await db.insert(pages).values(value);
 };
 
+export const updatePage = async (id: number, data: Partial<PageType>) => {
+	const updatedPage = await db
+		.update(pages)
+		.set(data)
+		.where(eq(pages.id, id))
+		.returning();
+	return updatedPage[0];
+};
+
 export const createPagePoint = async (
 	pageId: number,
 	data: pagePointInsertScheme

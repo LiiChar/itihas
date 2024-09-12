@@ -25,7 +25,7 @@ export type HistoryAll = History & {
 	}[];
 };
 
-type HistoryPage = Page & {
+export type HistoryPage = Page & {
 	points: PointPage[];
 };
 
