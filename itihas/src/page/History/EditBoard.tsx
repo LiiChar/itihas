@@ -14,8 +14,6 @@ export const HistoryEditBoard = () => {
 	if (!data) {
 		return 'Loading';
 	}
-	console.log(data.id);
-
 	return (
 		<div className='w-full h-full'>
 			<Board history={data} />

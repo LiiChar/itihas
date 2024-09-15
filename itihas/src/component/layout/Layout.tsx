@@ -1,7 +1,8 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { useLayoutStore } from '@/shared/store/LayoutStore';
+import { Outlet } from 'react-router-dom';
 
-export const Layout = ({ children }: { children: ReactElement }) => {
+export const Layout = ({ children }: { children?: ReactNode }) => {
 	const { Footer, Header, Components, footerVisible, headerVisible } =
 		useLayoutStore();
 	return (
@@ -12,12 +13,11 @@ export const Layout = ({ children }: { children: ReactElement }) => {
 					if (!c) {
 						return;
 					}
-					console.log(c.id);
 
 					const Component = c.Component;
 					return <Component key={c.id} />;
 				})}
-				{children}
+				<Outlet />
 			</div>
 			{footerVisible && <Footer />}
 		</>

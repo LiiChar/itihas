@@ -39,7 +39,7 @@ export const Background = ({ text }: { text: string[] }) => {
 	};
 	return (
 		<div className='w-full h-full relative overflow-hidden' ref={parallax.ref}>
-			<div className='flex absolute z-20 flex-col justify-center items-center w-full h-full'>
+			<div className='flex absolute z-40 flex-col justify-center items-center w-full h-full'>
 				{text.map((t, i) => (
 					<div key={t} className={i == 0 ? 'text-2xl' : ''}>
 						{t}

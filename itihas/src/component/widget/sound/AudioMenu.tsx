@@ -11,7 +11,7 @@ export const AudioMenu = memo(() => {
 	return (
 		<>
 			<DropdownMenu>
-				<DropdownMenuTrigger className='sticky top-2 left-1'>
+				<DropdownMenuTrigger className='fixed top-2 left-1'>
 					<LucideVolume2 />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>

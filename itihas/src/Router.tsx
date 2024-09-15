@@ -6,35 +6,42 @@ import { PageEditBoard } from './page/Read/EditBoard';
 import { HistoryEditBoard } from './page/History/EditBoard';
 import { Login } from './page/auth/Login';
 import { Register } from './page/auth/Register';
+import { Layout } from './component/layout/Layout';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Main />,
-	},
-	{
-		path: '/auth/login',
-		element: <Login />,
-	},
-	{
-		path: '/auth/register',
-		element: <Register />,
-	},
-	{
-		path: '/history/:id',
-		element: <History />,
-	},
-	{
-		path: '/history/:id/read',
-		element: <Read />,
-	},
-	{
-		path: '/history/:id/edit',
-		element: <HistoryEditBoard />,
-	},
-	{
-		path: '/page/:id/edit',
-		element: <PageEditBoard />,
+		element: <Layout />,
+		children: [
+			{
+				path: '/',
+				element: <Main />,
+			},
+			{
+				path: '/auth/login',
+				element: <Login />,
+			},
+			{
+				path: '/auth/register',
+				element: <Register />,
+			},
+			{
+				path: '/history/:id',
+				element: <History />,
+			},
+			{
+				path: '/history/:id/read',
+				element: <Read />,
+			},
+			{
+				path: '/history/:id/edit',
+				element: <HistoryEditBoard />,
+			},
+			{
+				path: '/page/:id/edit',
+				element: <PageEditBoard />,
+			},
+		],
 	},
 ]);
 

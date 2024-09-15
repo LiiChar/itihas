@@ -6,8 +6,6 @@ import { Layout } from './component/layout/Layout';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<Layout>
-			<Router />
-		</Layout>
+		<Router />
 	</StrictMode>
 );

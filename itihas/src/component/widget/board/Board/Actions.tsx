@@ -11,8 +11,8 @@ type Action = {
 export const Actions = ({ actions }: { actions: Action[] }) => {
 	return (
 		<div className='flex absolute top-0 left-1/2 gap-2 justify-between items-center h-12 px-2 bg-secondary'>
-			{actions.map(a => (
-				<div onClick={a.action}>
+			{actions.map((a, i) => (
+				<div key={i} onClick={a.action}>
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger>{a.element}</TooltipTrigger>

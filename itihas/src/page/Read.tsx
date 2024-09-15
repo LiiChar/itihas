@@ -54,7 +54,7 @@ export const Read = () => {
 	if (!page) {
 		return (
 			<div className='w-full h-full flex justify-center items-center'>
-				<div className='w-[clamp(200px,45%,500px)] flex flex-col gap-2 mx-4 my-12 px-2 pt-2 pb-4 bg-secondary rounded-lg'>
+				<div className='w-100% md:w-[clamp(200px,45%,500px)] flex flex-col gap-2 mx-4 my-12 px-2 pt-2 pb-4 bg-secondary rounded-lg'>
 					<Skeleton className='w-full h-[70vh]' />
 				</div>
 			</div>
@@ -62,7 +62,7 @@ export const Read = () => {
 	}
 
 	return (
-		<main className=''>
+		<main className='h-screen'>
 			<div className='w-full h-full absolute top-0 left-0 -z-10'>
 				<img
 					loading='lazy'
@@ -76,7 +76,7 @@ export const Read = () => {
 				/>
 			</div>
 			<div className='w-full h-full flex justify-center items-center'>
-				<div className='w-[clamp(200px,45%,500px)] flex flex-col gap-2 mx-4 my-12 px-2 pt-2 pb-4 bg-secondary rounded-lg  '>
+				<div className='sm:w-full sm:mt-0 my-4 md:w-[clamp(200px,45%,500px)] flex flex-col gap-2 mx-4  px-2 pt-2 pb-2 bg-secondary rounded-lg  '>
 					{(page.layout ?? page.history.layout).layout.map(l =>
 						getComponent(l, page, l.type)
 					)}
@@ -92,7 +92,7 @@ export const ImageLayout = ({ page }: ComponentLayoutDic) => {
 	return (
 		<div>
 			<img
-				className='rounded-tl-lg rounded-tr-lg'
+				className='h-[40vh] object-cover w-full rounded-tl-lg rounded-tr-lg'
 				src={page.image}
 				alt='Основное изображение'
 			/>
