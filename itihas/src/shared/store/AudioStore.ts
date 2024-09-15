@@ -20,7 +20,7 @@ interface AudioStore {
 	setAudioLayers: (layers: Record<Layer['name'], Layer>) => void;
 	setAudioVolume: (layer: Layer['name'], volume: number) => void;
 	setAudioCurrentTime: (layer: Layer['name'], time: number) => void;
-	updateAudioCurrentTime: () => void;
+	updateAudioCurrentTime: (layer: Layer['name']) => void;
 	toggleAudioUpdated: (layer: Layer['name'], updated?: boolean) => void;
 	toggleAudioMuted: (layer: Layer['name'], mutd?: boolean) => void;
 	updateAudio: (layer: Layer['name']) => void;
@@ -69,6 +69,8 @@ export const useAudioStore = create<AudioStore>()(
 		},
 		setAudioLayers: _layers => {},
 		setAudio: (src: string, layer: Layer['name']) => {
+			console.log(src);
+
 			set(state => {
 				let defaultLayer = state.layers[layer];
 				const audio: any = new Audio(src);
@@ -76,7 +78,6 @@ export const useAudioStore = create<AudioStore>()(
 				audio.volume = defaultLayer.volume;
 				audio.autoplay = !defaultLayer.stoped;
 				audio.preload = 'metadata';
-				audio.controls = true;
 				audio.defaultMuted = defaultLayer.muted;
 				const time = audio.duration;
 				const currentTime = audio.currentTime;
@@ -103,19 +104,11 @@ export const useAudioStore = create<AudioStore>()(
 				state.layers[layer].audio!.currentTime = time;
 			});
 		},
-		updateAudioCurrentTime: () => {
+		updateAudioCurrentTime: (layer: Layer['name']) => {
 			set(state => {
-				const layers = Object.values(state.layers);
-				for (let i = 0; i < layers.length; i++) {
-					const layer = layers[i];
-					if (!layer.updated) return;
-					if (!layer.audio) return;
-					if (layer.stoped) return;
-					if (layer.currentTime == layer.audio.currentTime) return;
-
-					layer.currentTime = layer.audio.currentTime;
-					layer.time = layer.audio.duration;
-				}
+				state.layers[layer].currentTime =
+					state.layers[layer].audio!.currentTime;
+				state.layers[layer].time = state.layers[layer].audio!.duration;
 			});
 		},
 		toggleAudioUpdated: (layer: Layer['name'], updated?: boolean) => {
@@ -161,3 +154,9 @@ export const useAudioStore = create<AudioStore>()(
 		},
 	}))
 );
+
+export const setMedia = (src: string, layer: Layer['name']) => {
+	let state = useAudioStore.getState();
+	if (src == state.layers[layer].source) return;
+	state.setAudio(src, layer);
+};

@@ -24,12 +24,10 @@ import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useAudioStore } from '@/shared/store/AudioStore';
-import { getFullUrl } from '@/shared/lib/image';
 import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const Read = () => {
 	const { id } = useParams();
-	const { setAudio } = useAudioStore();
 	const [searchParams, _setSearchParams] = useSearchParams();
 	const { currentPage, page } = usePageStore();
 	useQuery(
@@ -40,11 +38,6 @@ export const Read = () => {
 			),
 		{
 			keys: ['currentPage'],
-			onSuccess: page => {
-				if (!page.sound) return;
-				setAudio(getFullUrl(page.sound), 'music');
-				setAudio(getFullUrl(page.history.sound), 'background');
-			},
 		}
 	);
 	useMount(() => {
@@ -75,7 +68,11 @@ export const Read = () => {
 					loading='lazy'
 					alt='Задний фон'
 					className='w-full h-full object-cover opacity-30 blur-lg -z-10'
-					src={page.image}
+					src={
+						page.wallpaper?.source ??
+						page.history.wallpaper?.source ??
+						page.image
+					}
 				/>
 			</div>
 			<div className='w-full h-full flex justify-center items-center'>

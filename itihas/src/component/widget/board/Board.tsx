@@ -1,25 +1,18 @@
 import { getFullUrl } from '@/shared/lib/image';
 import { setVisibleFooter, setVisibleHeader } from '@/shared/store/LayoutStore';
-import { HistoryAll, HistoryPage, HistoryPages } from '@/shared/type/history';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from '@/shared/ui/dialog';
+import { HistoryPage, HistoryPages } from '@/shared/type/history';
+
 import { useEvent, useMount } from '@siberiacancode/reactuse';
-import {
-	BoxSelect,
-	Edit,
-	Plus,
-	PlusIcon,
-	PlusSquare,
-	Trash2,
-} from 'lucide-react';
+import { BoxSelect, Dot, PlusSquare } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { EditPageModal } from './Board/EditPageModal';
+import { Separator } from '@/shared/ui/separator';
+import { create } from 'zustand';
+import { CreatePageModal } from './Board/CreatePageModal';
+import { randomFloat } from '@/shared/lib/number';
+import { Actions } from './Board/Actions';
+import { setPage } from '@/shared/store/PageStore';
+import { CreatePointPageModal } from './Board/CreatePointPageModal';
 
 type Node = {
 	id: number;
@@ -34,8 +27,8 @@ type Point = {
 	y: number;
 };
 
-const NODE_WIDTH = 140; // ширина ноды
-const NODE_HEIGHT = 200; // высота ноды
+const NODE_WIDTH = 200; // ширина ноды
+const NODE_HEIGHT = 300; // высота ноды
 
 function distance(start: Point, end: Point) {
 	const dx = start.x - end.x;
@@ -43,31 +36,34 @@ function distance(start: Point, end: Point) {
 	return Math.sqrt(dx * dx + dy * dy);
 }
 
-function calculatePath(start: Point, end: Point) {
+function calculatePath(start: Point, end: Point, i: number) {
 	const dx = end.x - start.x;
 	const dy = end.y - start.y;
-	const angle = Math.atan2(dy, dx); // Угол между нодами
+
+	// Определение стороны относительно начальной точки
+	let side = dx > 0 ? 1 : -1; // Если конечная точка справа, side = 1, иначе -1
+	const HEIGHT_CONTENT_NODE = 57;
+	const HEIGHT_POINT = 17;
 
 	// Коррекция начала и конца линии
 	const startOffset = {
-		x: start.x + (NODE_WIDTH / 2) * Math.cos(angle),
-		y: start.y + (NODE_HEIGHT / 2) * Math.sin(angle),
+		x: start.x + ((NODE_WIDTH - 10) / 2) * side,
+		y: start.y + HEIGHT_CONTENT_NODE + HEIGHT_POINT * i,
 	};
 
 	const endOffset = {
-		x: end.x - (NODE_WIDTH / 2) * Math.cos(angle),
-		y: end.y - (NODE_HEIGHT / 2) * Math.sin(angle),
+		x: end.x + ((NODE_WIDTH - 10) / 2) * -side,
+		y: end.y + HEIGHT_CONTENT_NODE + HEIGHT_POINT * i,
 	};
 
-	// Более гибкая кривая Безье с контролем над кривизной
 	const controlPoint1 = {
-		x: startOffset.x + (endOffset.x - startOffset.x) / 3,
-		y: startOffset.y - 100, // Контроль высоты изгиба
+		x: startOffset.x + (endOffset.x - startOffset.x) / 1.5,
+		y: startOffset.y, // Контроль высоты изгиба
 	};
 
 	const controlPoint2 = {
-		x: endOffset.x - (endOffset.x - startOffset.x) / 3,
-		y: endOffset.y + 100,
+		x: endOffset.x - (endOffset.x - startOffset.x) / 1.5,
+		y: endOffset.y,
 	};
 
 	return {
@@ -96,115 +92,15 @@ function getRelation(point: string) {
 
 	return false; // Если не найдено move(), возвращаем false
 }
-type NodeWithDepth = Node & {
-	depth: number;
-	position?: Point;
-	outDegree?: number;
-};
 
-const calculateNodePositions = (nodes: Node[]): NodeWithDepth[] => {
-	const nodesWithDepth = nodes.map(node => ({
-		...node,
-		depth: 0,
-		outDegree: 0,
-	}));
-	const nodeMap = new Map<number, NodeWithDepth>();
-
-	nodesWithDepth.forEach(node => nodeMap.set(node.id, node));
-
-	// Определяем количество исходящих связей (outDegree) для каждого узла
-	nodesWithDepth.forEach(node => {
-		node.outDegree = node.relation.length;
+const calculateNodePositions = (nodes: Node[]): Node[] => {
+	return nodes.map((n, i) => {
+		n.position = {
+			x: NODE_WIDTH * i * 1.1,
+			y: (NODE_HEIGHT / 4) * n.relation.length * randomFloat(0.7, 1.3),
+		};
+		return n;
 	});
-
-	// Определяем глубину узлов
-	const calculateDepths = () => {
-		const inDegree = new Map<number, number>();
-		const adjacencyList = new Map<number, number[]>();
-
-		nodesWithDepth.forEach(node => {
-			inDegree.set(node.id, 0);
-			adjacencyList.set(node.id, []);
-		});
-
-		nodesWithDepth.forEach(node => {
-			node.relation.forEach(relation => {
-				adjacencyList.get(relation.nodeId)?.push(node.id);
-				inDegree.set(node.id, (inDegree.get(node.id) || 0) + 1);
-			});
-		});
-
-		const queue: number[] = [];
-		nodesWithDepth.forEach(node => {
-			if (inDegree.get(node.id) === 0) {
-				queue.push(node.id);
-			}
-		});
-
-		while (queue.length > 0) {
-			const nodeId = queue.shift()!;
-			const node = nodeMap.get(nodeId)!;
-			node.relation.forEach(relation => {
-				const nextNode = nodeMap.get(relation.nodeId);
-				if (nextNode) {
-					nextNode.depth = Math.max(nextNode.depth, node.depth + 1);
-					inDegree.set(nextNode.id, inDegree.get(nextNode.id)! - 1);
-					if (inDegree.get(nextNode.id) === 0) {
-						queue.push(nextNode.id);
-					}
-				}
-			});
-		}
-	};
-
-	calculateDepths();
-
-	// Размещаем узлы по горизонтали и вертикали
-	const groupNodesByDepth = () => {
-		const nodesByDepth = new Map<number, NodeWithDepth[]>();
-
-		nodesWithDepth.forEach(node => {
-			if (!nodesByDepth.has(node.depth)) {
-				nodesByDepth.set(node.depth, []);
-			}
-			nodesByDepth.get(node.depth)!.push(node);
-		});
-
-		return nodesByDepth;
-	};
-
-	const placeNodes = (nodesByDepth: Map<number, NodeWithDepth[]>) => {
-		const nodePositions: NodeWithDepth[] = [];
-		const maxWidth = NODE_WIDTH + 20; // Расстояние между колонками
-
-		nodesByDepth.forEach((nodesAtDepth, depth) => {
-			let xOffset = 0;
-			const nodeXPositions = new Map<number, number>();
-
-			// Расставляем узлы по горизонтали с учетом группировки
-			nodesAtDepth.forEach(node => {
-				// Определяем позицию X для узла
-				if (!nodeXPositions.has(node.id)) {
-					nodeXPositions.set(node.id, xOffset);
-					xOffset += maxWidth;
-				}
-
-				// Добавляем узел с вычисленной позицией
-				nodePositions.push({
-					...node,
-					position: {
-						x: nodeXPositions.get(node.id)!,
-						y: depth * (NODE_HEIGHT + 20) + node.outDegree! * 60, // Расстояние между строками с учетом количества связей
-					},
-				});
-			});
-		});
-
-		return nodePositions;
-	};
-
-	const nodesByDepth = groupNodesByDepth();
-	return placeNodes(nodesByDepth);
 };
 
 const generateNodesByHistories = (pages: HistoryPage[]) => {
@@ -215,12 +111,7 @@ const generateNodesByHistories = (pages: HistoryPage[]) => {
 		h.points.forEach(p => {
 			const relation = getRelation(p.action);
 			let type: Node['relation'][number]['type'] = 'solid';
-			if (relation == false) {
-				relations.push({
-					nodeId: 0,
-					type: type,
-				});
-			} else {
+			if (relation != false) {
 				relations.push({
 					nodeId: relation,
 					type,
@@ -238,15 +129,10 @@ const generateNodesByHistories = (pages: HistoryPage[]) => {
 	return nodes;
 };
 
-type BoardStore = {
-	nodes: Node[];
-};
-
 export const Board = memo(({ history }: { history: HistoryPages }) => {
 	const [nodes, setNodes] = useState(() =>
 		calculateNodePositions(generateNodesByHistories(history.pages))
 	);
-	console.log(nodes);
 
 	const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 0.7 });
 	const [isDragging, setIsDragging] = useState(false);
@@ -337,12 +223,30 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 
 	return (
 		<div
-			className='overflow-hidden w-full h-screen'
+			className='overflow-hidden relative w-full h-screen'
 			onMouseUp={handleMouseUp}
 			onMouseMove={handleMouseMove}
 			onMouseDown={e => handleMouseDown(e, 0, true)}
 			ref={layerRef}
 		>
+			<Actions
+				actions={[
+					{
+						action: () => {},
+						element: (
+							<CreatePageModal
+								onCreate={page =>
+									setNodes(prev => [
+										...prev,
+										...generateNodesByHistories([page]),
+									])
+								}
+							/>
+						),
+						alt: 'Добавить страницу',
+					},
+				]}
+			/>
 			<div
 				className='relative w-full h-full'
 				style={{
@@ -366,7 +270,7 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 					</defs>
 					<BoardRelation nodes={nodes} />
 				</svg>
-				<BoardNodes handleMouseDown={handleMouseDown} nodes={nodes} />
+				<BoardNodes handleMouseDown={handleMouseDown} nodes={nodes} />A
 			</div>
 		</div>
 	);
@@ -401,14 +305,32 @@ export const BoardNodes = memo(
 						className='absolute h-full select-none bg-secondary z-30 text-secondary-foreground rounded-md'
 					>
 						<BoardNode node={n} />
+						<Separator
+							orientation='horizontal'
+							className='h-[1px] mt-1 w-full bg-background'
+						/>
+						<div className='h-14 overflow-auto'>
+							{n.page.points.map(p => (
+								<div
+									className='px-1 h-4 gap-1 flex justify-center items-center'
+									key={p.id}
+								>
+									<div className='w-1  h-1 rounded-[50%] bg-foreground aspect-square'></div>
+									<div className=' w-full	line-clamp-1  bg-secondary text-xs'>
+										{p.name}
+									</div>
+									<div className='w-1 h-1 rounded-[50%] bg-foreground aspect-square'></div>
+								</div>
+							))}
+						</div>
 						<div className='flex h-7 justify-around items-center'>
-							<PlusSquare width={16} className='cursor-pointer' />
+							<CreatePointPageModal pageId={n.id} />
 							<BoxSelect
 								width={20}
 								className='cursor-pointer'
 								onMouseDown={e => handleMouseDown(e, i)}
 							/>
-							<EditPage page={n.page} />
+							<EditPageModal page={n.page} />
 						</div>
 					</div>
 				))}
@@ -418,11 +340,19 @@ export const BoardNodes = memo(
 );
 export const BoardNode = memo(({ node }: { node: Node }) => {
 	return (
-		<div className='h-[calc(100%-28px)] overflow-hidden'>
+		<div className='overflow-hidden'>
 			<div>
-				<img className='select-none' src={getFullUrl(node.page.image)} />
+				<img
+					className='select-none h-[140px] object-fill aspect-video'
+					src={getFullUrl(node.page.image)}
+				/>
 			</div>
-			<div className='text-xs px-1'>{node.page.content}</div>
+			<div className='text-base px-1 min-h-[16.8px] line-clamp-1'>
+				{node.page.name}
+			</div>
+			<div className='text-xs min-h-[33.6px] px-1 line-clamp-3'>
+				{node.page.content}
+			</div>
 		</div>
 	);
 });
@@ -431,14 +361,15 @@ export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 	return (
 		<>
 			{nodes.map((n, i) =>
-				n.relation.map(r => {
+				n.relation.map((r, j) => {
 					const startNode = n;
 					const endNode = nodes.find(n => n.id === r.nodeId);
 					if (!endNode) return null;
 
 					const { path, startOffset, endOffset } = calculatePath(
 						startNode.position,
-						endNode.position
+						endNode.position,
+						j + 1
 					);
 
 					// Отрисовка белого круга в начале линии
@@ -458,222 +389,3 @@ export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 		</>
 	);
 });
-
-export const EditPage = ({ page }: { page: HistoryPage }) => {
-	return (
-		<Dialog>
-			<DialogTrigger>
-				<Edit width={16} className='cursor-pointer' />
-			</DialogTrigger>
-			<DialogContent onMouseDown={e => e.stopPropagation()}>
-				<DialogHeader>
-					<DialogTitle>Изменить страницу</DialogTitle>
-				</DialogHeader>
-				<EditPageForm page={page} />
-			</DialogContent>
-		</Dialog>
-	);
-};
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/shared/ui/form';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Textarea } from '@/shared/ui/textarea';
-import { ImageUpload } from '../form/ImageUpload';
-import { updatePage } from '@/shared/api/page';
-import { Page } from '@/shared/type/page';
-import { runRefreshAction } from '@/shared/store/RefreshStore';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { SoundUpload } from '../form/SoundUpload';
-
-const loginFormScheme = z.object({
-	name: z.string().min(3, 'Имя слишком короткое'),
-	description: z.string(),
-	content: z.string(),
-	image: z.string().nullable(),
-	wallpaper: z.string().nullable(),
-	sound: z.string().nullable(),
-});
-
-export const EditPageForm = ({ page }: { page: HistoryPage }) => {
-	const form = useForm<z.infer<typeof loginFormScheme>>({
-		resolver: zodResolver(loginFormScheme),
-		defaultValues: {
-			content: page.content,
-			description: page.description ?? undefined,
-			image: page.image,
-			name: page.name,
-			sound: page.sound ?? undefined,
-			wallpaper: page.wallpaper ?? undefined,
-		},
-	});
-	function removeNullableValues<T extends object>(obj: T): T {
-		return Object.fromEntries(
-			Object.entries(obj).filter(([_, value]) => value !== null)
-		) as T;
-	}
-	const onSubmitEdit = async (values: z.infer<typeof loginFormScheme>) => {
-		const data: unknown = removeNullableValues(values);
-		await updatePage(page.id, data as unknown as Partial<Page>);
-		runRefreshAction('EditHistory');
-	};
-	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmitEdit)} className=''>
-				<div className='w-full px-2 max-h-[73vh] h-[calc(100%-46px)] overflow-scroll'>
-					<FormField
-						control={form.control}
-						name='name'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>
-									Название страницы
-								</FormLabel>
-								<FormControl>
-									<Input
-										className='bg-background -translate-y-2'
-										placeholder='Введите название страницы'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='description'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>Описание</FormLabel>
-								<FormControl>
-									<Textarea
-										className='bg-background -translate-y-2'
-										placeholder='Введите описание страницы'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='content'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>Содержание</FormLabel>
-								<FormControl>
-									<Textarea
-										className='bg-background -translate-y-2'
-										placeholder='Введите содержание страницы'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='image'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>
-									Ссылка на изображение
-								</FormLabel>
-								{field.value && (
-									<ImageUpload
-										src={field.value}
-										onUpload={path => {
-											form.setValue('image', path);
-										}}
-									/>
-								)}
-								<FormControl>
-									<Input
-										className='bg-background -translate-y-2'
-										placeholder='Введите ссылку на изображение'
-										{...field}
-										value={field.value ?? ''}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='wallpaper'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>Задний фон</FormLabel>
-								{field.value && (
-									<ImageUpload
-										src={field.value}
-										onUpload={path => {
-											form.setValue('image', path);
-										}}
-									/>
-								)}
-								<FormControl>
-									<Input
-										className='bg-background -translate-y-2'
-										placeholder='Выберите задний фон'
-										{...field}
-										value={field.value ?? ''}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='sound'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>
-									Ссылка на музыку
-								</FormLabel>
-								{field.value && (
-									<SoundUpload
-										src={field.value}
-										onUpload={src => form.setValue('sound', src)}
-									/>
-								)}
-
-								<FormControl>
-									<Input
-										className='bg-background -translate-y-2'
-										placeholder='Введите ссылку на музыку'
-										{...field}
-										value={field.value ?? ''}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
-						)}
-					/>
-				</div>
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button className='mt-2 float-end' type='submit'>
-							Сохранить
-						</Button>
-					</DialogClose>
-				</DialogFooter>
-			</form>
-		</Form>
-	);
-};

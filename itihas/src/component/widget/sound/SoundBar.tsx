@@ -1,7 +1,7 @@
 import { getTime } from '@/shared/lib/time';
 import { useAudioStore } from '@/shared/store/AudioStore';
 import { Slider } from '@/shared/ui/slider';
-import { useInterval, useMount } from '@siberiacancode/reactuse';
+import { useMount } from '@siberiacancode/reactuse';
 import { PauseIcon, PlayIcon } from 'lucide-react';
 import { memo } from 'react';
 
@@ -15,8 +15,6 @@ export const SoundBar = memo(() => {
 		updateAudio,
 	} = useAudioStore();
 
-	useInterval(() => updateAudioCurrentTime(), 1000);
-
 	useMount(() => {
 		const audios = Object.values(layers);
 		const cb = (layer: (typeof audios)[0]) => {
@@ -24,18 +22,23 @@ export const SoundBar = memo(() => {
 		};
 		const cb1 = (layer: (typeof audios)[0]) => {
 			updateAudio(layer.name);
-			console.log(layer);
 		};
 		audios.forEach(audio => {
 			if (!audio.audio) return;
 			audio.audio.addEventListener('ended', () => cb(audio));
 			audio.audio.addEventListener('loadedmetadata', () => cb1(audio));
+			audio.audio.addEventListener('timeupdate', () =>
+				updateAudioCurrentTime(audio.name)
+			);
 		}, [] as number[]);
 		return () => {
 			audios.forEach(audio => {
 				if (!audio.audio) return;
 				audio.audio.removeEventListener('ended', () => cb(audio));
 				audio.audio.removeEventListener('loadedmetadata', () => cb1(audio));
+				audio.audio.removeEventListener('timeupdate', () =>
+					updateAudioCurrentTime(audio.name)
+				);
 			});
 		};
 	});
@@ -45,7 +48,6 @@ export const SoundBar = memo(() => {
 		music: 'Музыка',
 		noise: 'Шум',
 	};
-	console.log(layers);
 
 	return (
 		<div className='flex gap-2 w-max min-w-[7em] justify-center'>
@@ -87,23 +89,23 @@ export const SoundBar = memo(() => {
 									<div>
 										{audio.stoped ? (
 											<div>
-												<PlayIcon
-													width={16}
-													height={16}
-													onClick={() => {
-														if (!audio.audio) return;
-														toggleAudioStoped(audio.name, false);
-													}}
-												/>
-											</div>
-										) : (
-											<div>
 												<PauseIcon
 													width={16}
 													height={16}
 													onClick={() => {
 														if (!audio.audio) return;
-														toggleAudioStoped(audio.name, true);
+														toggleAudioStoped(audio.name);
+													}}
+												/>
+											</div>
+										) : (
+											<div>
+												<PlayIcon
+													width={16}
+													height={16}
+													onClick={() => {
+														if (!audio.audio) return;
+														toggleAudioStoped(audio.name);
 													}}
 												/>
 											</div>

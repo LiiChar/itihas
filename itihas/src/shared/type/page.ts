@@ -15,7 +15,6 @@ export type PageInsert = {
 export type PagePointInsert = {
 	name: string;
 	action: string;
-	script: string;
 };
 
 export type Page = {

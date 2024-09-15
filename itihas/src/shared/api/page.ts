@@ -1,4 +1,5 @@
 import { URL } from '../const/const';
+import { HistoryPage } from '../type/history';
 import { Page, PageInsert, PagePointInsert, ReadPage } from '../type/page';
 import { axi } from './axios/axios';
 
@@ -12,20 +13,16 @@ export const resolveAction = async (actionId: number) => {
 	return pageData.data;
 };
 
-export const createPage = async (
-	historyId: number,
-	pageId: number,
-	data: PageInsert
-) => {
-	await axi.put(`${URL}/page/${historyId}/${pageId}`, data);
+export const createPage = async (id: number, data: PageInsert) => {
+	const page = await axi.post<HistoryPage>(`${URL}/page/${id}`, data);
+	return page;
 };
 
 export const createPagePoint = async (
-	historyId: number,
 	pageId: number,
 	data: PagePointInsert
 ) => {
-	await axi.put(`${URL}/page/${historyId}/${pageId}/point`, data);
+	await axi.post(`${URL}/page/${pageId}/point`, data);
 };
 
 export const updatePage = async (pageId: number, data: Partial<Page>) => {

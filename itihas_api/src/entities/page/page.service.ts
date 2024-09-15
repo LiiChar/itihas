@@ -115,6 +115,12 @@ export const executeActionPage = async (id: number, user: UserType) => {
 };
 
 export const createPage = async (id: number, data: pageInsertSchema) => {
+	const existPageByName = await db.query.pages.findFirst({
+		where: eq(pages.name, data.name),
+	});
+	if (existPageByName) {
+		throw Error(`Страница с названием ${data.name} уже создана!`);
+	}
 	const value = {
 		content: data.content,
 		historyId: id,
@@ -123,7 +129,8 @@ export const createPage = async (id: number, data: pageInsertSchema) => {
 		image: data.image ? data.image : undefined,
 		sound: data.sound ? data.sound : undefined,
 	};
-	await db.insert(pages).values(value);
+	const page = await db.insert(pages).values(value).returning();
+	return page[0];
 };
 
 export const updatePage = async (id: number, data: Partial<PageType>) => {

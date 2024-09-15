@@ -13,6 +13,27 @@ import { pageInsertSchema, pagePointInsertScheme } from './page.scheme';
 
 const pageRouter = Router();
 
+pageRouter.post(
+	'/:id',
+	validateData(pageInsertSchema),
+	async (req: Request, res: Response) => {
+		try {
+			const id = req.params.id;
+			const user = (await db.query.users.findMany())[0];
+			const data: pageInsertSchema = req.body;
+			const page = await createPage(parseInt(id), data);
+			const resPage = await getCurrentPageByHistoryId(
+				page.historyId,
+				page.id,
+				user
+			);
+			return res.json(resPage).status(StatusCodes.OK);
+		} catch (error) {
+			if (error instanceof Error) return res.json(error.message).status(500);
+		}
+	}
+);
+
 pageRouter.get('/action/:action', async (req: Request, res: Response) => {
 	try {
 		const action = req.params.action;
@@ -36,16 +57,15 @@ pageRouter.put('/:id', async (req: Request, res: Response) => {
 	}
 });
 
-pageRouter.put(
-	'/:id/:currentPage/point',
+pageRouter.post(
+	'/:currentPage/point',
 	validateData(pagePointInsertScheme),
 	async (req: Request, res: Response) => {
 		try {
-			const id = req.params.id;
-			const currentPage = req.params.currentPage;
+			const id = req.params.currentPage;
 			const data: (typeof pagePointInsertScheme)['_output'] = req.body;
 			const user = (await db.query.users.findMany())[0];
-			const page = await createPagePoint(parseInt(currentPage), data);
+			const page = await createPagePoint(parseInt(id), data);
 			return res.json(page).status(StatusCodes.OK);
 		} catch (error) {
 			if (error instanceof Error) return res.json(error.message).status(500);
