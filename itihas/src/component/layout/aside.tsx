@@ -8,7 +8,6 @@ import { Button } from '@/shared/ui/button';
 import { MenuIcon } from 'lucide-react';
 import { Avatar } from '../widget/user/avatar';
 import { useUserStore } from '@/shared/store/UserStore';
-import { SoundBar } from '../widget/sound/SoundBar';
 import { Link, useParams } from 'react-router-dom';
 
 export const AsideHeader = () => {

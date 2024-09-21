@@ -33,7 +33,7 @@ const loginFormScheme = z
 			countOfSpecialChar = 0;
 
 		for (let i = 0; i < password.length; i++) {
-			let ch = password.charAt(i);
+			const ch = password.charAt(i);
 			if (!isNaN(+ch)) countOfNumbers++;
 			else if (containsUppercase(ch)) countOfUpperCase++;
 			else if (containsLowercase(ch)) countOfLowerCase++;

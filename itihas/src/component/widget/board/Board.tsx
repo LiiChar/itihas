@@ -3,15 +3,13 @@ import { setVisibleFooter, setVisibleHeader } from '@/shared/store/LayoutStore';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
 import { useEvent, useMount } from '@siberiacancode/reactuse';
-import { BoxSelect, Dot, PlusSquare } from 'lucide-react';
+import { BoxSelect } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
 import { Separator } from '@/shared/ui/separator';
-import { create } from 'zustand';
 import { CreatePageModal } from './Board/CreatePageModal';
 import { randomFloat } from '@/shared/lib/number';
 import { Actions } from './Board/Actions';
-import { setPage } from '@/shared/store/PageStore';
 import { CreatePointPageModal } from './Board/CreatePointPageModal';
 
 type Node = {
@@ -30,18 +28,11 @@ type Point = {
 const NODE_WIDTH = 200; // ширина ноды
 const NODE_HEIGHT = 300; // высота ноды
 
-function distance(start: Point, end: Point) {
-	const dx = start.x - end.x;
-	const dy = start.y - end.y;
-	return Math.sqrt(dx * dx + dy * dy);
-}
-
 function calculatePath(start: Point, end: Point, i: number) {
 	const dx = end.x - start.x;
-	const dy = end.y - start.y;
 
 	// Определение стороны относительно начальной точки
-	let side = dx > 0 ? 1 : -1; // Если конечная точка справа, side = 1, иначе -1
+	const side = dx > 0 ? 1 : -1; // Если конечная точка справа, side = 1, иначе -1
 	const HEIGHT_CONTENT_NODE = 57;
 	const HEIGHT_POINT = 17;
 
@@ -106,11 +97,11 @@ const calculateNodePositions = (nodes: Node[]): Node[] => {
 const generateNodesByHistories = (pages: HistoryPage[]) => {
 	const nodes: Node[] = [];
 	const pos = { x: 0, y: 0 };
-	pages.forEach((h, i) => {
+	pages.forEach(h => {
 		const relations: Node['relation'] = [];
 		h.points.forEach(p => {
 			const relation = getRelation(p.action);
-			let type: Node['relation'][number]['type'] = 'solid';
+			const type: Node['relation'][number]['type'] = 'solid';
 			if (relation != false) {
 				relations.push({
 					nodeId: relation,
@@ -360,13 +351,13 @@ export const BoardNode = memo(({ node }: { node: Node }) => {
 export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 	return (
 		<>
-			{nodes.map((n, i) =>
+			{nodes.map(n =>
 				n.relation.map((r, j) => {
 					const startNode = n;
 					const endNode = nodes.find(n => n.id === r.nodeId);
 					if (!endNode) return null;
 
-					const { path, startOffset, endOffset } = calculatePath(
+					const { path, startOffset } = calculatePath(
 						startNode.position,
 						endNode.position,
 						j + 1

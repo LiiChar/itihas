@@ -1,6 +1,6 @@
 import { uploadFile } from '@/shared/api/file';
 import { getFullUrl } from '@/shared/lib/image';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 export const ImageUpload = ({
 	src,

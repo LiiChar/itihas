@@ -70,7 +70,7 @@ export const useAudioStore = create<AudioStore>()(
 		setAudioLayers: _layers => {},
 		setAudio: (src: string, layer: Layer['name']) => {
 			set(state => {
-				let defaultLayer = state.layers[layer];
+				const defaultLayer = state.layers[layer];
 				const audio: any = new Audio(src);
 				audio.loop = defaultLayer.loop;
 				audio.volume = defaultLayer.volume;
@@ -154,7 +154,7 @@ export const useAudioStore = create<AudioStore>()(
 );
 
 export const setMedia = (src: string, layer: Layer['name']) => {
-	let state = useAudioStore.getState();
+	const state = useAudioStore.getState();
 	if (src == state.layers[layer].source) return;
 	state.setAudio(src, layer);
 };

@@ -14,17 +14,10 @@ import {
 	usePageStore,
 } from '../shared/store/PageStore';
 import { Button } from '@/shared/ui/button';
-import {
-	addComponent,
-	removeComponent,
-	setHeader,
-	setVisibleFooter,
-} from '@/shared/store/LayoutStore';
+import { setHeader, setVisibleFooter } from '@/shared/store/LayoutStore';
 import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
-import { useAudioStore } from '@/shared/store/AudioStore';
-import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const Read = () => {
 	const { id } = useParams();

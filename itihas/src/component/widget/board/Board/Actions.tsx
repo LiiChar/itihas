@@ -1,6 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { PlusSquare } from 'lucide-react';
 import { ReactNode } from 'react';
 type Action = {
 	element: ReactNode;

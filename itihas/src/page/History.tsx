@@ -1,4 +1,4 @@
-import { useMount, useQuery, useUnmount } from '@siberiacancode/reactuse';
+import { useQuery } from '@siberiacancode/reactuse';
 import { useParams, Link } from 'react-router-dom';
 import { getHistory } from '../shared/api/history';
 import { getYear } from '../shared/lib/data';
@@ -10,8 +10,6 @@ import { Comments } from '../component/pages/History/Comments';
 import { Similar } from '../component/pages/History/Similar';
 import { Button } from '@/shared/ui/button';
 import { useAudioStore } from '@/shared/store/AudioStore';
-import { addComponent, removeComponent } from '@/shared/store/LayoutStore';
-import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const History = () => {
 	const { id } = useParams();

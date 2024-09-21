@@ -1,9 +1,8 @@
-import { ReactElement, ReactNode } from 'react';
 import { useLayoutStore } from '@/shared/store/LayoutStore';
 import { Outlet } from 'react-router-dom';
 import { AudioMenu } from '../widget/sound/AudioMenu';
 
-export const Layout = ({ children }: { children?: ReactNode }) => {
+export const Layout = () => {
 	const { Footer, Header, Components, footerVisible, headerVisible } =
 		useLayoutStore();
 	return (

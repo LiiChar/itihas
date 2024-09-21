@@ -12,8 +12,7 @@ import {
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
-import { createPage, createPagePoint, updatePage } from '@/shared/api/page';
-import { runRefreshAction } from '@/shared/store/RefreshStore';
+import { createPage } from '@/shared/api/page';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { ImageUpload } from '../../form/ImageUpload';
 import { SoundUpload } from '../../form/SoundUpload';
