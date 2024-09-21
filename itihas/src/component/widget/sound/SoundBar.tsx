@@ -19,6 +19,8 @@ export const SoundBar = memo(() => {
 		const audios = Object.values(layers);
 		const cb = (layer: (typeof audios)[0]) => {
 			toggleAudioStoped(layer.name, true);
+
+			if (layer.audio!.autoplay == true) layer.audio!.play();
 		};
 		const cb1 = (layer: (typeof audios)[0]) => {
 			updateAudio(layer.name);
@@ -30,7 +32,7 @@ export const SoundBar = memo(() => {
 			audio.audio.addEventListener('timeupdate', () =>
 				updateAudioCurrentTime(audio.name)
 			);
-		}, [] as number[]);
+		});
 		return () => {
 			audios.forEach(audio => {
 				if (!audio.audio) return;

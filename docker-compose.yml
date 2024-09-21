@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  api:
+    build: ./itihas_api
+    container_name: apitihas
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./itihas_api:/dist
+      - ./node_modules

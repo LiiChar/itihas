@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, memo, useState } from 'react';
 import { HistoryAll } from '../../../shared/type/history';
 import {
 	Carousel,
@@ -25,7 +25,7 @@ type Slider = {
 	setSlides?: (slides: HistoryAll[]) => void;
 };
 
-export const Slider = ({ link, histories, title }: Slider) => {
+export const Slider = memo(({ link, histories, title }: Slider) => {
 	const [slides, _setSlides] = useState<HistoryAll[]>(histories);
 	const navigate = useNavigate();
 
@@ -48,6 +48,7 @@ export const Slider = ({ link, histories, title }: Slider) => {
 						{slides.map(s => (
 							<CarouselItem
 								id={`${s.id}`}
+								key={`${s.id}`}
 								object-cover
 								className='basis-[30%] sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 								onClick={() => navigate(`/history/${s.id}`)}
@@ -72,4 +73,4 @@ export const Slider = ({ link, histories, title }: Slider) => {
 			</div>
 		</section>
 	);
-};
+});

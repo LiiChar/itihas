@@ -1,7 +1,7 @@
 import { DrizzleError } from 'drizzle-orm';
 import { UserType, db } from '../../database/db';
 import { faker } from '@faker-js/faker';
-import { users } from './user';
+import { users } from './model/user';
 
 export const generateUsers = async () => {
 	await db.delete(users);

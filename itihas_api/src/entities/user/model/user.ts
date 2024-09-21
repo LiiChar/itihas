@@ -1,6 +1,12 @@
 import { relations, sql } from 'drizzle-orm';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { histories } from '../history/model/history';
+import {
+	bookmarks,
+	charactersToUsers,
+	commentsToComments,
+	histories,
+} from '../../history/model/history';
+import { pageComments } from '../../page/model/page';
 
 export const dignity = sqliteTable('dignity', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -56,4 +62,8 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 		fields: [users.dignityId],
 		references: [dignity.id],
 	}),
+	comments: many(pageComments),
+	commentsReply: many(commentsToComments),
+	bookmarks: many(bookmarks),
+	characters: many(charactersToUsers),
 }));

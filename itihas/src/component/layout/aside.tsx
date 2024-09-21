@@ -14,7 +14,6 @@ import { Link, useParams } from 'react-router-dom';
 export const AsideHeader = () => {
 	const { user } = useUserStore();
 	const { id } = useParams();
-	console.log(id);
 
 	return (
 		<Sheet>

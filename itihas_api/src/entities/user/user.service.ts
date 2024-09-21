@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserType, db } from '../../database/db';
-import { users } from './user';
+import { users } from './model/user';
 import { getJwtToken, getUserFromToken, sendVerifyEmail } from '../../lib/auth';
 import bcrypt from 'bcrypt';
 import {

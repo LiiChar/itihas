@@ -69,8 +69,6 @@ export const useAudioStore = create<AudioStore>()(
 		},
 		setAudioLayers: _layers => {},
 		setAudio: (src: string, layer: Layer['name']) => {
-			console.log(src);
-
 			set(state => {
 				let defaultLayer = state.layers[layer];
 				const audio: any = new Audio(src);

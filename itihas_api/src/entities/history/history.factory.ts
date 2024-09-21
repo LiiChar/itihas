@@ -24,7 +24,12 @@ export const generateHistory = async () => {
 	await db.delete(histories);
 	const createRandomHistory = (): HistoryInsertType => {
 		return {
-			name: faker.person.firstName(),
+			name:
+				faker.person.prefix() +
+				' ' +
+				faker.person.firstName() +
+				' ' +
+				faker.person.suffix(),
 			image: faker.image.url(),
 			description: faker.lorem.text(),
 			sound: '/uploads/sound/default/Apocryphos-Simulacrum-of-Stone.mp3',

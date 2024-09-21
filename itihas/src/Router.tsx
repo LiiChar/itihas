@@ -7,6 +7,7 @@ import { HistoryEditBoard } from './page/History/EditBoard';
 import { Login } from './page/auth/Login';
 import { Register } from './page/auth/Register';
 import { Layout } from './component/layout/Layout';
+import { ProfilePage } from './page/Profile';
 
 const router = createBrowserRouter([
 	{
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
 			{
 				path: '/page/:id/edit',
 				element: <PageEditBoard />,
+			},
+			{
+				path: '/profile/:id',
+				element: <ProfilePage />,
 			},
 		],
 	},

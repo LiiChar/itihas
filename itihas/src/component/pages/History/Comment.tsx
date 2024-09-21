@@ -3,14 +3,14 @@ import { CommentWithUser } from '../../../shared/type/comment';
 import { getTimeAgo } from '../../../shared/lib/time';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Button } from '@/shared/ui/button';
-import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ReplyIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 
 export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 	const [visible, setVisible] = useState(comment.content.length < 270);
 	return (
-		<article className='flex gap-1' key={comment.id}>
-			<Avatar className='w-10 h-10'>
+		<article className='flex gap-2' key={comment.id}>
+			<Avatar className='w-9 h-9 mt-1'>
 				<AvatarImage
 					alt={`Фотография пользователя ${comment.user.name}`}
 					src={getFullUrl(comment.user.photo)}
@@ -20,7 +20,7 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 			<div>
 				<div className='bg-secondary px-2 py-1 rounded-lg '>
 					<div>
-						<div>{comment.user.name}</div>
+						<div className='font-bold'>{comment.user.name}</div>
 						<div>{comment.user.dignity}</div>
 					</div>
 					<div>
@@ -36,19 +36,20 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 						</Button>
 					</div>
 				</div>
-				<div className='flex justify-between items-center'>
-					<div className='flex gap-2'>
-						<div className='flex gap-1'>
+				<div className='flex justify-between mt-1 ml-2 items-center'>
+					<div className='flex gap-3 items-center'>
+						<div className='flex gap-2 items-center'>
 							<div>
-								<ThumbsUp />
+								<ThumbsUp height={18} width={18} />
 							</div>
 							<div>{comment.rate ?? 0}</div>
 							<div>
-								<ThumbsDown />
+								<ThumbsDown height={18} width={18} />
 							</div>
 						</div>
-						<div>L</div>
-						<div>C</div>
+						<div>
+							<ReplyIcon height={18} width={18} />
+						</div>
 					</div>
 					<div className='text-xs'>{getTimeAgo(comment.updatedAt)}</div>
 				</div>

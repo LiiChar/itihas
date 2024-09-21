@@ -29,7 +29,7 @@ export const TabsInfo = memo(({ history }: { history: HistoryPages }) => {
 
 	return (
 		<Tabs value={activeTab}>
-			<TabsList className='bg-transparent  text-xs'>
+			<TabsList className='bg-transparent -ml-1 text-xs'>
 				{tabs.map(t => (
 					<TabsTrigger
 						key={t.value}

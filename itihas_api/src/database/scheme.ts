@@ -3,7 +3,7 @@ import {
 	usersRelations,
 	dignity,
 	dignityRelations,
-} from '../entities/user/user';
+} from '../entities/user/model/user';
 import {
 	likePages,
 	likePagesRelations,

@@ -10,6 +10,11 @@ export const Main = () => {
 	return (
 		<div>
 			<Slider histories={data!.data} title='Все истории' />
+			<Slider histories={data!.data} title='Все истории' />
+			<Slider histories={data!.data} title='Все истории' />
+			<Slider histories={data!.data} title='Все истории' />
+			<Slider histories={data!.data} title='Все истории' />
+			<Slider histories={data!.data} title='Все истории' />
 		</div>
 	);
 };

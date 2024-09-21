@@ -43,12 +43,10 @@ export const Read = () => {
 	useMount(() => {
 		setVisibleFooter(false);
 		setHeader(AsideHeader);
-		addComponent(5, AudioMenu as unknown as () => JSX.Element);
 	});
 	useUnmount(() => {
 		setVisibleFooter(true);
 		setHeader(Header);
-		removeComponent(5, AudioMenu as unknown as () => JSX.Element);
 	});
 
 	if (!page) {

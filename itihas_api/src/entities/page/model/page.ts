@@ -5,7 +5,7 @@ import {
 	integer,
 	primaryKey,
 } from 'drizzle-orm/sqlite-core';
-import { users } from '../../user/user';
+import { users } from '../../user/model/user';
 import { histories } from '../../history/model/history';
 import { layoutComponents } from '../type/layout';
 
