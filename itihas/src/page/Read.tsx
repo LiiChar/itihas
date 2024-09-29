@@ -18,10 +18,13 @@ import { setHeader, setVisibleFooter } from '@/shared/store/LayoutStore';
 import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
+import { useHistoryStore } from '@/shared/store/HistoryStore';
+import { handleImageError } from '@/shared/lib/image';
 
 export const Read = () => {
 	const { id } = useParams();
 	const [searchParams, _setSearchParams] = useSearchParams();
+	const { history } = useHistoryStore();
 	const { currentPage, page } = usePageStore();
 	useQuery(
 		() =>
@@ -62,8 +65,10 @@ export const Read = () => {
 					src={
 						page.wallpaper?.source ??
 						page.history.wallpaper?.source ??
-						page.image
+						page.image ??
+						history?.wallpaper
 					}
+					onError={e => handleImageError(e, history?.wallpaper ?? page.image)}
 				/>
 			</div>
 			<div className='w-full h-full flex justify-center items-center'>

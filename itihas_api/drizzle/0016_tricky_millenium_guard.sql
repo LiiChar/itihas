@@ -1,1 +1,0 @@
-ALTER TABLE `pages` ADD `views` integer DEFAULT 0 NOT NULL;

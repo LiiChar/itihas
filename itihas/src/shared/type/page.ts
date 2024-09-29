@@ -41,3 +41,11 @@ export type ReadPage = Page & {
 	wallpaper: Wallpaper | null;
 	layout: Layout | null;
 };
+
+export type SimilarHistory = {
+	id: number;
+	created_at: string;
+	historyId: number;
+	similarHistoryId: number;
+	similar: number | null;
+};

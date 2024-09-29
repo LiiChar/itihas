@@ -13,3 +13,14 @@ export const preloadImage = async (url: string) => {
 		});
 	return objectUrl;
 };
+
+export const handleImageError = (
+	{ currentTarget }: React.SyntheticEvent<HTMLImageElement, Event>,
+	url?: string,
+	cb?: () => void
+) => {
+	currentTarget.onerror = null;
+	currentTarget.style.objectFit = 'cover';
+	currentTarget.src = url ? getFullUrl(url) : '/public/not-found.png';
+	cb && cb();
+};

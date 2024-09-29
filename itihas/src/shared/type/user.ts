@@ -1,3 +1,9 @@
+import { BookmarkWithHistories } from './bookmark';
+import { Dignity, UserCharacter } from './character';
+import { Comment } from './comment';
+import { History } from './history';
+import { LikeWithPage } from './like';
+
 export type User = {
 	id: number;
 	name: string;
@@ -19,4 +25,14 @@ export type User = {
 		| 'mythic'
 		| 'transcendent';
 	dignityId: number;
+};
+
+export type UserAll = User & {
+	authorHistories: History[];
+	bookmarks: BookmarkWithHistories[];
+	characters: UserCharacter[];
+	comments: Comment[];
+	commentsReply: Comment[];
+	dignity: Dignity;
+	likes: LikeWithPage[];
 };

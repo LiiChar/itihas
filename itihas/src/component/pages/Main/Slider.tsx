@@ -6,7 +6,8 @@ import {
 	CarouselItem,
 } from '../../../shared/ui/carousel';
 import { useNavigate } from 'react-router-dom';
-import { getFullUrl } from '@/shared/lib/image';
+import { getFullUrl, handleImageError } from '@/shared/lib/image';
+import { HistoryElement } from '../History/HistoryElement';
 
 type Slider = {
 	startSlide?: number;
@@ -30,7 +31,7 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 	const navigate = useNavigate();
 
 	return (
-		<section className='h-auto'>
+		<section className='h-min'>
 			<div className='flex justify-between'>
 				<h4>{title}</h4>
 				<div>{link}</div>
@@ -44,28 +45,19 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 					}}
 					className='h-full flex gap-2 '
 				>
-					<CarouselContent className='h-full px-6 flex gap-2'>
+					<CarouselContent className='h-min px-6 flex gap-2'>
 						{slides.map(s => (
 							<CarouselItem
 								id={`${s.id}`}
 								key={`${s.id}`}
 								object-cover
-								className='basis-[30%] sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
-								onClick={() => navigate(`/history/${s.id}`)}
+								className='basis-[30%] h-min sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 							>
-								<img
-									src={getFullUrl(s.image)}
-									loading='lazy'
-									className='object-cover rounded-t-sm w-full aspect-[3/4]'
-									alt={s.name}
+								<HistoryElement
+									option={{ nameHeight: 1 }}
+									history={s}
+									link={`/history/${s.id}`}
 								/>
-								<div className='px-1 overflow-hidden pb-1 pt-1 text-[70%] sm:text-[12px] md:text-[14px] lg:text-[16px]'>
-									<div className='flex gap-2 text-muted-foreground text-[0.8em]'>
-										<div>{s.genres.length > 0 && s.genres[0].genre.name}</div>
-										<div>{s.rate}</div>
-									</div>
-									<div>{s.name}</div>
-								</div>
 							</CarouselItem>
 						))}
 					</CarouselContent>

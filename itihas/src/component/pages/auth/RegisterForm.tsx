@@ -13,6 +13,7 @@ import {
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { register } from '@/shared/store/UserStore';
+import { useNavigate } from 'react-router-dom';
 
 const registerFormScheme = z
 	.object({
@@ -87,6 +88,7 @@ export const RegisterForm = () => {
 			password: '',
 		},
 	});
+	const navigate = useNavigate();
 	const onSubmitRegister = async (
 		values: z.infer<typeof registerFormScheme>
 	) => {
@@ -95,6 +97,7 @@ export const RegisterForm = () => {
 			email: values.email,
 			password: values.password,
 		});
+		navigate('/');
 	};
 	return (
 		<Form {...form}>

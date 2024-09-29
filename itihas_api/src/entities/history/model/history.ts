@@ -7,6 +7,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/model/user';
 import { layouts, pages, wallpapers } from '../../page/model/page';
+import { string } from 'zod';
 
 export const histories = sqliteTable('histories', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -27,9 +28,11 @@ export const histories = sqliteTable('histories', {
 		.default('free'),
 	layoutId: integer('layout_id')
 		.notNull()
-		.references(() => layouts.id)
+		.references(() => layouts.id, { onDelete: 'cascade' })
 		.default(1),
-	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id),
+	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id, {
+		onDelete: 'set null',
+	}),
 	sound: text('sound').default('/public/assets/default.mp3'),
 	minAge: integer('min_age'),
 	rate: integer('rate').notNull().default(0),
@@ -75,10 +78,10 @@ export const bookmarksToHistories = sqliteTable('bookmarks_to_histories', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	bookmarkId: integer('bookmark_id')
 		.notNull()
-		.references(() => users.id, { onDelete: 'cascade' }),
+		.references(() => bookmarks.id, { onDelete: 'cascade' }),
 	historyId: integer('history_id')
 		.notNull()
-		.references(() => users.id, { onDelete: 'cascade' }),
+		.references(() => histories.id, { onDelete: 'cascade' }),
 	createdAt: text('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
@@ -98,11 +101,12 @@ export const bookmarksToHistoriesRelations = relations(
 	})
 );
 
-export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
+export const bookmarksRelations = relations(bookmarks, ({ one, many }) => ({
 	user: one(users, {
 		fields: [bookmarks.userId],
 		references: [users.id],
 	}),
+	histories: many(bookmarksToHistories),
 }));
 
 export const characters = sqliteTable('characters', {
@@ -121,6 +125,7 @@ export const characters = sqliteTable('characters', {
 		],
 	}).default('handmade'),
 	rank: integer('rank').notNull().default(0),
+	image: text('image'),
 	description: text('description'),
 	historyId: integer('history_id')
 		.notNull()
@@ -172,7 +177,7 @@ export const similarHistories = sqliteTable('similar_histories', {
 	similarHistoryId: integer('similar_history_id')
 		.notNull()
 		.references(() => histories.id, { onDelete: 'cascade' }),
-	similar: integer('similar'),
+	similar: integer('similar').notNull().default(1),
 	created_at: text('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),

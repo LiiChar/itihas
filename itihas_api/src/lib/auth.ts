@@ -9,6 +9,12 @@ export const getJwtToken = (user: jwtData): string => {
 	return token;
 };
 
+export function getPayloadByToken<T>(token: string): T {
+	const secret = process.env.JWT_SECRET!;
+	const payload = jwt.verify(token, secret) as T;
+	return payload;
+}
+
 export const getUserFromToken = (token: string): UserType => {
 	const user = jwt.decode(token) as UserType;
 	return user;

@@ -10,7 +10,8 @@ export const authificationMiddleware = (
 ) => {
 	try {
 		let auth = req.headers.authorization;
-		const cookiesAuth = res.locals.cookie['token'] as string;
+
+		const cookiesAuth = req.cookies['token'] as string;
 		if (!auth && !cookiesAuth) {
 			return res
 				.status(StatusCodes.UNAUTHORIZED)

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { User } from '../type/user';
 import { persist } from 'zustand/middleware';
 import { LoginUser, RegisterUser, loginUser, registerUser } from '../api/user';
+import { getCookie } from '../lib/cookies';
 
 interface UserStore {
 	user: User | null;
@@ -36,4 +37,8 @@ export const login = async (login: LoginUser) => {
 export const register = async (login: RegisterUser) => {
 	const user = await registerUser(login);
 	return useUserStore.setState({ isAuthorize: true, user: user.data });
+};
+
+export const deleteUser = () => {
+	return useUserStore.setState({ isAuthorize: false, user: null });
 };

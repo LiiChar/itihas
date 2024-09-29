@@ -13,10 +13,13 @@ import {
 } from './user.scheme';
 import { eq } from 'drizzle-orm';
 import { emailTransporter, sendEmail } from '../../lib/mail';
+import { createDefaulBookmarks } from '../../lib/default';
+import { comments } from '../history/model/history';
 
 export const loginUser = async (req: Request, res: Response) => {
 	const { password, name: username }: (typeof userLoginSchema)['_output'] =
 		req.body;
+
 	const userFind = await db.query.users.findFirst({
 		where: (users, { eq }) => eq(users.name, username),
 	});
@@ -24,13 +27,18 @@ export const loginUser = async (req: Request, res: Response) => {
 	if (!userFind) {
 		return res.status(StatusCodes.UNAUTHORIZED).json('Users not found');
 	}
-	const isComparePassword = await bcrypt.compare(userFind.password, password);
+	const isComparePassword = await bcrypt.compare(password, userFind.password);
 
 	if (!isComparePassword) {
 		return res.status(StatusCodes.BAD_REQUEST).json('Password not equels');
 	}
 
 	const token = getJwtToken(userFind);
+
+	res.cookie('token', token, {
+		maxAge: 60 * 60 * 60 * 24 * 30,
+		sameSite: true,
+	});
 
 	res.setHeader('authorization', token);
 
@@ -42,6 +50,13 @@ export const loginUser = async (req: Request, res: Response) => {
 		role: userFind.role,
 	});
 };
+
+export const authificated = async (req: Request, res: Response) => {
+	console.log('req', req);
+
+	res.json(true);
+};
+
 export const registerUser = async (req: Request, res: Response) => {
 	const {
 		password,
@@ -72,12 +87,13 @@ export const registerUser = async (req: Request, res: Response) => {
 
 	const token = getJwtToken(user);
 
+	await createDefaulBookmarks(user.id);
+
 	// await sendVerifyEmail(email, token);
 
 	res.setHeader('authorization', token);
 
 	res.cookie('token', token, {
-		httpOnly: true,
 		maxAge: 60 * 60 * 24 * 30,
 		sameSite: true,
 	});
@@ -185,7 +201,59 @@ export const getUser = async (req: Request, res: Response) => {
 	const id = Number(req.params.id);
 	const user = await db.query.users.findFirst({
 		where: eq(users.id, id),
+		columns: {
+			password: false,
+		},
+		with: {
+			authorHistories: {
+				with: {
+					genres: {
+						with: {
+							genre: true,
+						},
+					},
+				},
+			},
+			bookmarks: {
+				with: {
+					histories: {
+						with: {
+							history: {
+								with: {
+									genres: {
+										with: {
+											genre: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			characters: {
+				with: {
+					character: {
+						with: {
+							history: true,
+						},
+					},
+				},
+			},
+			comments: true,
+			commentsReply: true,
+			commentsPage: true,
+			dignity: true,
+			likes: {
+				with: {
+					page: true,
+				},
+			},
+		},
 	});
+	if (!user) {
+		return res.json('User not exist').status(StatusCodes.BAD_REQUEST);
+	}
 
 	return res.json(user);
 };

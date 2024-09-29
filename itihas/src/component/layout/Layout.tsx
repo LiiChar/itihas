@@ -9,7 +9,7 @@ export const Layout = () => {
 		<>
 			{headerVisible && <Header />}
 			<div className='w-full h-full relative '>
-				<AudioMenu />
+				{/* <AudioMenu /> */}
 				{Components.map(c => {
 					if (!c) {
 						return;

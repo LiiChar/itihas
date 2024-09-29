@@ -10,6 +10,7 @@ import {
 } from './page.service';
 import { validateData } from '../../middleware/validationMiddleware';
 import { pageInsertSchema, pagePointInsertScheme } from './page.scheme';
+import { getUser } from '../user/user.service';
 
 const pageRouter = Router();
 

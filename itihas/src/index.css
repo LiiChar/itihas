@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: 'Raleway Black';
-	src: url('/public/font/raleway-black.woff2') format('woff2'),
-		url('/public/font/raleway-black.woff2') format('woff2');
-}
-
 @layer base {
 	:root {
 		--background: 0 0% 100%;
@@ -82,30 +76,8 @@ h4 {
 h5 {
 	font-size: 1.05em;
 }
-.text3d-wrap {
-	margin: 0;
-	padding: 0;
-	position: relative;
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	perspective: 3000px;
-}
-.text3d {
-	align-self: center;
-	margin-top: -18px;
-	transition: all 0.3s ease;
-	font-size: 30px;
-	letter-spacing: 3px;
-	color: #f5f5f5;
-	text-shadow: white 0.006em 0.006em 0.007em, #9c9c9c 1px 1px 1px,
-		#9c9c9c 1px 2px 1px, #9c9c9c 1px 3px 1px, #9c9c9c 1px 4px 1px,
-		#9c9c9c 1px 5px 1px, #9c9c9c 1px 6px 1px, #9c9c9c 1px 7px 1px,
-		#9c9c9c 1px 8px 1px, #9c9c9c 1px 9px 1px, #9c9c9c 1px 10px 1px,
-		#9c9c9c 1px 11px 1px, #9c9c9c 1px 12px 1px,
-		rgba(16, 16, 16, 0.4) 1px 18px 6px, rgba(16, 16, 16, 0.2) 1px 22px 10px,
-		rgba(16, 16, 16, 0.2) 1px 26px 35px, rgba(16, 16, 16, 0.4) 1px 30px 65px;
+a {
+	@apply text-primary underline;
 }
 
 @layer base {
@@ -119,5 +91,32 @@ h5 {
 	body,
 	#root {
 		@apply min-h-screen;
+	}
+}
+
+@media (max-width: 400px) {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		word-break: break-word;
+	}
+	h1 {
+		font-size: 1.6em;
+	}
+
+	h2 {
+		font-size: 1.35em;
+	}
+
+	h3 {
+		font-size: 1.2em;
+	}
+	h4 {
+		font-size: 1.05em;
+	}
+	h5 {
+		font-size: 1.01em;
 	}
 }

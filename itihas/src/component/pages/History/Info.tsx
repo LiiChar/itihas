@@ -1,6 +1,19 @@
 import { memo } from 'react';
 import { HistoryPages } from '../../../shared/type/history';
 
+const translate = {
+	status: {
+		announcement: 'Анонсирован',
+		complete: 'Завершен',
+		write: 'Выпускается',
+		frozen: 'Заморожен',
+	},
+	type: {
+		free: 'Доступная',
+		paid: 'Планая',
+	},
+};
+
 export const Info = memo(({ history }: { history: HistoryPages }) => {
 	return (
 		<div className='flex gap-3 mt-2 border-b-1 flex-wrap text-sm'>
@@ -10,12 +23,12 @@ export const Info = memo(({ history }: { history: HistoryPages }) => {
 			</div>
 			<div>
 				<p className='text-secondary-foreground'>Статус</p>
-				<p>{history.status}</p>
+				<p>{translate['status'][history.status]}</p>
 			</div>
 
 			<div>
 				<p className='text-secondary-foreground'>Тип истории</p>
-				<p>{history.type}</p>
+				<p>{translate['type'][history.type]}</p>
 			</div>
 			<div>
 				<p className='text-secondary-foreground'>Рейтинг</p>

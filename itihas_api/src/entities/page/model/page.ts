@@ -15,11 +15,15 @@ export const pages = sqliteTable('pages', {
 	historyId: integer('history_id')
 		.notNull()
 		.references(() => histories.id, { onDelete: 'cascade' }),
-	layoutId: integer('layout_id').references(() => layouts.id),
+	layoutId: integer('layout_id').references(() => layouts.id, {
+		onDelete: 'set null',
+	}),
 	image: text('photo').notNull().default('/public/assets/guest.png'),
 	sound: text('sound'),
 	script: text('script'),
-	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id),
+	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id, {
+		onDelete: 'set null',
+	}),
 	views: integer('views').notNull().default(0),
 	type: text('type', { enum: ['start', 'end', 'default'] }).default('default'),
 	description: text('description'),

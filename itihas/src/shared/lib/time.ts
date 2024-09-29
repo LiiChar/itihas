@@ -90,6 +90,7 @@ export const getDayOfYear = (dates: Date | string) => {
 };
 
 export const formatDate = (inputDate: string, short: boolean = false) => {
+	if (!inputDate) return inputDate;
 	// Создаем объект Date из входной строки
 	const date = new Date(inputDate);
 

@@ -1,3 +1,5 @@
+import { History, HistoryAll } from './history';
+
 export type bookmark = {
 	id: number;
 	name: string;
@@ -14,4 +16,17 @@ export type bookmarkToHistory = {
 };
 export type bookmarks = bookmarkToHistory & {
 	bookmark: bookmark;
+};
+
+export type BookmarkToHistories = {
+	id: number;
+	createdAt: string;
+	bookmarkId: number;
+	historyId: number;
+};
+
+export type BookmarkWithHistories = bookmark & {
+	histories: (BookmarkToHistories & {
+		history: HistoryAll;
+	})[];
 };

@@ -1,8 +1,15 @@
 import { DrizzleError, Table } from 'drizzle-orm';
-import { PageInsertType, VariableInsertType, db } from '../../database/db';
+import {
+	BookmarkInsertType,
+	BookmarkType,
+	PageInsertType,
+	VariableInsertType,
+	db,
+} from '../../database/db';
 import { faker } from '@faker-js/faker';
 import {
 	layouts,
+	likePages,
 	pagePoints,
 	pages,
 	variables,
@@ -10,6 +17,8 @@ import {
 } from './model/page';
 import { randomRangeInt } from '../../lib/num';
 import { layoutComponents } from './type/layout';
+import { bookmarks, comments } from '../history/model/history';
+import { createDefaulBookmarks } from '../../lib/default';
 
 export const generatePage = async (pagesDefault?: PageInsertType[]) => {
 	await db.delete(pages);
@@ -255,6 +264,81 @@ export const generateLayout = async () => {
 	};
 	const array = faker.helpers.multiple(createRandom, {
 		count: 1,
+	});
+
+	try {
+		const idx: number[] = [];
+		array.forEach(async data => {
+			const { id } = (await db.insert(table).values(data).returning())[0];
+			idx.push(id);
+		});
+
+		return {
+			factory: 'Создание данных ' + name,
+			status: true,
+			message: 'Все данные успешно созданы',
+			idx: idx,
+		};
+	} catch (error) {
+		if (error instanceof DrizzleError) {
+			return {
+				factory: 'Создание данных ' + name,
+				status: false,
+				message: error.message,
+			};
+		} else {
+			return {
+				factory: 'Создание данных ' + name,
+				status: false,
+				message: 'Произошла непредвиденная ошибка',
+			};
+		}
+	}
+};
+
+export const generateBookmarks = async () => {
+	const table = bookmarks;
+	const name = 'закладки';
+	await db.delete(table);
+
+	try {
+		const idx = await createDefaulBookmarks(1);
+
+		return {
+			factory: 'Создание данных ' + name,
+			status: true,
+			message: 'Все данные успешно созданы',
+			idx: idx,
+		};
+	} catch (error) {
+		if (error instanceof DrizzleError) {
+			return {
+				factory: 'Создание данных ' + name,
+				status: false,
+				message: error.message,
+			};
+		} else {
+			return {
+				factory: 'Создание данных ' + name,
+				status: false,
+				message: 'Произошла непредвиденная ошибка',
+			};
+		}
+	}
+};
+
+export const generateLikePages = async () => {
+	const table = likePages;
+	const name = 'нравиться';
+	await db.delete(table);
+	const createRandom = (): typeof table.$inferInsert => {
+		return {
+			pageId: randomRangeInt(1, 10),
+			userId: randomRangeInt(1, 10),
+		};
+	};
+	const array = faker.helpers.multiple(createRandom, {
+		count: 40,
 	});
 
 	try {

@@ -225,6 +225,41 @@
       "when": 1725119933678,
       "tag": "0031_married_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "6",
+      "when": 1727367779651,
+      "tag": "0032_workable_kree",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "6",
+      "when": 1727530402272,
+      "tag": "0033_fantastic_tinkerer",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "6",
+      "when": 1727533270716,
+      "tag": "0034_dapper_gideon",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "6",
+      "when": 1727538781439,
+      "tag": "0035_concerned_blackheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "6",
+      "when": 1727553992670,
+      "tag": "0036_numerous_mach_iv",
+      "breakpoints": true
     }
   ]
 }

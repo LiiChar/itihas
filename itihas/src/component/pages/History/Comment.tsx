@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 	const [visible, setVisible] = useState(comment.content.length < 270);
 	return (
-		<article className='flex gap-2' key={comment.id}>
+		<article className='w-full flex gap-2' key={comment.id}>
 			<Avatar className='w-9 h-9 mt-1'>
 				<AvatarImage
 					alt={`Фотография пользователя ${comment.user.name}`}
@@ -17,7 +17,7 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 				/>
 				<AvatarFallback>{comment.user.name}</AvatarFallback>
 			</Avatar>
-			<div>
+			<div className='w-full'>
 				<div className='bg-secondary px-2 py-1 rounded-lg '>
 					<div>
 						<div className='font-bold'>{comment.user.name}</div>
