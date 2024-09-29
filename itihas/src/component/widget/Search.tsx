@@ -1,11 +1,4 @@
-import React, {
-	ChangeEvent,
-	HTMLProps,
-	memo,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import { ChangeEvent, HTMLProps, memo, useEffect, useState } from 'react';
 import { Loader, Search as SearchSvg } from 'lucide-react';
 import { useClickOutside, useDebounceValue } from '@siberiacancode/reactuse';
 import { searchByString } from '@/shared/api/common';
@@ -13,19 +6,18 @@ import { SearchResult } from '@/shared/type/common';
 import { Input } from '@/shared/ui/input';
 import { Separator } from '@/shared/ui/separator';
 import { Link } from 'react-router-dom';
-import { History } from '@/shared/type/history';
 
 interface Props {
 	className?: HTMLProps<HTMLElement>['className'];
 	action?: (search: string) => void;
 }
 
-export const Search = memo(({ className, action }: Props) => {
+export const Search = memo(({ className }: Props) => {
 	const [search, setSearch] = useState('');
 	const [values, setValues] = useState<SearchResult | null>(null);
 	const debounceValue = useDebounceValue(search, 1000);
 	const [loading, setLoading] = useState(false);
-	const ref = useClickOutside(() => {
+	const ref = useClickOutside<HTMLDivElement>(() => {
 		setValues(null);
 		setSearch('');
 	});

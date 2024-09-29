@@ -1,18 +1,17 @@
-import { BookmarksTabs } from '@/component/pages/Profile/BookmarkTabs';
 import { ProfileTabs } from '@/component/pages/Profile/ProfileTabs';
 import { Avatar } from '@/component/widget/user/avatar';
 import { getUserById } from '@/shared/api/user';
-import { handleImageError } from '@/shared/lib/image';
 import { formatDate } from '@/shared/lib/time';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useQuery } from '@siberiacancode/reactuse';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const ProfilePage = () => {
 	const { user: u } = useUserStore();
 	const navigate = useNavigate();
 	if (!u) {
-		return navigate('/');
+		navigate('/');
+		return '';
 	}
 	const { data } = useQuery(() => getUserById(u.id));
 	if (!data) {

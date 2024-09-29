@@ -16,7 +16,7 @@ export const History = () => {
 	const { id } = useParams();
 	const { history } = useHistoryStore();
 	const { setAudio } = useAudioStore();
-	const { data } = useQuery(() => getHistory(+id!), {
+	const {} = useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			setHistory(data);
 			if (!data.sound) return;

@@ -13,7 +13,7 @@ export const BookmarksTabs = memo(({ user }: { user: UserAll }) => {
 				{user.bookmarks.map(b => (
 					<TabsTrigger
 						key={b.id}
-						className={` text-foreground ${
+						className={`text-foreground ${
 							activeTab == b.name && 'text-primary'
 						}`}
 						value={b.name}

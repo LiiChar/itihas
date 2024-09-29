@@ -1,5 +1,4 @@
 import { authicated } from '@/shared/api/user';
-import { getCookie } from '@/shared/lib/cookies';
 import { deleteUser } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
 

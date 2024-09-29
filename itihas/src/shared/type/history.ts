@@ -19,11 +19,13 @@ export type History = {
 	rate: number | null;
 };
 
-export type HistoryAll = History & {
+export type GenreRelation = {
 	genres: {
 		genre: Genre;
 	}[];
 };
+
+export type HistoryAll = History & GenreRelation;
 
 export type HistoryPage = Page & {
 	points: PointPage[];

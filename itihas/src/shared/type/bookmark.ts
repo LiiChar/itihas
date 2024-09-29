@@ -1,4 +1,4 @@
-import { History, HistoryAll } from './history';
+import { HistoryAll } from './history';
 
 export type bookmark = {
 	id: number;

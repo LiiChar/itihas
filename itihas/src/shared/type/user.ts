@@ -1,7 +1,7 @@
 import { BookmarkWithHistories } from './bookmark';
 import { Dignity, UserCharacter } from './character';
 import { Comment } from './comment';
-import { History } from './history';
+import { HistoryAll } from './history';
 import { LikeWithPage } from './like';
 
 export type User = {
@@ -28,7 +28,7 @@ export type User = {
 };
 
 export type UserAll = User & {
-	authorHistories: History[];
+	authorHistories: HistoryAll[];
 	bookmarks: BookmarkWithHistories[];
 	characters: UserCharacter[];
 	comments: Comment[];

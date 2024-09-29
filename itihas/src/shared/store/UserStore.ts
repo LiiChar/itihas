@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { User } from '../type/user';
 import { persist } from 'zustand/middleware';
 import { LoginUser, RegisterUser, loginUser, registerUser } from '../api/user';
-import { getCookie } from '../lib/cookies';
 
 interface UserStore {
 	user: User | null;

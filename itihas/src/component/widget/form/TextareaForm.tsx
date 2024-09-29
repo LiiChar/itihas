@@ -1,9 +1,5 @@
 import { Textarea } from '@/shared/ui/textarea';
-import {
-	useKeyPress,
-	useKeyPressEvent,
-	useKeysPressed,
-} from '@siberiacancode/reactuse';
+import { useKeyPressEvent } from '@siberiacancode/reactuse';
 import { LucideSendHorizonal } from 'lucide-react';
 import { memo, useState } from 'react';
 

@@ -1,7 +1,5 @@
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
-import { LikeWithPage } from '@/shared/type/like';
 import { Page } from '@/shared/type/page';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface PageElementProps {

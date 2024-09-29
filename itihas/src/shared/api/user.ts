@@ -1,5 +1,4 @@
 import { URL } from '../const/const';
-import { setCookie } from '../lib/cookies';
 import { User, UserAll } from '../type/user';
 import { axi } from './axios/axios';
 

@@ -5,8 +5,6 @@ import {
 	CarouselContent,
 	CarouselItem,
 } from '../../../shared/ui/carousel';
-import { useNavigate } from 'react-router-dom';
-import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { HistoryElement } from '../History/HistoryElement';
 
 type Slider = {
@@ -28,7 +26,6 @@ type Slider = {
 
 export const Slider = memo(({ link, histories, title }: Slider) => {
 	const [slides, _setSlides] = useState<HistoryAll[]>(histories);
-	const navigate = useNavigate();
 
 	return (
 		<section className='h-min'>

@@ -1,5 +1,5 @@
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
-import { Character, CharacterRelation } from '@/shared/type/character';
+import { CharacterRelation } from '@/shared/type/character';
 
 interface CharacterElementProps {
 	character: CharacterRelation;
@@ -15,19 +15,19 @@ interface CharacterElementProps {
 
 export const CharacterElement = ({
 	character,
-	link,
 	option,
 }: CharacterElementProps) => {
-	const rarity: Record<NonNullable<(typeof character)['rarity']>, string> = {
-		common: '',
-		epic: '',
-		handmade: '',
-		legendary: '',
-		uncommon: '',
-		mythic: '',
-		rare: '',
-		transcendent: '',
-	};
+	// TODO
+	// const _rarity: Record<NonNullable<(typeof character)['rarity']>, string> = {
+	// 	common: '',
+	// 	epic: '',
+	// 	handmade: '',
+	// 	legendary: '',
+	// 	uncommon: '',
+	// 	mythic: '',
+	// 	rare: '',
+	// 	transcendent: '',
+	// };
 	return (
 		<div>
 			<img
