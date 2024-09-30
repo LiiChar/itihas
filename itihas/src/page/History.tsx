@@ -11,12 +11,15 @@ import { Similar } from '../component/pages/History/Similar';
 import { Button } from '@/shared/ui/button';
 import { useAudioStore } from '@/shared/store/AudioStore';
 import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
+import { useUserStore } from '@/shared/store/UserStore';
+import { BookMarkedIcon, Edit } from 'lucide-react';
 
 export const History = () => {
 	const { id } = useParams();
+	const user = useUserStore(store => store.user);
 	const { history } = useHistoryStore();
 	const { setAudio } = useAudioStore();
-	const {} = useQuery(() => getHistory(+id!), {
+	useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			setHistory(data);
 			if (!data.sound) return;
@@ -30,19 +33,19 @@ export const History = () => {
 	return (
 		<main className='flex justify-center dark relative pt-6'>
 			<Wallpaper src={history.wallpaper ?? history.image} />
-			<div className='w-[min(100%,1280px)]  flex gap-5 px-8'>
-				<section className='w-[clamp(200px,30%,270px)] min-w-[clamp(200px,30%,270px)] h-min sticky top-[70px] left-0'>
-					<div className='w-full '>
+			<div className='w-[min(100%,1280px)] sm:flex-row flex-col  flex gap-5 px-8'>
+				<section className='sm:w-[clamp(200px,30%,270px)] sm:min-w-[clamp(200px,30%,270px)]  h-min md:sticky top-[70px] left-0'>
+					<div className='w-full'>
 						<img
 							fetchPriority='high'
 							decoding='async'
 							onError={handleImageError}
 							data-nimg='fill'
 							src={getFullUrl(history?.image)}
-							className='aspect-[2/3] object-cover rounded-2xl'
+							className='aspect-[16/9] md:aspect-[2/3] w-full h-full object-cover rounded-2xl'
 						/>
 					</div>
-					<div className='flex flex-col gap-3 mt-3'>
+					<div className='hidden sm:flex flex-col gap-3 mt-3'>
 						<Link to={history.pages.length == 0 ? '' : `/history/${id}/read`}>
 							<Button
 								disabled={history.pages.length == 0}
@@ -54,6 +57,22 @@ export const History = () => {
 						<Button className='rounded-lg bg-primary font-normal text-wrap'>
 							Добавить в закладки
 						</Button>
+						{user?.id == history.author.id && (
+							<Link className='w-full' to={`/history/${history.id}/edit`}>
+								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
+									Редактировать
+								</Button>
+							</Link>
+						)}
+					</div>
+					<div className='flex sm:hidden sticky bottom-3 left-3 justify-between items-center gap-3 mt-3'>
+						<div>
+							<Edit />
+						</div>
+						<Button className='w-full'>Читать</Button>
+						<div>
+							<BookMarkedIcon />
+						</div>
 					</div>
 				</section>
 				<section>

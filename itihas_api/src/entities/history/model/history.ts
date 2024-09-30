@@ -50,6 +50,7 @@ export const historiesRelations = relations(histories, ({ many, one }) => ({
 		fields: [histories.wallpaperId],
 		references: [wallpapers.id],
 	}),
+	characters: many(characters),
 	points: many(historyPoints),
 	pages: many(pages),
 	comments: many(comments),

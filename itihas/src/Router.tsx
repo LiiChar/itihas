@@ -8,6 +8,7 @@ import { Login } from './page/auth/Login';
 import { Register } from './page/auth/Register';
 import { Layout } from './component/layout/Layout';
 import { ProfilePage } from './page/Profile';
+import { HistoryEdit } from './page/History/EditHistory';
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 			{
 				path: '/auth/register',
 				element: <Register />,
+			},
+			{
+				path: '/history/:id/edit',
+				element: <HistoryEdit />,
 			},
 			{
 				path: '/history/:id',

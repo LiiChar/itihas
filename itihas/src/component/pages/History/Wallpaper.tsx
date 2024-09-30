@@ -14,7 +14,7 @@ export const Wallpaper = memo(
 				style={{ zIndex: -1 }}
 				className={
 					className +
-					' absolute top-0  left-0 w-full h-full bg-gradient-to-t bg-transparentfrom-background bg-background md:max-h-[600px] m-auto'
+					' absolute top-0  left-0 w-full h-full bg-gradient-to-t bg-transparentfrom-background bg-background max-h-[400px] md:max-h-[600px] m-auto'
 				}
 				{...attributes}
 			>

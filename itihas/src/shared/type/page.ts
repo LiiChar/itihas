@@ -1,3 +1,4 @@
+import { Character } from './character';
 import { Layout } from './layout';
 import { PointPage } from './point';
 import { Variable } from './variable';
@@ -33,6 +34,7 @@ export type Page = {
 export type ReadPage = Page & {
 	variables: Variable[];
 	points: PointPage[];
+	characters: Character[];
 	history: {
 		sound: string;
 		wallpaper: Wallpaper;

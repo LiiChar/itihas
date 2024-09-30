@@ -12,6 +12,7 @@ export const getHistory = async (id: number, user: UserType) => {
 		where: (histories, { eq }) => eq(histories.id, id),
 		with: {
 			author: true,
+			characters: true,
 			comments: {
 				with: {
 					user: true,
