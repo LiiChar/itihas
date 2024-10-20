@@ -18,22 +18,28 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 				<AvatarFallback>{comment.user.name}</AvatarFallback>
 			</Avatar>
 			<div className='w-full'>
-				<div className='bg-secondary px-2 py-1 rounded-lg '>
+				<div className='bg-secondary px-2 py-1 rounded-lg  transition-all'>
 					<div>
 						<div className='font-bold'>{comment.user.name}</div>
 						<div>{comment.user.dignity}</div>
 					</div>
 					<div>
-						<div className={!visible ? 'line-clamp-3' : ''}>
+						<div
+							className={
+								!visible && comment.content.length > 200 ? 'line-clamp-3' : ''
+							}
+						>
 							{comment.content}
 						</div>
-						<Button
-							className='font-normal text-primary normal-case p-0 m-0 h-min'
-							variant='ghost'
-							onClick={() => setVisible(prev => !prev)}
-						>
-							{visible ? 'Скрыть' : 'Открыть'}
-						</Button>
+						{comment.content.length > 200 && (
+							<Button
+								className='font-normal text-primary normal-case p-0 m-0 h-min'
+								variant='ghost'
+								onClick={() => setVisible(prev => !prev)}
+							>
+								{visible ? 'Скрыть' : 'Открыть'}
+							</Button>
+						)}
 					</div>
 				</div>
 				<div className='flex justify-between mt-1 ml-2 items-center'>

@@ -12,14 +12,14 @@ import {
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
-import { updatePage } from '@/shared/api/page';
-import { runRefreshAction } from '@/shared/store/RefreshStore';
+import { createPagePoint, updatePage } from '@/shared/api/page';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { ImageUpload } from '../../form/ImageUpload';
 import { SoundUpload } from '../../form/SoundUpload';
 import { DialogFooter } from '@/shared/ui/dialog';
-import { Page } from '@/shared/type/page';
+import { Page, PagePointInsert } from '@/shared/type/page';
 import { HistoryPage } from '@/shared/type/history';
+import { useListenerStore } from '@/shared/store/ListenerStore';
 
 const loginFormScheme = z.object({
 	name: z.string().min(3, 'Имя слишком короткое'),
@@ -28,9 +28,16 @@ const loginFormScheme = z.object({
 	image: z.string().nullable(),
 	wallpaper: z.string().nullable(),
 	sound: z.string().nullable(),
+	points: z.array(
+		z.object({
+			name: z.string(),
+			action: z.string(),
+		})
+	),
 });
 
 export const EditPageForm = ({ page }: { page: HistoryPage }) => {
+	const runListener = useListenerStore(state => state.runListener);
 	const form = useForm<z.infer<typeof loginFormScheme>>({
 		resolver: zodResolver(loginFormScheme),
 		defaultValues: {
@@ -40,6 +47,7 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 			name: page.name,
 			sound: page.sound ?? undefined,
 			wallpaper: page.wallpaper ?? undefined,
+			points: page.points,
 		},
 	});
 	function removeNullableValues<T extends object>(obj: T): T {
@@ -49,8 +57,15 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 	}
 	const onSubmitEdit = async (values: z.infer<typeof loginFormScheme>) => {
 		const data: unknown = removeNullableValues(values);
+		console.log('[submit]', data);
+
 		await updatePage(page.id, data as unknown as Partial<Page>);
-		runRefreshAction('EditHistory');
+		await Promise.all(
+			values.points.map(p =>
+				createPagePoint(page.id, p as unknown as PagePointInsert)
+			)
+		);
+		runListener('EditHistory');
 	};
 	return (
 		<Form {...form}>
@@ -139,6 +154,42 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 					/>
 					<FormField
 						control={form.control}
+						name='points'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className='text-foreground'>Содержание</FormLabel>
+								<>
+									{field.value.map((el, i) => (
+										<div>
+											<Input
+												className='bg-background -translate-y-2'
+												placeholder='Введите ссылку на изображение'
+												value={el.name}
+												onInput={e => {
+													const points = form.getValues().points;
+													points[i].name = e.currentTarget.value;
+													form.setValue('points', points);
+												}}
+											/>
+											<Input
+												className='bg-background -translate-y-2'
+												placeholder='Введите ссылку на изображение'
+												value={el.action}
+												onInput={e => {
+													const points = form.getValues().points;
+													points[i].action = e.currentTarget.value;
+													form.setValue('points', points);
+												}}
+											/>
+										</div>
+									))}
+								</>
+								<FormMessage className='-translate-y-4' />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
 						name='wallpaper'
 						render={({ field }) => (
 							<FormItem>
@@ -193,7 +244,13 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
-						<Button className='mt-2 float-end' type='submit'>
+						<Button
+							onClick={e => {
+								onSubmitEdit(form.getValues());
+							}}
+							className='mt-2 float-end'
+							type='submit'
+						>
 							Сохранить
 						</Button>
 					</DialogClose>

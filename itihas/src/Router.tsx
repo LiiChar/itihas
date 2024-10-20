@@ -9,6 +9,8 @@ import { Register } from './page/auth/Register';
 import { Layout } from './component/layout/Layout';
 import { ProfilePage } from './page/Profile';
 import { HistoryEdit } from './page/History/EditHistory';
+import { CreateHistory } from './page/History/CreateHistory';
+import { Constructor } from './page/Page/Constructor';
 
 const router = createBrowserRouter([
 	{
@@ -20,12 +22,20 @@ const router = createBrowserRouter([
 				element: <Main />,
 			},
 			{
+				path: '/page/:id/constructor',
+				element: <Constructor />,
+			},
+			{
 				path: '/auth/login',
 				element: <Login />,
 			},
 			{
 				path: '/auth/register',
 				element: <Register />,
+			},
+			{
+				path: '/history/create',
+				element: <CreateHistory />,
 			},
 			{
 				path: '/history/:id/edit',
@@ -40,13 +50,14 @@ const router = createBrowserRouter([
 				element: <Read />,
 			},
 			{
-				path: '/history/:id/edit',
+				path: '/history/:id/page/edit',
 				element: <HistoryEditBoard />,
 			},
 			{
 				path: '/page/:id/edit',
 				element: <PageEditBoard />,
 			},
+
 			{
 				path: '/profile/:id',
 				element: <ProfilePage />,

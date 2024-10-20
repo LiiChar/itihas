@@ -1,6 +1,6 @@
 export type Component = {
 	type: 'image' | 'points' | 'content' | 'custom';
-	align: 'center' | 'left' | 'butten';
+	align: 'center' | 'left' | 'right';
 	style: string;
 	content: null | string;
 };

@@ -33,6 +33,21 @@ export const fsExistOrCreate = async (path: string): Promise<boolean> => {
 	}
 };
 
+export const createFileByBuffer = async (
+	path: string,
+	buffer: string | Buffer
+) => {
+	try {
+		fs.writeFile(path, buffer);
+	} catch (error) {
+		if (error instanceof Error) {
+			throw Error(
+				`Create file by path - ${path} failed cause ${error.message}`
+			);
+		}
+	}
+};
+
 export const changeFileName = (
 	filePath: string,
 	newFileName: string

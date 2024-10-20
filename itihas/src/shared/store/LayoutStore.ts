@@ -48,7 +48,7 @@ export const addComponent = (id: number, Component: () => JSX.Element) => {
 	useLayoutStore.getState().Components[id] = { id, Component };
 };
 
-export const removeComponent = (id: number, _Component: () => JSX.Element) => {
+export const removeComponent = (id: number) => {
 	const indexFinded = useLayoutStore.getState().Components[id];
 	if (!indexFinded) {
 		return;
@@ -61,7 +61,7 @@ export const toggleComponent = (id: number, component: () => JSX.Element) => {
 	const isVisible = false;
 	const toggle = () => {
 		if (isVisible) {
-			removeComponent(id, component);
+			removeComponent(id);
 		} else {
 			addComponent(id, component);
 		}

@@ -22,8 +22,6 @@ export const History = () => {
 	useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			setHistory(data);
-			if (!data.sound) return;
-			setAudio(getFullUrl(data.sound), 'background');
 		},
 	});
 	if (!history) {
@@ -37,12 +35,12 @@ export const History = () => {
 				<section className='sm:w-[clamp(200px,30%,270px)] sm:min-w-[clamp(200px,30%,270px)]  h-min md:sticky top-[70px] left-0'>
 					<div className='w-full'>
 						<img
-							fetchPriority='high'
+							// fetchPriority='high'
 							decoding='async'
 							onError={handleImageError}
 							data-nimg='fill'
 							src={getFullUrl(history?.image)}
-							className='aspect-[16/9] md:aspect-[2/3] w-full h-full object-cover rounded-2xl'
+							className=' w-full h-full object-cover rounded-2xl'
 						/>
 					</div>
 					<div className='hidden sm:flex flex-col gap-3 mt-3'>
@@ -57,6 +55,13 @@ export const History = () => {
 						<Button className='rounded-lg bg-primary font-normal text-wrap'>
 							Добавить в закладки
 						</Button>
+						{user?.id == history.author.id && (
+							<Link className='w-full' to={`/history/${history.id}/page/edit`}>
+								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
+									Писать историю
+								</Button>
+							</Link>
+						)}
 						{user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>

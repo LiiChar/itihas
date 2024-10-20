@@ -37,7 +37,8 @@ export const loginUser = async (req: Request, res: Response) => {
 
 	res.cookie('token', token, {
 		maxAge: 60 * 60 * 60 * 24 * 30,
-		sameSite: true,
+		sameSite: false,
+		secure: false
 	});
 
 	res.setHeader('authorization', token);
@@ -89,22 +90,23 @@ export const registerUser = async (req: Request, res: Response) => {
 
 	await createDefaulBookmarks(user.id);
 
-	// await sendVerifyEmail(email, token);
-
 	res.setHeader('authorization', token);
 
 	res.cookie('token', token, {
-		maxAge: 60 * 60 * 24 * 30,
-		sameSite: true,
+		maxAge: 60 * 60 * 60 * 24 * 30,
+		sameSite: false,
+		secure: false,
 	});
 
-	return res.status(StatusCodes.OK).json({
-		name: user.name,
-		email: user.email,
-		photo: user.photo,
-		id: user.id,
-		role: user.role,
-	});
+	return res
+		.json({
+			name: user.name,
+			email: user.email,
+			photo: user.photo,
+			id: user.id,
+			role: user.role,
+		})
+		.status(StatusCodes.OK);
 };
 
 export const verifyEmail = async (req: Request, res: Response) => {

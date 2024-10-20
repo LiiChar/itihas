@@ -59,7 +59,6 @@ const parse = (str: string, { regex }: Element) => {
 };
 
 const REGEX = /\(([^)]+)\)/;
-REGEX;
 
 const token: Element[] = [
 	{
@@ -177,7 +176,7 @@ const token: Element[] = [
 			const data = getValueFromStaples(value);
 
 			return {
-				type: 'set',
+				type: 'create',
 				index,
 				value: data.split(','),
 			};

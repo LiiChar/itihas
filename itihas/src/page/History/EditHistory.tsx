@@ -42,7 +42,7 @@ export const HistoryEdit = () => {
 				<section className='w-[clamp(200px,30%,270px)] min-w-[clamp(200px,30%,270px)] h-min sticky top-[70px] left-0'>
 					<div className='w-full '>
 						<img
-							fetchPriority='high'
+							// fetchPriority='high'
 							decoding='async'
 							onError={handleImageError}
 							data-nimg='fill'

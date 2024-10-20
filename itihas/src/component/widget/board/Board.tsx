@@ -1,8 +1,7 @@
 import { getFullUrl } from '@/shared/lib/image';
-import { setVisibleFooter, setVisibleHeader } from '@/shared/store/LayoutStore';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
-import { useEvent, useMount } from '@siberiacancode/reactuse';
+import { useEvent } from '@siberiacancode/reactuse';
 import { BoxSelect } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
@@ -130,10 +129,6 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 	const layerRef = useRef<HTMLDivElement>(null);
 	const [activeNode, setActiveNode] = useState<number | null>(null);
 	const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
-	useMount(() => {
-		setVisibleFooter(false);
-		setVisibleHeader(false);
-	});
 
 	const handleMouseDown = useEvent(
 		(e: React.MouseEvent, nodeIndex: number, isViewport: boolean = false) => {
@@ -220,6 +215,7 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 			onMouseDown={e => handleMouseDown(e, 0, true)}
 			ref={layerRef}
 		>
+			{/* TODO <DotsBackground /> */}
 			<Actions
 				actions={[
 					{
@@ -261,7 +257,7 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 					</defs>
 					<BoardRelation nodes={nodes} />
 				</svg>
-				<BoardNodes handleMouseDown={handleMouseDown} nodes={nodes} />A
+				<BoardNodes handleMouseDown={handleMouseDown} nodes={nodes} />
 			</div>
 		</div>
 	);

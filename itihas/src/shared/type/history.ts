@@ -12,6 +12,8 @@ export type History = {
 	created_at: string;
 	image: string;
 	views: number;
+	layoutId: number;
+	authorId?: number;
 	status: 'complete' | 'write' | 'frozen' | 'announcement';
 	type: 'free' | 'paid';
 	wallpaper: string | null;

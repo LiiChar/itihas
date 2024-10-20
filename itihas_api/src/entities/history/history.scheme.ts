@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { HistoryInsertType } from '../../database/db';
+
 
 export const pageInsertSchema = z.object({
 	name: z.string(),
@@ -6,7 +8,7 @@ export const pageInsertSchema = z.object({
 	image: z.string().nullable(),
 	content: z.string(),
 	sound: z.string().nullable(),
-	action: z.string().nullable(),
+	minAge: z.number().nullable(),
 });
 
 export type pageInsertSchema = (typeof pageInsertSchema)['_output'];

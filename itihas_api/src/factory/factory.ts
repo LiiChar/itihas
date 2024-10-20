@@ -11,7 +11,6 @@ import {
 	generatePage,
 	generateVariable,
 	generatePagePoint,
-	generateWallpaper,
 	generateLayout,
 	generateBookmarks,
 	generateLikePages,
@@ -38,8 +37,6 @@ try {
 		console.log(2);
 		await generateUsers();
 		console.log(3);
-		await generateWallpaper();
-		console.log(4);
 		await generateHistory();
 		console.log(5);
 		await generateBookmarks();

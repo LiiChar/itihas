@@ -21,9 +21,7 @@ export const pages = sqliteTable('pages', {
 	image: text('photo').notNull().default('/public/assets/guest.png'),
 	sound: text('sound'),
 	script: text('script'),
-	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id, {
-		onDelete: 'set null',
-	}),
+	wallpaper: text('wallpaper'),
 	views: integer('views').notNull().default(0),
 	type: text('type', { enum: ['start', 'end', 'default'] }).default('default'),
 	description: text('description'),
@@ -43,10 +41,6 @@ export const pagesRelations = relations(pages, ({ many, one }) => ({
 		fields: [pages.layoutId],
 		references: [layouts.id],
 	}),
-	wallpaper: one(wallpapers, {
-		fields: [pages.wallpaperId],
-		references: [wallpapers.id],
-	}),
 	points: many(pagePoints),
 	history: one(histories, {
 		fields: [pages.historyId],
@@ -54,20 +48,6 @@ export const pagesRelations = relations(pages, ({ many, one }) => ({
 	}),
 	tags: many(tagsToPages),
 }));
-
-export const wallpapers = sqliteTable('wallpapers', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	name: text('name').notNull(),
-	alt: text('alt'),
-	rate: integer('rate').notNull().default(0),
-	source: text('source').notNull(),
-	width: integer('width'),
-	height: integer('height'),
-	description: text('description'),
-	createdAt: text('created_at')
-		.notNull()
-		.default(sql`CURRENT_TIMESTAMP`),
-});
 
 export const tags = sqliteTable('tags', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

@@ -14,12 +14,19 @@ import {
 	usePageStore,
 } from '../shared/store/PageStore';
 import { Button } from '@/shared/ui/button';
-import { setHeader, setVisibleFooter } from '@/shared/store/LayoutStore';
+import {
+	addComponent,
+	removeComponent,
+	setHeader,
+	setVisibleFooter,
+} from '@/shared/store/LayoutStore';
 import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
 import { handleImageError } from '@/shared/lib/image';
+import { useLayout } from '@/shared/hooks/useLayout';
+import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const Read = () => {
 	const { id } = useParams();
@@ -39,10 +46,12 @@ export const Read = () => {
 	useMount(() => {
 		setVisibleFooter(false);
 		setHeader(AsideHeader);
+		addComponent(5, () => <AudioMenu />);
 	});
 	useUnmount(() => {
 		setVisibleFooter(true);
 		setHeader(Header);
+		removeComponent(5);
 	});
 
 	if (!page) {

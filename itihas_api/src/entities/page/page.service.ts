@@ -1,7 +1,7 @@
 import { access } from 'fs/promises';
 import { PageInsertType, PageType, UserType, db } from '../../database/db';
 import { insertDataToContent } from './lib/content';
-import { eq, sql } from 'drizzle-orm';
+import { eq, min, sql } from 'drizzle-orm';
 import { pagePoints, pages } from './model/page';
 import { histories } from '../history/model/history';
 import { layoutComponents } from './type/layout';
@@ -13,12 +13,22 @@ export const getCurrentPageByHistoryId = async (
 	currentPage: number,
 	user: UserType
 ) => {
+	const firstPage = await db
+		.select({ id: min(pages.id) })
+		.from(pages)
+		.where(eq(pages.historyId, id));
+
+	if (firstPage.length == 0 && !firstPage[0].id) {
+		throw Error('Page not exist in story');
+	}
 	const page = await db.query.pages.findFirst({
 		where: (pages, { eq, and, or }) => {
-			const ex =
-				currentPage == 0
-					? or(eq(pages.type, 'start'), eq(pages.id, 1))
-					: eq(pages.id, currentPage);
+			let ex;
+			if (currentPage == 0) {
+				ex = or(eq(pages.type, 'start'), eq(pages.id, firstPage[0]!.id!));
+			} else {
+				ex = eq(pages.id, currentPage);
+			}
 			return and(ex, eq(pages.historyId, id));
 		},
 		with: {
@@ -28,12 +38,10 @@ export const getCurrentPageByHistoryId = async (
 					sound: true,
 				},
 				with: {
-					wallpaper: true,
 					layout: true,
 				},
 			},
 			layout: true,
-			wallpaper: true,
 		},
 	});
 
@@ -146,6 +154,17 @@ export const createPagePoint = async (
 	pageId: number,
 	data: pagePointInsertScheme
 ) => {
+	const existPoint = await db.query.pagePoints.findFirst({
+		where: eq(pagePoints.name, data.name),
+	});
+	if (existPoint) {
+		await db.update(pagePoints).set({
+			action: data.action,
+			name: data.name,
+			pageId: pageId,
+		});
+		return;
+	}
 	await db.insert(pagePoints).values({
 		action: data.action,
 		name: data.name,

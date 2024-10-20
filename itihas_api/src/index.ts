@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { route } from './entities/route';
 import path from 'path';
-import { cookiesMiddleware } from './middleware/cookieMiddleware';
+import { errorBoundaryMiddleware } from './middleware/errorBoundaryMiddleware';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -25,6 +25,7 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use('/api', route);
+app.use(errorBoundaryMiddleware);
 
 app.listen(PORT, () =>
 	console.log(`Server has been started on http://localhost:${PORT}`)

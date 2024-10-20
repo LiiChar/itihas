@@ -38,7 +38,6 @@ export const SimilarSlider = ({ history }: { history: HistoryPages }) => {
 						{history.similarHistories.map(s => (
 							<CarouselItem
 								id={`${s.id}`}
-								object-cover
 								className='basis-[30%] w-full sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 								onClick={() => navigate(`/history/${s.id}`)}
 							>

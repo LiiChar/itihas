@@ -47,7 +47,6 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 							<CarouselItem
 								id={`${s.id}`}
 								key={`${s.id}`}
-								object-cover
 								className='basis-[30%] h-min sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 							>
 								<HistoryElement

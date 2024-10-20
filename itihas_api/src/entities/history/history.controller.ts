@@ -1,6 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { getHistories, getHistory } from './history.service';
+import {
+	createHistory,
+	getHistories,
+	getHistory,
+	getLayouts,
+} from './history.service';
 import { db } from '../../database/db';
 
 const historyRouter = Router();
@@ -15,6 +20,19 @@ historyRouter.get('/', async (req: Request, res: Response) => {
 			.json('Get history failed')
 			.status(StatusCodes.INTERNAL_SERVER_ERROR);
 	}
+});
+
+historyRouter.post('/', async (req: Request, res: Response) => {
+	const dataHistory = req.body;
+	const user = (await db.query.users.findMany())[0];
+
+	const history = await createHistory(dataHistory);
+	return res.json(history).status(StatusCodes.OK);
+});
+
+historyRouter.get('/layout', async (req: Request, res: Response) => {
+	const layouts = await getLayouts();
+	return res.json(layouts);
 });
 
 historyRouter.get('/:id', async (req: Request, res: Response) => {

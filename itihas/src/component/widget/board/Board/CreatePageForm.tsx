@@ -148,14 +148,12 @@ export const CreatePageForm = ({
 								<FormLabel className='text-foreground'>
 									Ссылка на изображение
 								</FormLabel>
-								{field.value && (
-									<ImageUpload
-										src={field.value}
-										onUpload={path => {
-											form.setValue('image', path);
-										}}
-									/>
-								)}
+								<ImageUpload
+									src={field.value ?? ''}
+									onUpload={path => {
+										form.setValue('image', path);
+									}}
+								/>
 								<FormControl>
 									<Input
 										className='bg-background -translate-y-2'
@@ -174,14 +172,12 @@ export const CreatePageForm = ({
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel className='text-foreground'>Задний фон</FormLabel>
-								{field.value && (
-									<ImageUpload
-										src={field.value}
-										onUpload={path => {
-											form.setValue('image', path);
-										}}
-									/>
-								)}
+								<ImageUpload
+									src={field.value ?? ''}
+									onUpload={path => {
+										form.setValue('wallpaper', path);
+									}}
+								/>
 								<FormControl>
 									<Input
 										className='bg-background -translate-y-2'
@@ -202,12 +198,10 @@ export const CreatePageForm = ({
 								<FormLabel className='text-foreground'>
 									Ссылка на музыку
 								</FormLabel>
-								{field.value && (
-									<SoundUpload
-										src={field.value}
-										onUpload={src => form.setValue('sound', src)}
-									/>
-								)}
+								<SoundUpload
+									src={field.value ?? ''}
+									onUpload={src => form.setValue('sound', src)}
+								/>
 
 								<FormControl>
 									<Input

@@ -1,8 +1,16 @@
 import { access } from 'fs/promises';
-import { PageInsertType, PageType, UserType, db } from '../../database/db';
+import {
+	HistoryInsertType,
+	PageInsertType,
+	PageType,
+	UserType,
+	db,
+} from '../../database/db';
 import { insertDataToContent } from './lib/content';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { comments, histories } from './model/history';
+import { ErrorBoundary } from '../../lib/error';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 export const getHistory = async (id: number, user: UserType) => {
 	const history = await db.query.histories.findFirst({
@@ -61,6 +69,23 @@ export const getHistory = async (id: number, user: UserType) => {
 	return history;
 };
 
+export const createHistory = async (data: HistoryInsertType) => {
+	const existHistory = await db.query.histories.findFirst({
+		where: eq(histories.name, data.name),
+	});
+
+	if (existHistory) {
+		throw new ErrorBoundary(
+			'История с таким названием уже существует',
+			ReasonPhrases.BAD_REQUEST
+		);
+	}
+
+	const history = await db.insert(histories).values(data);
+
+	return history;
+};
+
 export const getHistories = async () => {
 	const histories = await db.query.histories.findMany({
 		with: {
@@ -73,4 +98,9 @@ export const getHistories = async () => {
 		},
 	});
 	return histories;
+};
+
+export const getLayouts = async () => {
+	const layouts = await db.query.layouts.findMany();
+	return layouts;
 };

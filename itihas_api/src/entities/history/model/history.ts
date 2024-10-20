@@ -6,7 +6,7 @@ import {
 	primaryKey,
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/model/user';
-import { layouts, pages, wallpapers } from '../../page/model/page';
+import { layouts, pages } from '../../page/model/page';
 import { string } from 'zod';
 
 export const histories = sqliteTable('histories', {
@@ -30,9 +30,7 @@ export const histories = sqliteTable('histories', {
 		.notNull()
 		.references(() => layouts.id, { onDelete: 'cascade' })
 		.default(1),
-	wallpaperId: integer('wallpaper_id').references(() => wallpapers.id, {
-		onDelete: 'set null',
-	}),
+	wallpaper: text('wallpaper'),
 	sound: text('sound').default('/public/assets/default.mp3'),
 	minAge: integer('min_age'),
 	rate: integer('rate').notNull().default(0),
@@ -45,10 +43,6 @@ export const historiesRelations = relations(histories, ({ many, one }) => ({
 	layout: one(layouts, {
 		fields: [histories.layoutId],
 		references: [layouts.id],
-	}),
-	wallpaper: one(wallpapers, {
-		fields: [histories.wallpaperId],
-		references: [wallpapers.id],
 	}),
 	characters: many(characters),
 	points: many(historyPoints),

@@ -15,13 +15,13 @@ export const authificationMiddleware = (
 		if (!auth && !cookiesAuth) {
 			return res
 				.status(StatusCodes.UNAUTHORIZED)
-				.json({ error: 'Internal Server Error' });
+				.json({ error: 'User not authorized into system' });
 		} else if (cookiesAuth) {
 			auth = cookiesAuth;
 		} else {
 			return res
 				.status(StatusCodes.UNAUTHORIZED)
-				.json({ error: 'Internal Server Error' });
+				.json({ error: 'User not authorized into system' });
 		}
 		const [_bearer, token] = auth.split(' ');
 		const secret = process.env.JWT_SECRET!;

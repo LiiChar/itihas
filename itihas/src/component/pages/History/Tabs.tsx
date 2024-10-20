@@ -37,7 +37,6 @@ export const Characters = memo(({ history }: { history: HistoryPages }) => {
 						<CarouselItem
 							id={`${c.id}`}
 							key={`${c.id}`}
-							object-cover
 							className='basis-[30%] h-min sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 						>
 							<CharacterElement character={char} />
