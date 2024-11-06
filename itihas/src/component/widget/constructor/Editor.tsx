@@ -1,5 +1,8 @@
 import { useLayout } from '@/shared/hooks/useLayout';
-import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { Textarea } from '@/shared/ui/textarea';
+import { Blocks, CodeSquare, Text } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -164,6 +167,7 @@ const AsideDefaultBlock = () => {
 	return;
 };
 
+// TODO
 const reverseTransform = (text: string) => {
 	const stack: string[] = text.split('.').reverse();
 	let result = '';
@@ -179,7 +183,12 @@ const reverseTransform = (text: string) => {
 				// Проверка на шаблонное слово
 				if (phrase.indexOf('[key]') > -1) {
 					const startPhrase = phrase.slice(0, phrase.indexOf('[key]'));
-					if (!t.includes(startPhrase)) return;
+
+					if (
+						!t.includes(startPhrase) ||
+						phrase.trim().indexOf(startPhrase) > 0
+					)
+						return;
 					if (phrase.indexOf('[value]') > -1) {
 						const endPhrase = phrase.slice(
 							startPhrase.length + 4,
@@ -202,9 +211,9 @@ const reverseTransform = (text: string) => {
 							startPhrase.length + 5,
 							phrase.length - startPhrase.length + 10
 						);
+
 						if (!t.includes(endPhrase)) return;
-						key = t.slice(startPhrase.length, t.indexOf(endPhrase)).trim();
-						console.log(t, key);
+						key = t.slice(startPhrase.length - 1, t.indexOf(endPhrase)).trim();
 						if (t.length - key.length > phrase.length - 5)
 							stack.push(
 								t.slice(t.length - key.length - phrase.length - 5, t.length)
@@ -219,21 +228,114 @@ const reverseTransform = (text: string) => {
 			result += `${token}(${children.join(',')});`;
 		});
 	}
+
 	return result;
 };
 
-export const Editor = () => {
-	const inputString = 'var(id,5);move(get(id););';
-	useLayout({ footer: true });
-	const [data, setData] = useState(parse(inputString));
-	reverseTransform(data.reduce<string>((acc, el) => acc + WordConvert(el), ''));
+const PrimaryTokens = ({ code }: { code: string }) => {
+	return <Textarea>{code}</Textarea>;
+};
 
+const Block = ({ token, children }: any) => {
+	return (
+		<div
+			style={{
+				margin: '10px',
+				padding: '10px',
+				border: '1px solid #ccc',
+				borderRadius: '5px',
+			}}
+		>
+			<strong>{token}</strong>
+			{Array.isArray(children) ? (
+				<div style={{ paddingLeft: '20px' }}>
+					{children.map((child, index) => (
+						<Block
+							key={index}
+							{...(typeof child === 'object' ? child : { token: child })}
+						/>
+					))}
+				</div>
+			) : typeof children === 'object' ? (
+				<Block {...children} />
+			) : (
+				<div>{children}</div>
+			)}
+		</div>
+	);
+};
+
+const BlockTokens = ({ code }: { code: string }) => {
+	const [blocks, setBlocks] = useState(parse(code));
 	return (
 		<div>
-			<h1>Визуальный дисплей объекта</h1>
-			<div>
-				<DisplayTokens data={data} />
-			</div>
+			{blocks.map((b, i) => (
+				<div>
+					<Block key={i} {...b} />
+				</div>
+			))}
 		</div>
+	);
+};
+
+const TextTokens = ({ code }: { code: string }) => {
+	const [text, setText] = useState(
+		parse(code).reduce<string>((acc, el) => acc + WordConvert(el), '')
+	);
+	return <Textarea>{text}</Textarea>;
+};
+
+export const Editor = () => {
+	const code = 'var(id,5);move(get(id););';
+	useLayout({ footer: true });
+
+	const tabs = [
+		{
+			value: 'Исходный код',
+			icon: <CodeSquare />,
+			content: <PrimaryTokens code={code} />,
+		},
+		{
+			value: 'Блочное представление',
+
+			icon: <Blocks />,
+			content: <BlockTokens code={code} />,
+		},
+		{
+			value: 'Текствое представление',
+
+			icon: <Text />,
+			content: <TextTokens code={code} />,
+		},
+	];
+
+	const [activeTab, setActiveTab] = useState(tabs[0].value);
+
+	return (
+		<Tabs value={activeTab}>
+			<TabsList className='bg-transparent -ml-1 text-xs'>
+				{tabs.map(t => (
+					<TabsTrigger
+						key={t.value}
+						className={`rounded-none text-foreground ${
+							activeTab == t.value && 'text-accent fill-accent'
+						}`}
+						value={t.value}
+						onClick={() => setActiveTab(t.value)}
+					>
+						{t.icon}
+					</TabsTrigger>
+				))}
+			</TabsList>
+			{tabs.map(t => (
+				<TabsContent
+					key={t.value}
+					className='text-foreground p-0 font-normal text-sm'
+					value={t.value}
+				>
+					{t.content}
+				</TabsContent>
+			))}
+		</Tabs>
 	);
 };
