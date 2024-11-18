@@ -11,6 +11,7 @@ import { ProfilePage } from './page/Profile';
 import { HistoryEdit } from './page/History/EditHistory';
 import { CreateHistory } from './page/History/CreateHistory';
 import { Constructor } from './page/Page/Constructor';
+import { Catalog } from './page/Catalog';
 
 const router = createBrowserRouter([
 	{
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
 			{
 				path: '/profile/:id',
 				element: <ProfilePage />,
+			},
+			{
+				path: '/library',
+				element: <Catalog />,
 			},
 		],
 	},

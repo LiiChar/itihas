@@ -18,10 +18,11 @@ export const useListenerStore = create<ListenerStore>()((set, get) => ({
 	addCallback: (listener: Listeners, cb: () => void) => {
 		set(state => {
 			const storeState = state;
-			if (!storeState.listeners[listener]) return state;
+			if (!storeState.listeners[listener]) {
+				storeState.listeners[listener] = [];
+			}
 			storeState.listeners[listener].push(cb);
-			state = { ...storeState };
-			return state;
+			return { ...state };
 		});
 	},
 	removeCallback: (listener: Listeners, cb: () => void) => {

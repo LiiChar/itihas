@@ -66,19 +66,6 @@ function parse(input: string): Tokens {
 	return result;
 }
 
-// Компонент
-const DisplayTokens = ({ data }: { data: Tokens }) => {
-	return (
-		<div>
-			{data.map((item, index) => (
-				<>
-					<span key={index}>{WordConvert(item)}</span>
-				</>
-			))}
-		</div>
-	);
-};
-
 const phrases = {
 	get: {
 		default: `Получить значение из локальной среды по ключу [key]. `,
@@ -318,7 +305,7 @@ export const Editor = () => {
 					<TabsTrigger
 						key={t.value}
 						className={`rounded-none text-foreground ${
-							activeTab == t.value && 'text-accent fill-accent'
+							activeTab == t.value && 'text-accent bg-accent'
 						}`}
 						value={t.value}
 						onClick={() => setActiveTab(t.value)}

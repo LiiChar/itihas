@@ -2,6 +2,7 @@ import { ProfileTabs } from '@/component/pages/Profile/ProfileTabs';
 import { Avatar } from '@/component/widget/user/avatar';
 import { getUserById } from '@/shared/api/user';
 import { formatDate } from '@/shared/lib/time';
+import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useQuery } from '@siberiacancode/reactuse';
 import { useNavigate } from 'react-router-dom';
@@ -13,8 +14,9 @@ export const ProfilePage = () => {
 		navigate('/');
 		return '';
 	}
-	const { data } = useQuery(() => getUserById(u.id));
-	if (!data) {
+	const { data, refetch } = useQuery(() => getUserById(u.id));
+	// useListenerStore().addCallback('userChange', () => refetch());
+	if (!data || !data.data || data.status != 200) {
 		return 'Loading...';
 	}
 	const user = data.data;
@@ -37,9 +39,9 @@ export const ProfilePage = () => {
 							<p>{user.dignity}</p>
 							<p>{user.age}</p>
 							<p>{user.comments.length}</p>
-							<p>{user.authorHistories.length}</p>
+							{user.authorHistories && <p>{user.authorHistories.length}</p>}
 
-							<p>{user.likes.length}</p>
+							{user.likes && <p>{user.likes.length}</p>}
 						</div>
 					</div>
 				</div>

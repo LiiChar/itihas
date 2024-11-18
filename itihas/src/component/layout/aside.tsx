@@ -26,7 +26,10 @@ export const AsideHeader = () => {
 			</SheetTrigger>
 			<SheetContent className='md:min-w-1/2 sm:min-w-[50%]' side={'right'}>
 				<SheetTitle>
-					<div className='flex justify-end gap-2 mr-5'>
+					<Link
+						to={`/profile/${id}`}
+						className='flex text-foreground justify-end gap-2 mr-5'
+					>
 						{user && (
 							<>
 								<div>{user.name}</div>
@@ -35,7 +38,7 @@ export const AsideHeader = () => {
 								</div>
 							</>
 						)}
-					</div>
+					</Link>
 				</SheetTitle>
 				<div className='grid gap-4 py-4'>
 					<Link to={`/history/${id}`}>Перейти на страницу истории</Link>

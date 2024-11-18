@@ -7,12 +7,25 @@ import {
 	getLayouts,
 } from './history.service';
 import { db } from '../../database/db';
+import { ReplOptions } from 'repl';
 
 const historyRouter = Router();
 
 historyRouter.get('/', async (req: Request, res: Response) => {
 	try {
-		const history = await getHistories();
+		const params: Record<string, string> = req.query as any;
+		const history = await getHistories(params);
+		return res.json(history).status(StatusCodes.OK);
+	} catch (error) {
+		console.log(error);
+		return res.json('Get history failed').status(404);
+	}
+});
+
+historyRouter.post('/catalog', async (req: Request, res: Response) => {
+	try {
+		const params: Record<string, string> = Object.assign(req.query, req.body);
+		const history = await getHistories(params);
 		return res.json(history).status(StatusCodes.OK);
 	} catch (error) {
 		console.log(error);
@@ -23,11 +36,17 @@ historyRouter.get('/', async (req: Request, res: Response) => {
 });
 
 historyRouter.post('/', async (req: Request, res: Response) => {
-	const dataHistory = req.body;
-	const user = (await db.query.users.findMany())[0];
+	try {
+		const dataHistory = req.body;
+		const user = (await db.query.users.findMany())[0];
 
-	const history = await createHistory(dataHistory);
-	return res.json(history).status(StatusCodes.OK);
+		const history = await createHistory(dataHistory);
+		return res.json(history).status(StatusCodes.OK);
+	} catch (error) {
+		if (error instanceof Error) {
+			return res.json(error.message).status(StatusCodes.BAD_REQUEST);
+		}
+	}
 });
 
 historyRouter.get('/layout', async (req: Request, res: Response) => {

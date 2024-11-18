@@ -1,5 +1,5 @@
 import { BookmarkInsertType, db } from '../database/db';
-import { bookmarks } from '../entities/history/model/history';
+import { bookmarks } from '../entities/bookmark/model/bookmark';
 
 export const createDefaulBookmarks = async (userId: number) => {
 	const defaultBookmark: BookmarkInsertType[] = [

@@ -13,6 +13,7 @@ import { useAudioStore } from '@/shared/store/AudioStore';
 import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { BookMarkedIcon, Edit } from 'lucide-react';
+import { SelectBookmarks } from '@/component/widget/bookmarks/SelectBookmarks';
 
 export const History = () => {
 	const { id } = useParams();
@@ -52,9 +53,11 @@ export const History = () => {
 								Читать
 							</Button>
 						</Link>
-						<Button className='rounded-lg bg-primary font-normal text-wrap'>
-							Добавить в закладки
-						</Button>
+						<SelectBookmarks historyId={history.id}>
+							<Button className='rounded-lg bg-primary font-normal text-wrap'>
+								Добавить в закладки
+							</Button>
+						</SelectBookmarks>
 						{user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/page/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
@@ -75,9 +78,11 @@ export const History = () => {
 							<Edit />
 						</div>
 						<Button className='w-full'>Читать</Button>
-						<div>
-							<BookMarkedIcon />
-						</div>
+						<SelectBookmarks historyId={history.id}>
+							<div>
+								<BookMarkedIcon />
+							</div>
+						</SelectBookmarks>
 					</div>
 				</section>
 				<section>

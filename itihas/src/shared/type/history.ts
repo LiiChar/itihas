@@ -1,15 +1,35 @@
-import { bookmarks } from './bookmark';
+import { Bookmarks } from './bookmark';
 import { Character } from './character';
 import { Comment } from './comment';
 import { Page } from './page';
 import { PointHistory, PointPage } from './point';
 import { User } from './user';
 
+export type Filter = {
+	field?: keyof History;
+	value?: string;
+	innerFilters?: Filter[];
+	variant?: 'or' | 'and';
+	operator?: 'like' | '=' | '<' | '>' | '!=';
+};
+
+export type FilterParams = {
+	offset?: number;
+	page?: number;
+	orders?: { order: 'asc' | 'desc'; field: string }[];
+	filter?: Filter[];
+	author?: string;
+	limit?: number;
+	genres?: { genre: string; allow: string }[];
+	tags?: { tag: string; allow: string }[];
+};
+
 export type History = {
 	id: number;
 	name: string;
 	description: string | null;
 	created_at: string;
+	updated_at: string;
 	image: string;
 	views: number;
 	layoutId: number;
@@ -56,7 +76,7 @@ export type HistoryPages = History & {
 	comments: HistoryComment[];
 	genres: { genre: Genre }[];
 	author: User;
-	bookmarks: bookmarks[];
+	bookmarks: Bookmarks[];
 };
 
 export type Genre = {

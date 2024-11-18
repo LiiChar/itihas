@@ -65,7 +65,7 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 				createPagePoint(page.id, p as unknown as PagePointInsert)
 			)
 		);
-		runListener('EditHistory');
+		// runListener('EditHistory');
 	};
 	return (
 		<Form {...form}>

@@ -1,14 +1,13 @@
 import { relations, sql } from 'drizzle-orm';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import {
-	bookmarks,
-	bookmarksToHistories,
 	charactersToUsers,
 	comments,
 	commentsToComments,
 	histories,
 } from '../../history/model/history';
 import { likePages, pageComments } from '../../page/model/page';
+import { bookmarks } from '../../bookmark/model/bookmark';
 
 export const dignity = sqliteTable('dignity', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

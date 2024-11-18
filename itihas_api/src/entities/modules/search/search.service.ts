@@ -1,4 +1,4 @@
-import { like, or } from 'drizzle-orm';
+import { like, or, sql } from 'drizzle-orm';
 import { db } from '../../../database/db';
 import { histories } from '../../history/model/history';
 import { pages } from '../../page/model/page';
@@ -17,8 +17,8 @@ export const search = async (search: string) => {
 
 	const pagesSearched = await db.query.pages.findMany({
 		where: or(
-			like(pages.name, `%${search}%`),
-			like(pages.description, `%${search}%`)
+			sql`to_tsvector('simple', ${pages.name}) @@ to_tsquery('simple', ${search})`,
+			sql`to_tsvector('simple', ${pages.description}) @@ to_tsquery('simple', ${search})`
 		),
 	});
 
