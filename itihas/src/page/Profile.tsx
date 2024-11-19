@@ -3,19 +3,16 @@ import { Avatar } from '@/component/widget/user/avatar';
 import { getUserById } from '@/shared/api/user';
 import { formatDate } from '@/shared/lib/time';
 import { useListenerStore } from '@/shared/store/ListenerStore';
-import { useUserStore } from '@/shared/store/UserStore';
-import { useQuery } from '@siberiacancode/reactuse';
-import { useNavigate } from 'react-router-dom';
+import { useMount, useQuery } from '@siberiacancode/reactuse';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ProfilePage = () => {
-	const { user: u } = useUserStore();
-	const navigate = useNavigate();
-	if (!u) {
-		navigate('/');
-		return '';
-	}
-	const { data, refetch } = useQuery(() => getUserById(u.id));
-	// useListenerStore().addCallback('userChange', () => refetch());
+	const { id } = useParams();
+	const { data, refetch } = useQuery(() => getUserById(+id!));
+	const { addCallback } = useListenerStore();
+	useMount(() => {
+		addCallback('userChange', () => refetch());
+	});
 	if (!data || !data.data || data.status != 200) {
 		return 'Loading...';
 	}

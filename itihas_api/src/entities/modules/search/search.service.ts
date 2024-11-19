@@ -17,8 +17,8 @@ export const search = async (search: string) => {
 
 	const pagesSearched = await db.query.pages.findMany({
 		where: or(
-			sql`to_tsvector('simple', ${pages.name}) @@ to_tsquery('simple', ${search})`,
-			sql`to_tsvector('simple', ${pages.description}) @@ to_tsquery('simple', ${search})`
+			like(pages.name, `%${search}%`),
+			like(pages.description, `%${search}%`)
 		),
 	});
 

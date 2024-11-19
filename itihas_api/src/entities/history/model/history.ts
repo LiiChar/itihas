@@ -7,7 +7,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/model/user';
 import { layouts, pages } from '../../page/model/page';
-import { bookmarksToHistories } from '../../bookmark/model/bookmark';
+import { bookmarks } from '../../bookmark/model/bookmark';
 
 export const histories = sqliteTable('histories', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -59,6 +59,33 @@ export const historiesRelations = relations(histories, ({ many, one }) => ({
 		references: [users.id],
 	}),
 }));
+
+export const bookmarksToHistories = sqliteTable('bookmarks_to_histories', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	bookmarkId: integer('bookmark_id')
+		.notNull()
+		.references(() => bookmarks.id, { onDelete: 'cascade' }),
+	historyId: integer('history_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const bookmarksToHistoriesRelations = relations(
+	bookmarksToHistories,
+	({ one }) => ({
+		bookmark: one(bookmarks, {
+			fields: [bookmarksToHistories.bookmarkId],
+			references: [bookmarks.id],
+		}),
+		history: one(histories, {
+			fields: [bookmarksToHistories.historyId],
+			references: [histories.id],
+		}),
+	})
+);
 
 export const characters = sqliteTable('characters', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

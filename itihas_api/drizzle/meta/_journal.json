@@ -274,6 +274,20 @@
       "when": 1731601314071,
       "tag": "0038_free_human_torch",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "6",
+      "when": 1732038934745,
+      "tag": "0039_omniscient_changeling",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "6",
+      "when": 1732038988365,
+      "tag": "0040_moaning_warpath",
+      "breakpoints": true
     }
   ]
 }

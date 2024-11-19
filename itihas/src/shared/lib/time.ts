@@ -89,10 +89,8 @@ export const getDayOfYear = (dates: Date | string) => {
 	return dayOfYear;
 };
 
-export const formatDate = (inputDate: string, short: boolean = false) => {
-	if (!inputDate) return inputDate;
-	// Создаем объект Date из входной строки
-	const date = new Date(inputDate);
+export const formatDate = (inputDate?: string, short: boolean = false) => {
+	const date = inputDate == null ? new Date() : new Date(inputDate);
 
 	// Определяем массивы с названиями месяцев и их сокращениями
 	const months = [

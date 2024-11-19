@@ -22,7 +22,7 @@ export const BookmarkCreateForm = memo(() => {
 
 	const handleBookmarkCreateForm = async () => {
 		await createBookmark({ name, userId: user?.id });
-		// runListener('userChange');
+		runListener('userChange');
 	};
 
 	return (

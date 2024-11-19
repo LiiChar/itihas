@@ -4,7 +4,8 @@ import {
 	bookmarkHistoryInsertSchemaType,
 	bookmarkInsertSchemaType,
 } from './bookmark.scheme';
-import { bookmarks, bookmarksToHistories } from './model/bookmark';
+import { bookmarks } from './model/bookmark';
+import { bookmarksToHistories } from '../history/model/history';
 
 export const getListBookmarks = async (userId: number) => {
 	let bookmarks = await db.query.bookmarks.findMany({

@@ -6,6 +6,9 @@ import { HistoryElement } from '../History/HistoryElement';
 import { BookmarkCreateForm } from './BookmarkCreateForm';
 
 export const BookmarksTabs = memo(({ user }: { user: UserAll }) => {
+	if (user.bookmarks.length == 0) {
+		return '';
+	}
 	const [activeTab, setActiveTab] = useState(user.bookmarks[0].name);
 
 	return (

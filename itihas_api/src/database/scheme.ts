@@ -41,12 +41,12 @@ import {
 	genresToHistoriesRelations,
 	commentsToComments,
 	commentsToCommentsRelations,
+	bookmarksToHistories,
+	bookmarksToHistoriesRelations,
 } from '../entities/history/model/history';
 import {
 	bookmarks,
 	bookmarksRelations,
-	bookmarksToHistories,
-	bookmarksToHistoriesRelations,
 } from '../entities/bookmark/model/bookmark';
 export {
 	dignity,
