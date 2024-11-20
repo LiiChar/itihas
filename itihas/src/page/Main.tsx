@@ -3,6 +3,7 @@ import { useQuery } from '@siberiacancode/reactuse';
 import { Slider } from '@/component/pages/Main/Slider';
 import { getCurrentDateAtMinute } from '@/shared/lib/data';
 import { GigaChat } from '@/component/widget/GigaChat/GigaChat';
+import { TextareaHelper } from '@/component/widget/GigaChat/TextareaHelper';
 
 export const Main = () => {
 	const { data: newHistory } = useQuery(() =>
@@ -23,7 +24,8 @@ export const Main = () => {
 	return (
 		<div>
 			<Slider histories={newHistory} title='Новые истории' />
-			<GigaChat />
+			{/* <GigaChat /> */}
+			<TextareaHelper variant='top' corrected={true} />
 		</div>
 	);
 };
