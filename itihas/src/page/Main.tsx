@@ -15,6 +15,13 @@ export const Main = () => {
 					value: getCurrentDateAtMinute(60 * 24 * 30),
 				},
 			],
+			orders: [
+				{
+					order: 'desc',
+					field: 'created_at',
+				},
+			],
+			limit: 15,
 		})
 	);
 	if (!newHistory) {

@@ -54,19 +54,14 @@ export const ImageUpload = memo(
 				onDragExit={() => setIsDragOver(false)}
 			>
 				<div className='relative bg-white rounded-t-sm'>
-					{src ? (
-						<img
-							className={`w-full object-containt rounded-t-sm`}
-							src={getFullUrl(src)}
-							alt=''
-						/>
-					) : (
-						<img
-							className={`w-full h-40 object-contain rounded-t-none`}
-							src={placeholderImage}
-							alt=''
-						/>
-					)}
+					<img
+						className={`w-full object-containt rounded-t-sm`}
+						src={getFullUrl(src)}
+						onError={e => {
+							e.currentTarget.src = placeholderImage;
+						}}
+						alt=''
+					/>
 					{isDragOver && (
 						<div className='absolute bg-black/80 w-full top-0 left-0 h-full border-6 border-secondary flex justify-center items-center'>
 							Переместите изображение

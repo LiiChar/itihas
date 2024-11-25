@@ -14,11 +14,14 @@ export const insertDataToContent = async (
 		),
 	});
 	const mathchesVariable = Array.from(content.matchAll(/{=(.*?)}/gm));
+
 	mathchesVariable.forEach(reg => {
 		const regex = new RegExp('{=' + reg[1] + '}', 'gm');
+
 		const variableSearch =
 			variabs.find(ver => ver.variable == reg[1])?.data ??
 			'такого значения нет';
+
 		content = content.replace(/{=name}/gm, variableSearch);
 	});
 	return content;

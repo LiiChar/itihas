@@ -15,9 +15,6 @@ commentRouter.post(
 	async (req: Request, res: Response) => {
 		const commentData: CommentInsertType = req.body;
 		const user = (await db.query.users.findMany())[0];
-		if (!(user.id == commentData.userId || user.role == 'admin')) {
-			return res.json().status(StatusCodes.UNAUTHORIZED);
-		}
 		const comment = await createComment(commentData);
 		return res.json(comment).status(StatusCodes.OK);
 	}
@@ -29,11 +26,6 @@ commentRouter.post(
 	async (req: Request, res: Response) => {
 		const commentReplyData: replyInsertSchema = req.body;
 		const user = (await db.query.users.findMany())[0];
-		if (!(user.id == commentReplyData.userId || user.role == 'admin')) {
-			return res
-				.json('Dont allow to create comment')
-				.status(StatusCodes.UNAUTHORIZED);
-		}
 		const comment = await db.query.comments.findFirst({
 			where: eq(comments.id, commentReplyData.commentId),
 		});

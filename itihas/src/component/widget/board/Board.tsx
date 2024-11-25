@@ -2,13 +2,16 @@ import { getFullUrl } from '@/shared/lib/image';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
 import { useEvent } from '@siberiacancode/reactuse';
-import { BoxSelect } from 'lucide-react';
+import { BoxSelect, Trash2 } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
 import { Separator } from '@/shared/ui/separator';
 import { CreatePageModal } from './Board/CreatePageModal';
 import { randomFloat } from '@/shared/lib/number';
 import { Actions } from './Board/Actions';
+import { deleteActionPage, updateActionPage } from '@/shared/api/page';
+import { useListenerStore } from '@/shared/store/ListenerStore';
+import { UpdatePointPageModal } from './Board/UpdatePointPageModal';
 import { CreatePointPageModal } from './Board/CreatePointPageModal';
 
 type Node = {
@@ -119,10 +122,14 @@ const generateNodesByHistories = (pages: HistoryPage[]) => {
 	return nodes;
 };
 
-export const Board = memo(({ history }: { history: HistoryPages }) => {
+export const Board = ({ history }: { history: HistoryPages }) => {
 	const [nodes, setNodes] = useState(() =>
 		calculateNodePositions(generateNodesByHistories(history.pages))
 	);
+
+	useEffect(() => {
+		setNodes(calculateNodePositions(generateNodesByHistories(history.pages)));
+	}, [history]);
 
 	const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 0.7 });
 	const [isDragging, setIsDragging] = useState(false);
@@ -240,7 +247,7 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 					transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
 				}}
 			>
-				<svg className='pointer-events-none overflow-visible fill-transparent stroke-white absolute w-full h-full origin-center z-40'>
+				<svg className='pointer-events-none overflow-visible fill-transparent stroke-white absolute w-full h-full origin-center z-40 -mt-5'>
 					<defs>
 						{/* Определяем маркер-стрелку для конца линии */}
 						<marker
@@ -261,7 +268,7 @@ export const Board = memo(({ history }: { history: HistoryPages }) => {
 			</div>
 		</div>
 	);
-});
+};
 
 export const BoardNodes = memo(
 	({
@@ -275,6 +282,7 @@ export const BoardNodes = memo(
 			isViewport?: boolean
 		) => void;
 	}) => {
+		const { runListener } = useListenerStore();
 		return (
 			<>
 				{nodes.map((n, i) => (
@@ -291,6 +299,9 @@ export const BoardNodes = memo(
 						}}
 						className='absolute h-full select-none bg-secondary z-30 text-secondary-foreground rounded-md'
 					>
+						<div className='absolute top-1 right-1 bg-black/60 p-1'>
+							{n.page.id}
+						</div>
 						<BoardNode node={n} />
 						<Separator
 							orientation='horizontal'
@@ -303,8 +314,33 @@ export const BoardNodes = memo(
 									key={p.id}
 								>
 									<div className='w-1  h-1 rounded-[50%] bg-foreground aspect-square'></div>
-									<div className=' w-full	line-clamp-1  bg-secondary text-xs'>
-										{p.name}
+									<div className=' w-full relative	line-clamp-1 flex justify-between bg-secondary text-xs'>
+										<div className='max-w-[200px]'>{p.name}</div>
+										<div className='flex top-[2px] right-0 absolute items-center h-min'>
+											<UpdatePointPageModal
+												action={p}
+												pagesName={nodes.map(n => ({
+													id: n['page']['id'],
+													name: n.page.name,
+												}))}
+												onCreate={async action => {
+													const res = await updateActionPage(p.id, action);
+													if (res.status == 200) {
+														runListener('EditHistory');
+													}
+												}}
+											/>
+											<Trash2
+												onClick={async () => {
+													const res = await deleteActionPage(p.id);
+													if (res.status == 200) {
+														runListener('EditHistory');
+													}
+												}}
+												className='cursor-pointer'
+												height={11}
+											/>
+										</div>
 									</div>
 									<div className='w-1 h-1 rounded-[50%] bg-foreground aspect-square'></div>
 								</div>

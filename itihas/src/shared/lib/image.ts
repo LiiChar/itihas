@@ -19,8 +19,9 @@ export const handleImageError = (
 	url?: string,
 	cb?: () => void
 ) => {
+	console.log(currentTarget);
 	currentTarget.onerror = null;
 	currentTarget.style.objectFit = 'cover';
-	currentTarget.src = url ? getFullUrl(url) : '/public/not-found.png';
+	// currentTarget.src = getFullUrl('/public/not-found.png');
 	cb && cb();
 };

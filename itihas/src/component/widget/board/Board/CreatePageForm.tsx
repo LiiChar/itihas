@@ -66,7 +66,7 @@ export const CreatePageForm = ({
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmitCreate)} className=''>
-				<div className='w-full px-2 max-h-[73vh] h-[calc(100%-46px)] overflow-scroll'>
+				<div className='w-full px-2 max-h-[73vh] h-[calc(100%-46px)] overflow-y-scroll'>
 					<FormField
 						control={form.control}
 						name='name'

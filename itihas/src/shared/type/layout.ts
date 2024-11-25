@@ -9,8 +9,20 @@ export type Layout = {
 };
 
 export type LayoutComponent = {
-	type: 'image' | 'points' | 'content' | 'custom';
+	type: 'image' | 'points' | 'content' | 'dialog' | 'custom';
 	align: 'center' | 'left' | 'right';
 	style: string;
-	content: null | string;
+	content: null | LayoutContent;
+};
+
+export type LayoutContent = {
+	value: string | Record<string, LayoutContent> | LayoutContent[];
+	style: string;
+	type?: 'list' | 'object' | 'row';
+	variable: LayoutContentVariable[];
+};
+
+export type LayoutContentVariable = {
+	key: string;
+	value: string;
 };

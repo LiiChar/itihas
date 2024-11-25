@@ -28,6 +28,7 @@ import { Button } from '@/shared/ui/button';
 import { Textarea } from '@/shared/ui/textarea';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
+import { useNavigate, useNavigation } from 'react-router-dom';
 
 type HistoryStoreAction = {
 	setStore: (store: Partial<HistoryPages>) => void;
@@ -378,6 +379,8 @@ export const CreateHistory = memo(() => {
 	const [activeTab, setActiveTab] = useState(tabs[0].value);
 	const runCallback = useListenerStore(state => state.runListener);
 	const history = useHistoryCreateStore();
+	const { user } = useUserStore();
+	const navigate = useNavigate();
 
 	return (
 		<section>
@@ -439,7 +442,18 @@ export const CreateHistory = memo(() => {
 						<div>
 							{tabs.findIndex(value => value.value == activeTab) ==
 							tabs.length - 1 ? (
-								<Button onClick={() => createHistory(history)}>Создать</Button>
+								<Button
+									onClick={async () => {
+										const res = await createHistory(
+											Object.assign(history, { authorId: user?.id })
+										);
+										if (res) {
+											navigate(`/history/${res.id}/page/edit`);
+										}
+									}}
+								>
+									Создать
+								</Button>
 							) : (
 								<Button
 									onClick={() => {
@@ -527,9 +541,10 @@ export const CustomLayout = ({ c }: { c: LayoutComponent }) => {
 	return 'custom';
 };
 
-const LayoutComponents = {
+const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
 	custom: CustomLayout,
+	dialog: '',
 };

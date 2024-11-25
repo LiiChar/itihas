@@ -24,8 +24,7 @@ import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
-import { handleImageError } from '@/shared/lib/image';
-import { useLayout } from '@/shared/hooks/useLayout';
+import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 
 export const Read = () => {
@@ -98,7 +97,7 @@ export const ImageLayout = ({ page }: ComponentLayoutDic) => {
 		<div>
 			<img
 				className='h-[40vh] object-cover w-full rounded-tl-lg rounded-tr-lg'
-				src={page.image}
+				src={getFullUrl(page.image)}
 				alt='Основное изображение'
 			/>
 		</div>
@@ -123,7 +122,6 @@ export const PointLayout = ({ page }: ComponentLayoutDic) => {
 		onKeyDown: async event => {
 			const keys = Array.from({ length: page.points.length }, (_, i) => i + 1);
 			if (!keys.includes(+event.key)) return;
-			console.log(event.key);
 
 			const points = page.points[+event.key!];
 			await resolvePoint(points.id);
@@ -153,9 +151,10 @@ export const CustomLayout = ({}: ComponentLayoutDic) => {
 	return 'custom';
 };
 
-const LayoutComponents = {
+const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
 	custom: CustomLayout,
+	dialog: '',
 };

@@ -30,7 +30,7 @@ export const History = () => {
 	}
 
 	return (
-		<main className='flex justify-center dark relative pt-6'>
+		<main className='flex justify-center  dark relative pt-6'>
 			<Wallpaper src={history.wallpaper ?? history.image} />
 			<div className='w-[min(100%,1280px)] sm:flex-row flex-col  flex gap-5 px-8'>
 				<section className='sm:w-[clamp(200px,30%,270px)] sm:min-w-[clamp(200px,30%,270px)]  h-min md:sticky top-[70px] left-0'>
@@ -54,7 +54,7 @@ export const History = () => {
 							</Button>
 						</Link>
 						<SelectBookmarks historyId={history.id}>
-							<Button className='rounded-lg bg-primary font-normal text-wrap'>
+							<Button className='rounded-lg bg-primary font-normal w-full text-wrap'>
 								Добавить в закладки
 							</Button>
 						</SelectBookmarks>
@@ -85,7 +85,7 @@ export const History = () => {
 						</SelectBookmarks>
 					</div>
 				</section>
-				<section>
+				<section className='w-full'>
 					<div>
 						<h5 className='text-secondary-foreground'>
 							История {getYear(history.created_at)}
@@ -95,24 +95,26 @@ export const History = () => {
 					<div className='border-b-[1px] pb-3 border-foreground/30'>
 						<Info history={history} />
 					</div>
-					<div className='flex gap-4'>
-						<div>
+					<div className='flex gap-4 '>
+						<div className='w-full'>
 							<div>
 								<TabsInfo history={history} />
 							</div>
-							<div className='mt-4 flex flex-col gap-2'>
-								<h5>Автор</h5>
-								<div className='flex gap-2  items-center'>
-									<img
-										className=''
-										width={36}
-										height={36}
-										src={getFullUrl(history.author.photo)}
-										alt='Автор'
-									/>
-									<h5>{history.author.name}</h5>
+							{history.author && (
+								<div className='mt-4 flex flex-col gap-2'>
+									<h5>Автор</h5>
+									<div className='flex gap-2  items-center'>
+										<img
+											className=''
+											width={36}
+											height={36}
+											src={getFullUrl(history.author.photo)}
+											alt='Автор'
+										/>
+										<h5>{history.author.name}</h5>
+									</div>
 								</div>
-							</div>
+							)}
 							<div className='mt-4'>
 								<Comments comments={history.comments} />
 							</div>

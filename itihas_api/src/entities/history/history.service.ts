@@ -82,9 +82,9 @@ export const createHistory = async (data: HistoryInsertType) => {
 		);
 	}
 
-	const history = await db.insert(histories).values(data);
+	const history = await db.insert(histories).values(data).returning();
 
-	return history;
+	return history[0];
 };
 
 type KeyParam = 'offset' | 'page' | 'order' | 'genres' | 'author' | 'limit';

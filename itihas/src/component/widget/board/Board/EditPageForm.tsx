@@ -65,12 +65,12 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 				createPagePoint(page.id, p as unknown as PagePointInsert)
 			)
 		);
-		// runListener('EditHistory');
+		runListener('EditHistory');
 	};
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmitEdit)} className=''>
-				<div className='w-full px-2 max-h-[73vh] h-[calc(100%-46px)] overflow-scroll'>
+				<div className='w-full px-2 max-h-[73vh] h-[calc(100%-46px)] overflow-y-scroll'>
 					<FormField
 						control={form.control}
 						name='name'
@@ -132,14 +132,14 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 								<FormLabel className='text-foreground'>
 									Ссылка на изображение
 								</FormLabel>
-								{field.value && (
-									<ImageUpload
-										src={field.value}
-										onUpload={path => {
-											form.setValue('image', path);
-										}}
-									/>
-								)}
+
+								<ImageUpload
+									src={field.value ?? ''}
+									onUpload={path => {
+										form.setValue('image', path);
+									}}
+								/>
+
 								<FormControl>
 									<Input
 										className='bg-background -translate-y-2'

@@ -40,7 +40,10 @@ historyRouter.post('/', async (req: Request, res: Response) => {
 		const dataHistory = req.body;
 		const user = (await db.query.users.findMany())[0];
 
-		const history = await createHistory(dataHistory);
+		const history = await createHistory({
+			...dataHistory,
+			authorId: dataHistory.authorId ?? user.id,
+		});
 		return res.json(history).status(StatusCodes.OK);
 	} catch (error) {
 		if (error instanceof Error) {

@@ -13,6 +13,21 @@ export const resolveAction = async (actionId: number) => {
 	return pageData.data;
 };
 
+export const deleteActionPage = async (actionId: number) => {
+	const pageData = await axi.delete<ReadPage>(URL + '/page/action/' + actionId);
+	return pageData;
+};
+
+export const updateActionPage = async (
+	actionId: number,
+	action: Partial<PagePointInsert>
+) => {
+	const pageData = await axi.put<ReadPage>(URL + '/page/action/' + actionId, {
+		...action,
+	});
+	return pageData;
+};
+
 export const createPage = async (id: number, data: PageInsert) => {
 	const page = await axi.post<HistoryPage>(`${URL}/page/${id}`, data);
 	return page;

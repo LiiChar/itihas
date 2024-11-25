@@ -6,7 +6,12 @@ import { pagePoints, pages } from './model/page';
 import { histories } from '../history/model/history';
 import { layoutComponents } from './type/layout';
 import { executeAction } from './lib/action';
-import { pageInsertSchema, pagePointInsertScheme } from './page.scheme';
+import {
+	pageInsertSchema,
+	pagePointInsertScheme,
+	pagePointUpdateScheme,
+} from './page.scheme';
+import { parse, run } from './lib/actionV2';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,
@@ -96,6 +101,22 @@ export const getCurrentPageByHistoryId = async (
 	return pagesWithVariables;
 };
 
+export const deleteActionById = async (actionId: number) => {
+	await db.delete(pagePoints).where(eq(pagePoints.id, actionId));
+};
+
+export const updateAction = async (
+	actionId: number,
+	data: pagePointUpdateScheme
+) => {
+	const newAction = await db
+		.update(pagePoints)
+		.set(data as any)
+		.where(eq(pagePoints, actionId))
+		.returning();
+	return newAction[0];
+};
+
 export const executeActionPage = async (id: number, user: UserType) => {
 	const point = await db.query.pagePoints.findFirst({
 		where: (points, { eq }) => eq(points.id, id),
@@ -111,7 +132,8 @@ export const executeActionPage = async (id: number, user: UserType) => {
 		throw Error('Не найдено пункта по id - ' + id);
 	}
 
-	const pageId = await executeAction(point.page.historyId, user, point.action);
+	const tokens = parse(point.action);
+	const pageId = await run(tokens, null, user, 1, new Map());
 
 	const page = await getCurrentPageByHistoryId(
 		point.page.historyId,

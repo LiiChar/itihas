@@ -12,39 +12,47 @@ import {
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
-import { createPagePoint } from '@/shared/api/page';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { DialogFooter } from '@/shared/ui/dialog';
 import { PagePointInsert } from '@/shared/type/page';
 import { useListenerStore } from '@/shared/store/ListenerStore';
+import { PointPage } from '@/shared/type/point';
+
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 
 const pageloginFormScheme = z.object({
 	name: z.string(),
 	action: z.string(),
 });
 
-export const CreatePointPageForm = ({ pageId }: { pageId: number }) => {
+export const UpdatePointPageForm = ({
+	action,
+	onCreate,
+	pagesName,
+}: {
+	onCreate: (page: Partial<PagePointInsert>) => void;
+	action: PointPage;
+	pagesName: { id: number; name: string }[];
+}) => {
 	const form = useForm<z.infer<typeof pageloginFormScheme>>({
 		resolver: zodResolver(pageloginFormScheme),
 		defaultValues: {
-			action: '',
-			name: '',
+			action: action.action,
+			name: action.name,
 		},
 	});
-	const {runListener} = useListenerStore();
-	function removeNullableValues<T extends object>(obj: T): T {
-		return Object.fromEntries(
-			Object.entries(obj).filter(
-				([_, value]) => value !== null || (value !== '' && value !== undefined)
-			)
-		) as T;
-	}
 	const onSubmitCreate = async (
 		values: z.infer<typeof pageloginFormScheme>
 	) => {
-		const data: unknown = removeNullableValues(values);
-		await createPagePoint(pageId, data as unknown as PagePointInsert);
-		runListener('EditHistory');
+		onCreate(values);
 	};
 	return (
 		<Form {...form}>

@@ -16,7 +16,7 @@ export const CreatePointPageModal = ({ pageId }: { pageId: number }) => {
 			</DialogTrigger>
 			<DialogContent onMouseDown={e => e.stopPropagation()}>
 				<DialogHeader>
-					<DialogTitle>Создать страницу</DialogTitle>
+					<DialogTitle>Создать поинт</DialogTitle>
 				</DialogHeader>
 				<CreatePointPageForm pageId={pageId} />
 			</DialogContent>

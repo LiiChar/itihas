@@ -17,3 +17,12 @@ export const pagePointInsertScheme = z.object({
 });
 
 export type pagePointInsertScheme = (typeof pagePointInsertScheme)['_output'];
+
+export const pagePointUpdateScheme = z
+	.object({
+		name: z.string().nullable(),
+		action: z.string().nullable(),
+	})
+	.partial();
+
+export type pagePointUpdateScheme = (typeof pagePointUpdateScheme)['_output'];
