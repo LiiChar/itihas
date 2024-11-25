@@ -5,8 +5,6 @@ import { Button } from '@/shared/ui/button';
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -17,7 +15,7 @@ import { memo, useState } from 'react';
 export const BookmarkCreateForm = memo(() => {
 	const [name, setName] = useState('');
 	const [visible, setVisible] = useState(false);
-	const { isAuthorize, user } = useUserStore();
+	const { user } = useUserStore();
 	const { runListener } = useListenerStore();
 
 	const handleBookmarkCreateForm = async () => {

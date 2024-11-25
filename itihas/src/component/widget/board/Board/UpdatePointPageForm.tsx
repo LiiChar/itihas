@@ -15,18 +15,7 @@ import { Textarea } from '@/shared/ui/textarea';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { DialogFooter } from '@/shared/ui/dialog';
 import { PagePointInsert } from '@/shared/type/page';
-import { useListenerStore } from '@/shared/store/ListenerStore';
 import { PointPage } from '@/shared/type/point';
-
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 
 const pageloginFormScheme = z.object({
 	name: z.string(),
@@ -36,11 +25,10 @@ const pageloginFormScheme = z.object({
 export const UpdatePointPageForm = ({
 	action,
 	onCreate,
-	pagesName,
 }: {
 	onCreate: (page: Partial<PagePointInsert>) => void;
 	action: PointPage;
-	pagesName: { id: number; name: string }[];
+	pagesName?: { id: number; name: string }[];
 }) => {
 	const form = useForm<z.infer<typeof pageloginFormScheme>>({
 		resolver: zodResolver(pageloginFormScheme),

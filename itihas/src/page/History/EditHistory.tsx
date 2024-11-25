@@ -8,7 +8,6 @@ import { Wallpaper } from '@/component/pages/History/Wallpaper';
 import { getYear } from '@/shared/lib/data';
 import { Similar } from '@/component/pages/History/Similar';
 import { Input } from '@/shared/ui/input';
-import { useHistoryEditStore } from '@/shared/store/EditHistoryStore';
 import { Genres } from '@/component/pages/History/Genres';
 import { memo, useState } from 'react';
 import { HistoryPages } from '@/shared/type/history';
@@ -24,7 +23,6 @@ import { CharacterElement } from '@/component/pages/History/CharacterElement';
 export const HistoryEdit = () => {
 	const { id } = useParams();
 	const { history } = useHistoryStore();
-	const edit = useHistoryEditStore();
 	useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			setHistory(data);

@@ -3,7 +3,7 @@ import { formatDate } from '@/shared/lib/time';
 import { useUserStore } from '@/shared/store/UserStore';
 import { Button } from '@/shared/ui/button';
 import { Textarea } from '@/shared/ui/textarea';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 type ChatMessage = {
 	role: 'user' | 'bot';

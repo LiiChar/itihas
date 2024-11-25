@@ -4,7 +4,7 @@ import { getUserById } from '@/shared/api/user';
 import { formatDate } from '@/shared/lib/time';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useMount, useQuery } from '@siberiacancode/reactuse';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export const ProfilePage = () => {
 	const { id } = useParams();

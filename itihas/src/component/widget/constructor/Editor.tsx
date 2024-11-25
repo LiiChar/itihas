@@ -2,9 +2,7 @@ import { useLayout } from '@/shared/hooks/useLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Textarea } from '@/shared/ui/textarea';
 import { Blocks, CodeSquare, Text } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useState } from 'react';
 
 type TokenName = 'move' | 'query' | 'var' | 'get';
 
@@ -150,74 +148,74 @@ const WordConvert = (token: Token | string, parent?: TokenName): string => {
 	return '';
 };
 
-const AsideDefaultBlock = () => {
-	return;
-};
+// const AsideDefaultBlock = () => {
+// 	return;
+// };
 
 // TODO
-const reverseTransform = (text: string) => {
-	const stack: string[] = text.split('.').reverse();
-	let result = '';
+// const reverseTransform = (text: string) => {
+// 	const stack: string[] = text.split('.').reverse();
+// 	let result = '';
 
-	for (let i = 0; i < stack.length; i++) {
-		if (stack.length == 0) return;
-		const t = stack.pop()!;
-		if (t.trim() == '') return;
-		Object.entries(phrases).forEach(([token, innerPhrases]) => {
-			let key: null | string = null;
-			let value: null | string = null;
-			Object.values(innerPhrases).forEach(phrase => {
-				// Проверка на шаблонное слово
-				if (phrase.indexOf('[key]') > -1) {
-					const startPhrase = phrase.slice(0, phrase.indexOf('[key]'));
+// 	for (let i = 0; i < stack.length; i++) {
+// 		if (stack.length == 0) return;
+// 		const t = stack.pop()!;
+// 		if (t.trim() == '') return;
+// 		Object.entries(phrases).forEach(([token, innerPhrases]) => {
+// 			let key: null | string = null;
+// 			let value: null | string = null;
+// 			Object.values(innerPhrases).forEach(phrase => {
+// 				// Проверка на шаблонное слово
+// 				if (phrase.indexOf('[key]') > -1) {
+// 					const startPhrase = phrase.slice(0, phrase.indexOf('[key]'));
 
-					if (
-						!t.includes(startPhrase) ||
-						phrase.trim().indexOf(startPhrase) > 0
-					)
-						return;
-					if (phrase.indexOf('[value]') > -1) {
-						const endPhrase = phrase.slice(
-							startPhrase.length + 4,
-							phrase.length - startPhrase.length + 4
-						);
-						const betweenPhrase = phrase.slice(
-							startPhrase.length + 4,
-							phrase.indexOf('[value]')
-						);
-						if (!t.includes(betweenPhrase)) return;
-						if (!t.includes(endPhrase)) return;
-						key = t.slice(startPhrase.length, t.indexOf(betweenPhrase)).trim();
-						value = t.slice(betweenPhrase.length, t.indexOf(endPhrase)).trim();
-						if (t.length - key.length > phrase.length - 5)
-							stack.push(
-								t.slice(t.length - key.length - phrase.length - 5, t.length)
-							);
-					} else {
-						const endPhrase = phrase.slice(
-							startPhrase.length + 5,
-							phrase.length - startPhrase.length + 10
-						);
+// 					if (
+// 						!t.includes(startPhrase) ||
+// 						phrase.trim().indexOf(startPhrase) > 0
+// 					)
+// 						return;
+// 					if (phrase.indexOf('[value]') > -1) {
+// 						const endPhrase = phrase.slice(
+// 							startPhrase.length + 4,
+// 							phrase.length - startPhrase.length + 4
+// 						);
+// 						const betweenPhrase = phrase.slice(
+// 							startPhrase.length + 4,
+// 							phrase.indexOf('[value]')
+// 						);
+// 						if (!t.includes(betweenPhrase)) return;
+// 						if (!t.includes(endPhrase)) return;
+// 						key = t.slice(startPhrase.length, t.indexOf(betweenPhrase)).trim();
+// 						value = t.slice(betweenPhrase.length, t.indexOf(endPhrase)).trim();
+// 						if (t.length - key.length > phrase.length - 5)
+// 							stack.push(
+// 								t.slice(t.length - key.length - phrase.length - 5, t.length)
+// 							);
+// 					} else {
+// 						const endPhrase = phrase.slice(
+// 							startPhrase.length + 5,
+// 							phrase.length - startPhrase.length + 10
+// 						);
 
-						if (!t.includes(endPhrase)) return;
-						key = t.slice(startPhrase.length - 1, t.indexOf(endPhrase)).trim();
-						if (t.length - key.length > phrase.length - 5)
-							stack.push(
-								t.slice(t.length - key.length - phrase.length - 5, t.length)
-							);
-					}
-				}
-			});
-			if (!key && !value) return;
-			const children: string[] = [];
-			key && children.push(key);
-			value && children.push(value);
-			result += `${token}(${children.join(',')});`;
-		});
-	}
+// 						if (!t.includes(endPhrase)) return;
+// 						key = t.slice(startPhrase.length - 1, t.indexOf(endPhrase)).trim();
+// 						if (t.length - key.length > phrase.length - 5)
+// 							stack.push(
+// 								t.slice(t.length - key.length - phrase.length - 5, t.length)
+// 							);
+// 					}
+// 				}
+// 			});
+// 			if (!key && !value) return;
+// 			const children: string[] = [];
+// 			key && children.push(key);
+// 			value && children.push(value);
+// 			result += `${token}(${children.join(',')});`;
+// 		});
+// 	}
 
-	return result;
-};
+// 	return result;
+// };
 
 const PrimaryTokens = ({ code }: { code: string }) => {
 	return <Textarea>{code}</Textarea>;
@@ -253,7 +251,7 @@ const Block = ({ token, children }: any) => {
 };
 
 const BlockTokens = ({ code }: { code: string }) => {
-	const [blocks, setBlocks] = useState(parse(code));
+	const [blocks, _setBlocks] = useState(parse(code));
 	return (
 		<div>
 			{blocks.map((b, i) => (
@@ -266,7 +264,7 @@ const BlockTokens = ({ code }: { code: string }) => {
 };
 
 const TextTokens = ({ code }: { code: string }) => {
-	const [text, setText] = useState(
+	const [text, _setText] = useState(
 		parse(code).reduce<string>((acc, el) => acc + WordConvert(el), '')
 	);
 	return <Textarea>{text}</Textarea>;

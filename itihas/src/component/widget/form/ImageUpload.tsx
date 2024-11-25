@@ -1,6 +1,5 @@
 import { uploadFile } from '@/shared/api/file';
 import { getFullUrl } from '@/shared/lib/image';
-import { PlusSquare } from 'lucide-react';
 import React, { memo, useRef, useState } from 'react';
 import placeholderImage from '@/assets/placeholder.png';
 

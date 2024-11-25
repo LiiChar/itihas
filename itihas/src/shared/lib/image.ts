@@ -16,7 +16,7 @@ export const preloadImage = async (url: string) => {
 
 export const handleImageError = (
 	{ currentTarget }: React.SyntheticEvent<HTMLImageElement, Event>,
-	url?: string,
+	_url?: string,
 	cb?: () => void
 ) => {
 	console.log(currentTarget);

@@ -5,7 +5,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/shared/ui/dialog';
-import { Pencil, PlusSquare } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { UpdatePointPageForm } from './UpdatePointPageForm';
 import { PagePointInsert } from '@/shared/type/page';
 import { PointPage } from '@/shared/type/point';
@@ -17,7 +17,7 @@ export const UpdatePointPageModal = ({
 }: {
 	onCreate: (page: Partial<PagePointInsert>) => void;
 	action: PointPage;
-	pagesName: { id: number; name: string }[];
+	pagesName?: { id: number; name: string }[];
 }) => {
 	return (
 		<Dialog>

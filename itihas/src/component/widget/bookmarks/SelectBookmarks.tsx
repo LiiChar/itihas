@@ -2,7 +2,7 @@ import { addHistoryToBookmark, getListBookmarks } from '@/shared/api/history';
 import { useUserStore } from '@/shared/store/UserStore';
 import { Bookmark } from '@/shared/type/bookmark';
 import { useQuery } from '@siberiacancode/reactuse';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
@@ -38,7 +38,7 @@ export const SelectBookmarks = ({
 				<ul>
 					{data &&
 						Array.isArray(data) &&
-						data.map((b, i) => (
+						data.map((b, _i) => (
 							<li
 								className='py-1 text-sm'
 								onClick={() => handleSelectBookmark(b.id)}

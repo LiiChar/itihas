@@ -1,5 +1,4 @@
 import { authicated } from '@/shared/api/user';
-import { deleteUser } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
 
 const checkValideUser = async () => {

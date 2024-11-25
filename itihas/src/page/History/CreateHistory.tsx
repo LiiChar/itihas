@@ -1,4 +1,4 @@
-import { History, HistoryPages } from '@/shared/type/history';
+import { HistoryPages } from '@/shared/type/history';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { memo, useState } from 'react';
 import { create } from 'zustand';
@@ -28,7 +28,7 @@ import { Button } from '@/shared/ui/button';
 import { Textarea } from '@/shared/ui/textarea';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type HistoryStoreAction = {
 	setStore: (store: Partial<HistoryPages>) => void;
@@ -537,7 +537,7 @@ export const ImageLayout = ({ c }: { c: LayoutComponent }) => {
 	);
 };
 
-export const CustomLayout = ({ c }: { c: LayoutComponent }) => {
+export const CustomLayout = ({}: { c: LayoutComponent }) => {
 	return 'custom';
 };
 

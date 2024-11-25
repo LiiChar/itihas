@@ -245,7 +245,7 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button
-							onClick={e => {
+							onClick={() => {
 								onSubmitEdit(form.getValues());
 							}}
 							className='mt-2 float-end'

@@ -4,7 +4,6 @@ import { memo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel';
 import { CharacterElement } from './CharacterElement';
-import { CharacterRelation } from '@/shared/type/character';
 
 export const Description = memo(({ history }: { history: HistoryPages }) => {
 	return (

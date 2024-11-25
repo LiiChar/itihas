@@ -2,18 +2,8 @@ import { sendQuestion } from '@/shared/api/gigaChat';
 import { clearTextQuota } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button';
 import { Textarea } from '@/shared/ui/textarea';
-import {
-	useDebounceValue,
-	useKeyboard,
-	useKeyPress,
-} from '@siberiacancode/reactuse';
-import {
-	Book,
-	FilePenIcon,
-	Pen,
-	SendHorizonalIcon,
-	SendHorizontalIcon,
-} from 'lucide-react';
+import { useDebounceValue } from '@siberiacancode/reactuse';
+import { Book, FilePenIcon, Pen, SendHorizontalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 type TextareahHelperProps = {

@@ -1,16 +1,6 @@
-import { Rect as RectType, RectConfig } from 'konva/lib/shapes/Rect';
 import { Token } from './Parser';
-import {
-	Stage,
-	Layer,
-	Rect,
-	Text,
-	Circle,
-	Line,
-	KonvaNodeComponent,
-	Transformer,
-} from 'react-konva';
-import { ComponentLifecycle, ComponentProps, ReactNode } from 'react';
+import { Stage, Layer, Rect, Text } from 'react-konva';
+import { ComponentProps, ReactNode } from 'react';
 import { useLayout } from '@/shared/hooks/useLayout';
 
 type Node = {
@@ -66,11 +56,11 @@ const MoveNode = ({
 	);
 };
 
-const ConditionNode = ({ node }: { node: Node }) => {
+const ConditionNode = ({}: { node: Node }) => {
 	return <Rect></Rect>;
 };
 
-const OperatorNode = ({ node }: { node: Node }) => {
+const OperatorNode = ({}: { node: Node }) => {
 	return <Rect></Rect>;
 };
 
