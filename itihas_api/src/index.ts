@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+app.get('/', (req, res) => {
+	res.json('Server has been started');
+});
 app.use('/api', express.static(path.join(__dirname, '..', 'public')));
 app.use(
 	cors({
