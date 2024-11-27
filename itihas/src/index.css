@@ -135,8 +135,6 @@ a {
 ::-webkit-scrollbar-button {
 	display: none;
 }
-::-webkit-scrollbar-track {
-}
 ::-webkit-scrollbar-thumb {
 	background: white;
 }

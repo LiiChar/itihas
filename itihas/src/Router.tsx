@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { Main } from './page/Main';
 import { History } from './page/History';
 import { Read } from './page/Read';
@@ -13,7 +13,7 @@ import { CreateHistory } from './page/History/CreateHistory';
 import { Constructor } from './page/Page/Constructor';
 import { Catalog } from './page/Catalog';
 
-const router = createBrowserRouter([
+const router = createMemoryRouter([
 	{
 		path: '/',
 		element: <Layout />,
