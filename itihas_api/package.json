@@ -5,6 +5,7 @@
 	"scripts": {
 		"build": "npx tsc",
 		"start": "node dist/src/index.js",
+		"start:dev": "ts-node /src/index.ts",
 		"dev": "nodemon src/index.ts",
 		"seed": "ts-node src/factory/factory.ts",
 		"test::custom": "ts-node src/test/index.ts",
