@@ -30,6 +30,6 @@ app.use(bodyParser.json());
 app.use('/api', route);
 app.use(errorBoundaryMiddleware);
 
-app.listen(8080, () =>
+app.listen(PORT, () =>
 	console.log(`Server has been started on http://localhost:${PORT}`)
 );
