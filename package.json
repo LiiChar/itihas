@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"apitihas": "cd ./itihas_api/dist/src && node index.js"
+		"apitihas": "cd ./itihas_api/ && npm i && cd ./dist/src && node index.js"
 	},
 	"keywords": [],
 	"author": "",
