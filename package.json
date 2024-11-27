@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"apitihas": "cd ./itihas_api/ && npm i && mv database.sqlite ./dist/src && cd ./dist/src && npm run  node index.js"
+		"apitihas": "cd ./itihas_api/ && npm i && cd ./dist/src && npm run  node index.js"
 	},
 	"keywords": [],
 	"author": "",
