@@ -16,8 +16,8 @@ export const CreatePageModal = ({
 }) => {
 	return (
 		<Dialog>
-			<DialogTrigger>
-				<PlusSquare />
+			<DialogTrigger className='w-min h-min'>
+				<PlusSquare className='w-min h-min' />
 			</DialogTrigger>
 			<DialogContent onMouseDown={e => e.stopPropagation()}>
 				<DialogHeader>

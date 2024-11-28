@@ -1,8 +1,8 @@
 import { useQuery, useField } from '@siberiacancode/reactuse';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
-import { getHistory } from '@/shared/api/history';
+import { getHistory, updateHistory } from '@/shared/api/history';
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { Wallpaper } from '@/component/pages/History/Wallpaper';
 import { getYear } from '@/shared/lib/data';
@@ -19,19 +19,26 @@ import { getTimeAgo } from '@/shared/lib/time';
 import { Textarea } from '@/shared/ui/textarea';
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel';
 import { CharacterElement } from '@/component/pages/History/CharacterElement';
+import { create } from 'zustand';
+import { stat } from 'fs';
 
 export const HistoryEdit = () => {
 	const { id } = useParams();
 	const { history } = useHistoryStore();
+	const navigate = useNavigate();
 	useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
 			setHistory(data);
 		},
 	});
-	const nameField = useField({ initialValue: history?.name });
 	if (!history) {
 		return '';
 	}
+
+	const handleEditHistory = async () => {
+		await updateHistory(history.id, history);
+		navigate('/history/' + history.id);
+	};
 
 	return (
 		<main className='flex justify-center dark relative pt-6'>
@@ -49,11 +56,12 @@ export const HistoryEdit = () => {
 						/>
 					</div>
 					<div className='flex flex-col gap-3 mt-3'>
-						<Link to={history.pages.length == 0 ? '' : `/history/${id}/read`}>
-							<Button className='rounded-lg w-full bg-primary font-normal'>
-								Сохранить
-							</Button>
-						</Link>
+						<Button
+							onClick={handleEditHistory}
+							className='rounded-lg w-full bg-primary font-normal'
+						>
+							Сохранить
+						</Button>
 					</div>
 				</section>
 				<section>
@@ -63,7 +71,16 @@ export const HistoryEdit = () => {
 						</h5>
 						<Input
 							className='border-white text-2xl h-9'
-							{...nameField.register()}
+							defaultValue={history.name}
+							onInput={e => {
+								useHistoryStore.setState(state => {
+									if (state.history) {
+										state.history.name = e.currentTarget.value;
+										return state;
+									}
+									return state;
+								});
+							}}
 						/>
 					</div>
 					<div className='border-b-[1px] pb-3 border-foreground/30'>
@@ -133,13 +150,19 @@ export const Characters = memo(({ history }: { history: HistoryPages }) => {
 });
 
 export const Description = memo(({ history }: { history: HistoryPages }) => {
-	const descriptionField = useField({
-		initialValue: history?.description ?? '',
-	});
 	return (
 		<div>
 			<Textarea
-				{...descriptionField.register()}
+				defaultValue={history.description ?? ''}
+				onInput={e => {
+					useHistoryStore.setState(state => {
+						if (state.history) {
+							state.history.description = e.currentTarget.value;
+							return state;
+						}
+						return state;
+					});
+				}}
 				className='mb-5 border-white h-28'
 			/>
 			<div>

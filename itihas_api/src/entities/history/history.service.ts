@@ -29,6 +29,7 @@ export const getHistory = async (id: number, user: UserType) => {
 						with: {},
 					},
 				},
+				orderBy: (histories, { desc }) => [desc(histories.createdAt)],
 			},
 			similarHistories: {
 				with: {
@@ -197,4 +198,16 @@ export const getHistories = async (params: Params) => {
 export const getLayouts = async () => {
 	const layouts = await db.query.layouts.findMany();
 	return layouts;
+};
+
+export const updateHistory = async (
+	id: number,
+	updatedData: Partial<HistoryType>
+) => {
+	const updatedHistory = await db
+		.update(histories)
+		.set(updatedData)
+		.where(eq(histories.id, id))
+		.returning();
+	return updatedHistory[0];
 };

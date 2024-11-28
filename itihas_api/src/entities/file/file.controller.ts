@@ -26,7 +26,9 @@ fileRouter.post('/', async (req: Request, res: Response) => {
 				.status(StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 		const file = req.files.file as unknown as UploadedFile;
-		const date = `${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}`;
+		const date = `${new Date().getDate()}-${
+			new Date().getMonth() + 1
+		}-${new Date().getFullYear()}`;
 		const folder = getFolderByFileType(file.name);
 		let pathDir = path.join(
 			__dirname,
@@ -44,6 +46,8 @@ fileRouter.post('/', async (req: Request, res: Response) => {
 			pathDir.slice(0, pathDir.lastIndexOf('/'))
 		);
 		if (isExist) {
+			console.log(pathDir);
+
 			return res
 				.json(slicePathByDir(pathDir, 'uploads'))
 				.status(StatusCodes.OK);

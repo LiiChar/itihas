@@ -9,7 +9,7 @@ type Action = {
 
 export const Actions = ({ actions }: { actions: Action[] }) => {
 	return (
-		<div className='flex absolute top-0 left-1/2 gap-2 justify-between items-center h-12 px-2 bg-secondary'>
+		<div className='flex absolute rounded-b-sm top-0 left-1/2 gap-2 justify-between items-center h-11 pt-[5px] px-2 bg-secondary'>
 			{actions.map((a, i) => (
 				<div key={i} onClick={a.action}>
 					<TooltipProvider>

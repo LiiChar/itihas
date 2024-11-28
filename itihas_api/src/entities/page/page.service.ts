@@ -112,7 +112,7 @@ export const updateAction = async (
 	const newAction = await db
 		.update(pagePoints)
 		.set(data as any)
-		.where(eq(pagePoints, actionId))
+		.where(eq(pagePoints.id, actionId))
 		.returning();
 	return newAction[0];
 };

@@ -74,10 +74,22 @@ export const History = () => {
 						)}
 					</div>
 					<div className='flex sm:hidden sticky bottom-3 left-3 justify-between items-center gap-3 mt-3'>
-						<div>
-							<Edit />
-						</div>
-						<Button className='w-full'>Читать</Button>
+						{user?.id == history.author.id && (
+							<Link className='' to={`/history/${history.id}/page/edit`}>
+								<Edit />
+							</Link>
+						)}
+						<Link
+							className='w-full'
+							to={history.pages.length == 0 ? '' : `/history/${id}/read`}
+						>
+							<Button
+								disabled={history.pages.length == 0}
+								className='rounded-lg w-full bg-primary font-normal'
+							>
+								Читать
+							</Button>
+						</Link>
 						<SelectBookmarks historyId={history.id}>
 							<div>
 								<BookMarkedIcon />

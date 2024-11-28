@@ -1,6 +1,11 @@
 import { URL } from '../const/const';
 import { Bookmark, BookmarkToHistory } from '../type/bookmark';
-import { FilterParams, HistoryAll, HistoryPages } from '../type/history';
+import {
+	FilterParams,
+	History,
+	HistoryAll,
+	HistoryPages,
+} from '../type/history';
 import { Layout } from '../type/layout';
 import { axi } from './axios/axios';
 
@@ -25,6 +30,11 @@ export const getHistory = async (id: number) => {
 export const getLayouts = async () => {
 	const layouts = await axi.get<Layout[]>(URL + '/history/layout');
 	return layouts.data;
+};
+
+export const updateHistory = async (id: number, data: History) => {
+	const newHistory = await axi.put<HistoryPages>(URL + '/history/' + id, data);
+	return newHistory;
 };
 
 export const createHistory = async (historyData: Partial<HistoryPages>) => {

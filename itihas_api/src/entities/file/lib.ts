@@ -6,7 +6,15 @@ export const getFolderByFileType = (fileName: string) => {
 	const extension = path.extname(fileName).toLowerCase();
 
 	// Определяем тип файла на основе расширения
-	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+	const imageExtensions = [
+		'.jpg',
+		'.jpeg',
+		'.png',
+		'.gif',
+		'.bmp',
+		'.svg',
+		'.webp',
+	];
 	const videoExtensions = ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv'];
 	const musicExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma'];
 

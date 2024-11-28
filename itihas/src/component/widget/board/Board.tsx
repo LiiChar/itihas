@@ -1,7 +1,7 @@
 import { getFullUrl } from '@/shared/lib/image';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
-import { useEvent } from '@siberiacancode/reactuse';
+import { useEvent, useInterval } from '@siberiacancode/reactuse';
 import { BoxSelect, Trash2 } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
@@ -35,7 +35,7 @@ function calculatePath(start: Point, end: Point, i: number) {
 
 	// Определение стороны относительно начальной точки
 	const side = dx > 0 ? 1 : -1; // Если конечная точка справа, side = 1, иначе -1
-	const HEIGHT_CONTENT_NODE = 57;
+	const HEIGHT_CONTENT_NODE = 47;
 	const HEIGHT_POINT = 17;
 
 	// Коррекция начала и конца линии
@@ -87,10 +87,25 @@ function getRelation(point: string) {
 }
 
 const calculateNodePositions = (nodes: Node[]): Node[] => {
+	const storagePos = localStorage.getItem('nodes_positions');
+	if (storagePos) {
+		let nodePos = JSON.parse(storagePos);
+		return nodes.map((n, i) => {
+			if (n.id in nodePos) {
+				n.position = nodePos[n.id];
+			} else {
+				n.position = {
+					x: NODE_WIDTH * i * 1.1,
+					y: (NODE_HEIGHT / 4) * n.relation.length,
+				};
+			}
+			return n;
+		});
+	}
 	return nodes.map((n, i) => {
 		n.position = {
 			x: NODE_WIDTH * i * 1.1,
-			y: (NODE_HEIGHT / 4) * n.relation.length * randomFloat(0.7, 1.3),
+			y: (NODE_HEIGHT / 4) * n.relation.length,
 		};
 		return n;
 	});
@@ -136,6 +151,14 @@ export const Board = ({ history }: { history: HistoryPages }) => {
 	const layerRef = useRef<HTMLDivElement>(null);
 	const [activeNode, setActiveNode] = useState<number | null>(null);
 	const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
+
+	useInterval(() => {
+		const nodePos = nodes.reduce<Record<string, any>>((acc, n) => {
+			acc[n.id] = n.position;
+			return acc;
+		}, {});
+		localStorage.setItem('nodes_positions', JSON.stringify(nodePos));
+	}, 5000);
 
 	const handleMouseDown = useEvent(
 		(e: React.MouseEvent, nodeIndex: number, isViewport: boolean = false) => {
@@ -247,7 +270,7 @@ export const Board = ({ history }: { history: HistoryPages }) => {
 					transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
 				}}
 			>
-				<svg className='pointer-events-none overflow-visible fill-transparent stroke-white absolute w-full h-full origin-center z-40 -mt-5'>
+				<svg className='pointer-events-none overflow-visible fill-transparent stroke-white absolute w-full h-full origin-center z-40 -mt-0]'>
 					<defs>
 						{/* Определяем маркер-стрелку для конца линии */}
 						<marker
@@ -299,7 +322,7 @@ export const BoardNodes = memo(
 						}}
 						className='absolute h-full select-none bg-secondary z-30 text-secondary-foreground rounded-md'
 					>
-						<div className='absolute top-1 right-1 bg-black/60 p-1'>
+						<div className='absolute top-1 right-1 aspect-square w-[25px] h-[25px] text-center bg-black/60 p-1'>
 							{n.page.id}
 						</div>
 						<BoardNode node={n} />
@@ -315,7 +338,7 @@ export const BoardNodes = memo(
 								>
 									<div className='w-1  h-1 rounded-[50%] bg-foreground aspect-square'></div>
 									<div className=' w-full relative	line-clamp-1 flex justify-between bg-secondary text-xs'>
-										<div className='max-w-[200px]'>{p.name}</div>
+										<div className='max-w-[140px] line-clamp-1'>{p.name}</div>
 										<div className='flex top-[2px] right-0 absolute items-center h-min'>
 											<UpdatePointPageModal
 												action={p}
@@ -404,7 +427,12 @@ export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 							{/* Белый круг на начале соединения */}
 							<circle cx={circleX} cy={circleY} r='5' fill='white' />
 							{/* Линия со стрелкой на конце */}
-							<path d={path} stroke='white' markerEnd='url(#arrow)' />
+							<path
+								d={path}
+								stroke='white'
+								className='hover:stroke-primary'
+								markerEnd='url(#arrow)'
+							/>
 						</g>
 					);
 				})

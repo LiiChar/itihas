@@ -5,6 +5,7 @@ import {
 	getHistories,
 	getHistory,
 	getLayouts,
+	updateHistory,
 } from './history.service';
 import { db } from '../../database/db';
 import { ReplOptions } from 'repl';
@@ -19,6 +20,18 @@ historyRouter.get('/', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.log(error);
 		return res.json('Get history failed').status(404);
+	}
+});
+
+historyRouter.put('/:id', async (req: Request, res: Response) => {
+	try {
+		const id = req.params.id;
+		const data = req.body;
+		const history = await updateHistory(+id!, data);
+		return res.json(history).status(StatusCodes.OK);
+	} catch (error) {
+		console.log(error);
+		return res.json('Update history failed').status(404);
 	}
 });
 
