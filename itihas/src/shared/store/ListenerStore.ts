@@ -3,11 +3,11 @@ import { create } from 'zustand';
 export type Listeners = 'historyChange' | 'callback' | string;
 
 export interface ListenerStore {
-	listeners: Record<Listeners, (() => void)[]>;
-	addCallback: (listener: Listeners, cb: () => void) => void;
-	removeCallback: (listener: Listeners, cb: () => void) => void;
+	listeners: Record<Listeners, ((data?: any) => void)[]>;
+	addCallback: (listener: Listeners, cb: (data?: any) => void) => void;
+	removeCallback: (listener: Listeners, cb: (data?: any) => void) => void;
 	addListener: (listener: string, cb?: (() => void)[]) => void;
-	runListener: (listener: string) => void;
+	runListener: (listener: string, data?: any) => void;
 }
 
 export const useListenerStore = create<ListenerStore>()((set, get) => ({
@@ -48,9 +48,15 @@ export const useListenerStore = create<ListenerStore>()((set, get) => ({
 			return state;
 		});
 	},
-	runListener: (listener: Listeners) => {
+	runListener: (listener: Listeners, data?: any) => {
 		const state = get();
 		if (!state.listeners[listener]) return;
-		state.listeners[listener].forEach(cb => cb());
+		state.listeners[listener].forEach(cb => cb(data));
 	},
 }));
+
+export const runListener = (listener: Listeners, data?: any) => {
+	const state = useListenerStore.getState();
+	if (!state.listeners[listener]) return;
+	state.listeners[listener].forEach(cb => cb(data));
+};

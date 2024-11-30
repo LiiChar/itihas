@@ -1,6 +1,7 @@
 import { Bookmarks } from './bookmark';
 import { Character } from './character';
 import { Comment } from './comment';
+import { LikeHistory } from './like';
 import { Page } from './page';
 import { PointHistory, PointPage } from './point';
 import { User } from './user';
@@ -77,6 +78,7 @@ export type HistoryPages = History & {
 	genres: { genre: Genre }[];
 	author: User;
 	bookmarks: Bookmarks[];
+	likes: LikeHistory[];
 };
 
 export type Genre = {

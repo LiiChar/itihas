@@ -1,5 +1,5 @@
 export const getFullUrl = (url: string) => {
-	if (url.includes('http')) {
+	if (url && url.includes('http')) {
 		return url;
 	}
 	return import.meta.env.VITE_SERVER_URL + url;
@@ -19,7 +19,6 @@ export const handleImageError = (
 	_url?: string,
 	cb?: () => void
 ) => {
-	console.log(currentTarget);
 	currentTarget.onerror = null;
 	currentTarget.style.objectFit = 'cover';
 	// currentTarget.src = getFullUrl('/public/not-found.png');

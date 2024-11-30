@@ -43,6 +43,12 @@ import {
 	commentsToCommentsRelations,
 	bookmarksToHistories,
 	bookmarksToHistoriesRelations,
+	likesToHistories,
+	likesToHistoriesRelations,
+	likeToCommentComments,
+	likeToComments,
+	likeToCommentsCommentRelations,
+	likeToCommentsRelations,
 } from '../entities/history/model/history';
 import {
 	bookmarks,
@@ -91,4 +97,10 @@ export {
 	pageCommentsRelations,
 	pageCommentsToPageComments,
 	commentsToCommentsPageRelations,
+	likesToHistories,
+	likesToHistoriesRelations,
+	likeToCommentComments,
+	likeToComments,
+	likeToCommentsCommentRelations,
+	likeToCommentsRelations,
 };

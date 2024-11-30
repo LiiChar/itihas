@@ -6,12 +6,16 @@ import { route } from './entities/route';
 import path from 'path';
 import { errorBoundaryMiddleware } from './middleware/errorBoundaryMiddleware';
 import cookieParser from 'cookie-parser';
+import { createServer } from 'http';
+import { runWebsocket } from './websocket/websocket';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+export const server = createServer(app);
+export const socket = runWebsocket();
 
 app.get('/', (req, res) => {
 	res.json('Server has been started');
@@ -30,6 +34,6 @@ app.use(bodyParser.json());
 app.use('/api', route);
 app.use(errorBoundaryMiddleware);
 
-app.listen(PORT, () =>
+server.listen(PORT, () =>
 	console.log(`Server has been started on http://localhost:${PORT}`)
 );

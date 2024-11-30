@@ -1,17 +1,29 @@
 import { access } from 'fs/promises';
 import {
+	CommentInsertType,
 	HistoryInsertType,
 	HistoryType,
+	LikeCommentInsertType,
+	LikeCommentsCommentInsertType,
+	LikeHistoryInsertType,
+	LikeHistoryType,
 	PageInsertType,
 	PageType,
 	UserType,
 	db,
 } from '../../database/db';
 import { insertDataToContent } from './lib/content';
-import { asc, desc, eq, SQL, sql, Table } from 'drizzle-orm';
-import { comments, histories } from './model/history';
+import { and, asc, desc, eq, SQL, sql, Table } from 'drizzle-orm';
+import {
+	comments,
+	histories,
+	likesToHistories,
+	likeToCommentComments,
+	likeToComments,
+} from './model/history';
 import { ErrorBoundary } from '../../lib/error';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { socket } from '../..';
 
 export const getHistory = async (id: number, user: UserType) => {
 	const history = await db.query.histories.findFirst({
@@ -22,9 +34,11 @@ export const getHistory = async (id: number, user: UserType) => {
 		with: {
 			author: true,
 			characters: true,
+			likes: true,
 			comments: {
 				with: {
 					user: true,
+					likes: true,
 					comments: {
 						with: {},
 					},
@@ -185,7 +199,9 @@ export const getHistories = async (params: Params) => {
 		histories = histories.filter(h => {
 			let allow = true;
 			params.genres!.forEach(g => {
-				const isFinded = !!h.genres.find(ig => ig.genre.name === g.genre);
+				const isFinded = !!h.genres.find(
+					(ig: any) => ig.genre.name === g.genre
+				);
 
 				allow = isFinded == true && g.allow == 'true' ? true : false;
 			});
@@ -210,4 +226,78 @@ export const updateHistory = async (
 		.where(eq(histories.id, id))
 		.returning();
 	return updatedHistory[0];
+};
+
+export const updateLikeHistory = async (data: LikeHistoryInsertType) => {
+	const likes = await db.query.likesToHistories.findMany({
+		where: and(
+			eq(likesToHistories.historyId, data.historyId),
+			eq(likesToHistories.userId, data.userId)
+		),
+	});
+
+	if (likes.find(l => l.variant == data.variant)) {
+		await db
+			.delete(likesToHistories)
+			.where(
+				and(
+					eq(likesToHistories.historyId, data.historyId),
+					eq(likesToHistories.userId, data.userId)
+				)
+			);
+		return;
+	}
+
+	const like = await db.insert(likesToHistories).values(data).returning();
+	return like;
+};
+
+export const updateCommentHistory = async (data: LikeCommentInsertType) => {
+	const likes = await db.query.likeToComments.findMany({
+		where: and(
+			eq(likeToComments.id, data.commentId),
+			eq(likeToComments.userId, data.userId)
+		),
+	});
+
+	if (likes.find(l => l.variant == data.variant)) {
+		await db
+			.delete(likeToComments)
+			.where(
+				and(
+					eq(likeToComments.id, data.commentId),
+					eq(likeToComments.userId, data.userId)
+				)
+			);
+		return;
+	}
+
+	const like = await db.insert(likeToComments).values(data).returning();
+	return like;
+};
+
+export const updateCommentsCommentHistory = async (
+	data: LikeCommentsCommentInsertType
+) => {
+	const likes = await db.query.likeToCommentComments.findMany({
+		where: and(
+			eq(likeToCommentComments.id, data.commentsCommentId),
+			eq(likeToCommentComments.userId, data.userId)
+		),
+	});
+
+	if (likes.find(l => l.variant == data.variant)) {
+		await db
+			.delete(likeToCommentComments)
+			.where(
+				and(
+					eq(likeToCommentComments.id, data.commentsCommentId),
+					eq(likeToCommentComments.userId, data.userId)
+				)
+			);
+		return;
+	}
+
+	const like = await db.insert(likeToCommentComments).values(data).returning();
+	return like;
 };

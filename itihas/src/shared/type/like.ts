@@ -9,3 +9,11 @@ export type LikePage = {
 export type LikeWithPage = LikePage & {
 	page: Page;
 };
+
+export type LikeHistory = {
+	id: number;
+	userId: number;
+	historyId: number;
+	variant: 'negative' | 'positive';
+	createAt: string;
+};

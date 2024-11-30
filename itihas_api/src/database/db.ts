@@ -40,3 +40,11 @@ export type BookmarkToHistoryType =
 	typeof schema.bookmarksToHistories.$inferSelect;
 export type BookmarkToHistoryInsertType =
 	typeof schema.bookmarksToHistories.$inferInsert;
+export type LikeHistoryType = typeof schema.likesToHistories.$inferSelect;
+export type LikeHistoryInsertType = typeof schema.likesToHistories.$inferInsert;
+export type LikeCommentType = typeof schema.likeToComments.$inferSelect;
+export type LikeCommentInsertType = typeof schema.likeToComments.$inferInsert;
+export type LikeCommentsCommentType =
+	typeof schema.likeToCommentComments.$inferSelect;
+export type LikeCommentsCommentInsertType =
+	typeof schema.likeToCommentComments.$inferInsert;

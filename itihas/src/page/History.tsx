@@ -1,4 +1,4 @@
-import { useQuery } from '@siberiacancode/reactuse';
+import { useMount, useQuery } from '@siberiacancode/reactuse';
 import { useParams, Link } from 'react-router-dom';
 import { getHistory } from '../shared/api/history';
 import { getYear } from '../shared/lib/data';
@@ -14,6 +14,8 @@ import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { BookMarkedIcon, Edit } from 'lucide-react';
 import { SelectBookmarks } from '@/component/widget/bookmarks/SelectBookmarks';
+import { joinToRoom } from '@/shared/lib/websocket/websocket';
+import { HistoryLike } from '@/component/pages/History/HistoryLike';
 
 export const History = () => {
 	const { id } = useParams();
@@ -24,6 +26,9 @@ export const History = () => {
 		onSuccess: data => {
 			setHistory(data);
 		},
+	});
+	useMount(() => {
+		joinToRoom('history', +id!);
 	});
 	if (!history) {
 		return;
@@ -72,6 +77,9 @@ export const History = () => {
 								</Button>
 							</Link>
 						)}
+						<div>
+							<HistoryLike likes={history.likes} historyId={history.id} />
+						</div>
 					</div>
 					<div className='flex sm:hidden sticky bottom-3 left-3 justify-between items-center gap-3 mt-3'>
 						{user?.id == history.author.id && (

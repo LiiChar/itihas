@@ -1,10 +1,17 @@
-import { useLayoutStore } from '@/shared/store/LayoutStore';
+import { socketListener } from '@/shared/lib/websocket/websocket';
+import { addComponent, useLayoutStore } from '@/shared/store/LayoutStore';
+import { useMount } from '@siberiacancode/reactuse';
 import { Outlet } from 'react-router-dom';
+import { Sooner } from './sooner';
 // import { AudioMenu } from '../widget/sound/AudioMenu';
 
 export const Layout = () => {
 	const { Footer, Header, Components, footerVisible, headerVisible } =
 		useLayoutStore();
+	useMount(() => {
+		addComponent(11, () => <Sooner />);
+		socketListener();
+	});
 	return (
 		<>
 			{headerVisible && <Header />}

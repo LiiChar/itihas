@@ -29,13 +29,22 @@ userRouter.post(
 	validateData(userRegistrationSchema),
 	registerUser
 );
-userRouter.get('/authicated', (req, res) => {
+userRouter.get('/authicated/:id', async (req, res) => {
 	console.log(req.cookies['token']);
-
+	const userId = req.params.id;
+	// TODO fix remove
+	if (userId) {
+		const user = await db.query.users.findFirst({
+			where: eq(users.id, +userId!),
+		});
+		if (user) {
+			return res.json(true);
+		}
+	}
 	const token = req.cookies['token'];
 	if (!token) return res.json(false);
 	const payload = getPayloadByToken<UserType>(token);
-	const user = db.query.users.findFirst({
+	const user = await db.query.users.findFirst({
 		where: eq(users.id, payload.id),
 	});
 	if (!user) return res.json(false);

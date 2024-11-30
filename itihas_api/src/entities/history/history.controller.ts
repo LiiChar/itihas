@@ -9,6 +9,7 @@ import {
 } from './history.service';
 import { db } from '../../database/db';
 import { ReplOptions } from 'repl';
+import { socket } from '../..';
 
 const historyRouter = Router();
 
@@ -16,6 +17,7 @@ historyRouter.get('/', async (req: Request, res: Response) => {
 	try {
 		const params: Record<string, string> = req.query as any;
 		const history = await getHistories(params);
+
 		return res.json(history).status(StatusCodes.OK);
 	} catch (error) {
 		console.log(error);

@@ -10,6 +10,14 @@ export type Comment = {
 	updatedAt: string;
 };
 
+export type CommentLike = {
+	userId: number;
+	variant: 'negative' | 'positive';
+	id: number;
+	createdAt: string;
+	commentId: number;
+};
+
 export type CommentReply = {
 	id: number;
 	rate: number | null;
@@ -22,6 +30,7 @@ export type CommentReply = {
 
 export type CommentWithUser = Comment & {
 	user: User;
+	likes: CommentLike[];
 };
 
 export type CommentInsert = {

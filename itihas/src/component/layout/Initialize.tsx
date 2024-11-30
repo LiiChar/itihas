@@ -1,14 +1,17 @@
 import { authicated } from '@/shared/api/user';
+import { deleteUser, useUserStore } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
 
 const checkValideUser = async () => {
-	const tokenCookie = await authicated();
+	if (!useUserStore.getState().user) deleteUser();
+
+	const tokenCookie = await authicated(useUserStore.getState().user!.id);
 	// TODO
 	console.log(tokenCookie);
 
-	if (tokenCookie) return;
-	// if (tokenCookie.data) return;
-	// deleteUser();
+	// if (tokenCookie) return;
+	if (tokenCookie.data) return;
+	deleteUser();
 };
 
 export const Initialize = () => {

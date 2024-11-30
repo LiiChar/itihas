@@ -9,8 +9,8 @@ export type LoginUser = {
 	password: string;
 };
 
-export const authicated = async () => {
-	const data = await axi.get<boolean>(`${BASE_URL}/authicated`);
+export const authicated = async (id: number) => {
+	const data = await axi.get<boolean>(`${BASE_URL}/authicated/${id}`);
 	return data;
 };
 

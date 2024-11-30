@@ -8,12 +8,16 @@ import { useUserStore } from '@/shared/store/UserStore';
 import { getHistory } from '@/shared/api/history';
 
 export const CommentTextarea = memo(() => {
+	const { user } = useUserStore();
+	if (!user) {
+		return '';
+	}
 	return (
 		<TextareaForm
 			placeholder='Написть комментарии'
 			onSubmit={value => {
 				const id = useHistoryStore.getState().history?.id;
-				const userId = useUserStore.getState().user?.id;
+				const userId = user.id;
 				if (!id || !userId) return;
 				createComment({
 					content: value,

@@ -17,9 +17,7 @@ export const SelectBookmarks = ({
 }: SelectBookmarksProps) => {
 	const { user } = useUserStore();
 	const [visible, setVisible] = useState(false);
-	const navigate = useNavigate();
 	if (!user) {
-		navigate('/');
 		return '';
 	}
 	const { data } = useQuery(() => getListBookmarks(user.id), {

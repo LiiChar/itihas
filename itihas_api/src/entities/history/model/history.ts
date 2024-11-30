@@ -58,6 +58,7 @@ export const historiesRelations = relations(histories, ({ many, one }) => ({
 		fields: [histories.authorId],
 		references: [users.id],
 	}),
+	likes: many(likesToHistories),
 }));
 
 export const bookmarksToHistories = sqliteTable('bookmarks_to_histories', {
@@ -211,6 +212,63 @@ export const comments = sqliteTable('comments', {
 		.default(sql`CURRENT_TIMESTAMP`),
 });
 
+export const likeToComments = sqliteTable('like_to_comments', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	commentId: integer('comment_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	variant: text('variant', { enum: ['negative', 'positive'] }),
+
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const likeToCommentsRelations = relations(
+	likeToComments,
+	({ one, many }) => ({
+		comment: one(comments, {
+			fields: [likeToComments.commentId],
+			references: [comments.id],
+		}),
+		user: one(users, {
+			fields: [likeToComments.userId],
+			references: [users.id],
+		}),
+	})
+);
+
+export const likeToCommentComments = sqliteTable('like_to_comments', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	commentsCommentId: integer('comments_comment_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	variant: text('variant', { enum: ['negative', 'positive'] }),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const likeToCommentsCommentRelations = relations(
+	likeToCommentComments,
+	({ one, many }) => ({
+		commentsComment: one(commentsToComments, {
+			fields: [likeToCommentComments.commentsCommentId],
+			references: [commentsToComments.id],
+		}),
+		user: one(users, {
+			fields: [likeToCommentComments.userId],
+			references: [users.id],
+		}),
+	})
+);
+
 export const commentsRelations = relations(comments, ({ one, many }) => ({
 	history: one(histories, {
 		fields: [comments.historyId],
@@ -221,6 +279,7 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	comments: many(commentsToComments),
+	likes: many(likeToComments),
 }));
 
 export const commentsToComments = sqliteTable('comments_to_comments', {
@@ -243,7 +302,7 @@ export const commentsToComments = sqliteTable('comments_to_comments', {
 
 export const commentsToCommentsRelations = relations(
 	commentsToComments,
-	({ one }) => ({
+	({ one, many }) => ({
 		comment: one(comments, {
 			fields: [commentsToComments.commentId],
 			references: [comments.id],
@@ -252,6 +311,7 @@ export const commentsToCommentsRelations = relations(
 			fields: [commentsToComments.userId],
 			references: [users.id],
 		}),
+		likes: many(likeToCommentComments),
 	})
 );
 
@@ -288,6 +348,34 @@ export const genresToHistoriesRelations = relations(
 		genre: one(genres, {
 			fields: [genresToHistories.genreId],
 			references: [genres.id],
+		}),
+	})
+);
+
+export const likesToHistories = sqliteTable('like_to_history', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	historyId: integer('history_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	variant: text('variant', { enum: ['negative', 'positive'] }),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const likesToHistoriesRelations = relations(
+	likesToHistories,
+	({ one }) => ({
+		history: one(histories, {
+			fields: [likesToHistories.historyId],
+			references: [histories.id],
+		}),
+		genre: one(users, {
+			fields: [likesToHistories.userId],
+			references: [users.id],
 		}),
 	})
 );
