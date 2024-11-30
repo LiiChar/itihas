@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLayouts = exports.getHistories = exports.createHistory = exports.getHistory = void 0;
+exports.updateCommentsCommentHistory = exports.updateCommentHistory = exports.updateLikeHistory = exports.updateHistory = exports.getLayouts = exports.getHistories = exports.createHistory = exports.getHistory = void 0;
 const db_1 = require("../../database/db");
 const content_1 = require("./lib/content");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -25,13 +25,16 @@ const getHistory = (id, user) => __awaiter(void 0, void 0, void 0, function* () 
         with: {
             author: true,
             characters: true,
+            likes: true,
             comments: {
                 with: {
                     user: true,
+                    likes: true,
                     comments: {
                         with: {},
                     },
                 },
+                orderBy: (histories, { desc }) => [desc(histories.createdAt)],
             },
             similarHistories: {
                 with: {
@@ -142,7 +145,7 @@ const getHistories = (params) => __awaiter(void 0, void 0, void 0, function* () 
         histories = histories.filter(h => {
             let allow = true;
             params.genres.forEach(g => {
-                const isFinded = !!h.genres.find(ig => ig.genre.name === g.genre);
+                const isFinded = !!h.genres.find((ig) => ig.genre.name === g.genre);
                 allow = isFinded == true && g.allow == 'true' ? true : false;
             });
             return allow;
@@ -156,3 +159,54 @@ const getLayouts = () => __awaiter(void 0, void 0, void 0, function* () {
     return layouts;
 });
 exports.getLayouts = getLayouts;
+const updateHistory = (id, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
+    const updatedHistory = yield db_1.db
+        .update(history_1.histories)
+        .set(updatedData)
+        .where((0, drizzle_orm_1.eq)(history_1.histories.id, id))
+        .returning();
+    return updatedHistory[0];
+});
+exports.updateHistory = updateHistory;
+const updateLikeHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const likes = yield db_1.db.query.likesToHistories.findMany({
+        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likesToHistories.historyId, data.historyId), (0, drizzle_orm_1.eq)(history_1.likesToHistories.userId, data.userId)),
+    });
+    if (likes.find(l => l.variant == data.variant)) {
+        yield db_1.db
+            .delete(history_1.likesToHistories)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likesToHistories.historyId, data.historyId), (0, drizzle_orm_1.eq)(history_1.likesToHistories.userId, data.userId)));
+        return;
+    }
+    const like = yield db_1.db.insert(history_1.likesToHistories).values(data).returning();
+    return like;
+});
+exports.updateLikeHistory = updateLikeHistory;
+const updateCommentHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const likes = yield db_1.db.query.likeToComments.findMany({
+        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.id, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)),
+    });
+    if (likes.find(l => l.variant == data.variant)) {
+        yield db_1.db
+            .delete(history_1.likeToComments)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.id, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)));
+        return;
+    }
+    const like = yield db_1.db.insert(history_1.likeToComments).values(data).returning();
+    return like;
+});
+exports.updateCommentHistory = updateCommentHistory;
+const updateCommentsCommentHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const likes = yield db_1.db.query.likeToCommentComments.findMany({
+        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.id, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)),
+    });
+    if (likes.find(l => l.variant == data.variant)) {
+        yield db_1.db
+            .delete(history_1.likeToCommentComments)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.id, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)));
+        return;
+    }
+    const like = yield db_1.db.insert(history_1.likeToCommentComments).values(data).returning();
+    return like;
+});
+exports.updateCommentsCommentHistory = updateCommentsCommentHistory;

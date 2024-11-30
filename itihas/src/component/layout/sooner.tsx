@@ -6,9 +6,7 @@ import { toast } from 'sonner';
 export const Sooner = () => {
 	const { addCallback } = useListenerStore();
 	useMount(() => {
-		addCallback('toastTrigger', (data?: string) => {
-			console.log('---------------');
-
+		addCallback('toastTrigger', (_data?: string) => {
 			toast('Вы вошли в комнату');
 		});
 	});

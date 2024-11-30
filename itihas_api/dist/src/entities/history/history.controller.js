@@ -27,6 +27,18 @@ historyRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.json('Get history failed').status(404);
     }
 }));
+historyRouter.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        const history = yield (0, history_service_1.updateHistory)(+id, data);
+        return res.json(history).status(http_status_codes_1.StatusCodes.OK);
+    }
+    catch (error) {
+        console.log(error);
+        return res.json('Update history failed').status(404);
+    }
+}));
 historyRouter.post('/catalog', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const params = Object.assign(req.query, req.body);

@@ -3,7 +3,6 @@ import { useUserStore } from '@/shared/store/UserStore';
 import { Bookmark } from '@/shared/type/bookmark';
 import { useQuery } from '@siberiacancode/reactuse';
 import { ReactNode, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 type SelectBookmarksProps = {

@@ -32,11 +32,12 @@ fileRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR);
         }
         const file = req.files.file;
-        const date = `${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}`;
+        const date = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
         const folder = (0, lib_1.getFolderByFileType)(file.name);
         let pathDir = path_1.default.join(__dirname, '..', '..', '..', 'public', 'uploads', folder, date, file.name);
         const isExist = yield (0, lib_1.fsExistOrCreate)(pathDir.slice(0, pathDir.lastIndexOf('/')));
         if (isExist) {
+            console.log(pathDir);
             return res
                 .json((0, lib_1.slicePathByDir)(pathDir, 'uploads'))
                 .status(http_status_codes_1.StatusCodes.OK);

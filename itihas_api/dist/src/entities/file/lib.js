@@ -19,7 +19,15 @@ const getFolderByFileType = (fileName) => {
     // Получаем расширение файла
     const extension = path_1.default.extname(fileName).toLowerCase();
     // Определяем тип файла на основе расширения
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+    const imageExtensions = [
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.bmp',
+        '.svg',
+        '.webp',
+    ];
     const videoExtensions = ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv'];
     const musicExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma'];
     // Проверяем, к какому типу относится расширение файла

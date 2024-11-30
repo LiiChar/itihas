@@ -1,6 +1,6 @@
 import { Bookmarks } from './bookmark';
 import { Character } from './character';
-import { Comment } from './comment';
+import { CommentWithUser } from './comment';
 import { LikeHistory } from './like';
 import { Page } from './page';
 import { PointHistory, PointPage } from './point';
@@ -65,16 +65,14 @@ type similarHistory = {
 
 type similarHistoryContent = similarHistory & { similarHistory: History };
 
-export type HistoryComment = Comment & {
-	user: User;
-};
+export type HistoryComment = CommentWithUser;
 
 export type HistoryPages = History & {
 	pages: HistoryPage[];
 	points: PointHistory[];
 	characters: Character[];
 	similarHistories: similarHistoryContent[];
-	comments: HistoryComment[];
+	comments: CommentWithUser[];
 	genres: { genre: Genre }[];
 	author: User;
 	bookmarks: Bookmarks[];

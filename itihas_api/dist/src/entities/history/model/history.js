@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.genresToHistoriesRelations = exports.genresToHistories = exports.genresRelations = exports.genres = exports.commentsToCommentsRelations = exports.commentsToComments = exports.commentsRelations = exports.comments = exports.historyPointsRelations = exports.historyPoints = exports.similarHistoriesRelation = exports.similarHistories = exports.charactersToUsersRelations = exports.charactersToUsers = exports.charactersRelation = exports.characters = exports.bookmarksToHistoriesRelations = exports.bookmarksToHistories = exports.historiesRelations = exports.histories = void 0;
+exports.likesToHistoriesRelations = exports.likesToHistories = exports.genresToHistoriesRelations = exports.genresToHistories = exports.genresRelations = exports.genres = exports.commentsToCommentsRelations = exports.commentsToComments = exports.commentsRelations = exports.likeToCommentsCommentRelations = exports.likeToCommentComments = exports.likeToCommentsRelations = exports.likeToComments = exports.comments = exports.historyPointsRelations = exports.historyPoints = exports.similarHistoriesRelation = exports.similarHistories = exports.charactersToUsersRelations = exports.charactersToUsers = exports.charactersRelation = exports.characters = exports.bookmarksToHistoriesRelations = exports.bookmarksToHistories = exports.historiesRelations = exports.histories = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const sqlite_core_1 = require("drizzle-orm/sqlite-core");
 const user_1 = require("../../user/model/user");
@@ -54,6 +54,7 @@ exports.historiesRelations = (0, drizzle_orm_1.relations)(exports.histories, ({ 
         fields: [exports.histories.authorId],
         references: [user_1.users.id],
     }),
+    likes: many(exports.likesToHistories),
 }));
 exports.bookmarksToHistories = (0, sqlite_core_1.sqliteTable)('bookmarks_to_histories', {
     id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
@@ -186,6 +187,52 @@ exports.comments = (0, sqlite_core_1.sqliteTable)('comments', {
         .notNull()
         .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
 });
+exports.likeToComments = (0, sqlite_core_1.sqliteTable)('like_to_comments', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    commentId: (0, sqlite_core_1.integer)('comment_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    variant: (0, sqlite_core_1.text)('variant', { enum: ['negative', 'positive'] }),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.likeToCommentsRelations = (0, drizzle_orm_1.relations)(exports.likeToComments, ({ one, many }) => ({
+    comment: one(exports.comments, {
+        fields: [exports.likeToComments.commentId],
+        references: [exports.comments.id],
+    }),
+    user: one(user_1.users, {
+        fields: [exports.likeToComments.userId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.likeToCommentComments = (0, sqlite_core_1.sqliteTable)('like_to_comments', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    commentsCommentId: (0, sqlite_core_1.integer)('comments_comment_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    variant: (0, sqlite_core_1.text)('variant', { enum: ['negative', 'positive'] }),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.likeToCommentsCommentRelations = (0, drizzle_orm_1.relations)(exports.likeToCommentComments, ({ one, many }) => ({
+    commentsComment: one(exports.commentsToComments, {
+        fields: [exports.likeToCommentComments.commentsCommentId],
+        references: [exports.commentsToComments.id],
+    }),
+    user: one(user_1.users, {
+        fields: [exports.likeToCommentComments.userId],
+        references: [user_1.users.id],
+    }),
+}));
 exports.commentsRelations = (0, drizzle_orm_1.relations)(exports.comments, ({ one, many }) => ({
     history: one(exports.histories, {
         fields: [exports.comments.historyId],
@@ -196,6 +243,7 @@ exports.commentsRelations = (0, drizzle_orm_1.relations)(exports.comments, ({ on
         references: [user_1.users.id],
     }),
     comments: many(exports.commentsToComments),
+    likes: many(exports.likeToComments),
 }));
 exports.commentsToComments = (0, sqlite_core_1.sqliteTable)('comments_to_comments', {
     id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
@@ -214,7 +262,7 @@ exports.commentsToComments = (0, sqlite_core_1.sqliteTable)('comments_to_comment
         .notNull()
         .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
 });
-exports.commentsToCommentsRelations = (0, drizzle_orm_1.relations)(exports.commentsToComments, ({ one }) => ({
+exports.commentsToCommentsRelations = (0, drizzle_orm_1.relations)(exports.commentsToComments, ({ one, many }) => ({
     comment: one(exports.comments, {
         fields: [exports.commentsToComments.commentId],
         references: [exports.comments.id],
@@ -223,6 +271,7 @@ exports.commentsToCommentsRelations = (0, drizzle_orm_1.relations)(exports.comme
         fields: [exports.commentsToComments.userId],
         references: [user_1.users.id],
     }),
+    likes: many(exports.likeToCommentComments),
 }));
 exports.genres = (0, sqlite_core_1.sqliteTable)('genres', {
     id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
@@ -252,5 +301,28 @@ exports.genresToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.genres
     genre: one(exports.genres, {
         fields: [exports.genresToHistories.genreId],
         references: [exports.genres.id],
+    }),
+}));
+exports.likesToHistories = (0, sqlite_core_1.sqliteTable)('like_to_history', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
+    variant: (0, sqlite_core_1.text)('variant', { enum: ['negative', 'positive'] }),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.likesToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.likesToHistories, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.likesToHistories.historyId],
+        references: [exports.histories.id],
+    }),
+    genre: one(user_1.users, {
+        fields: [exports.likesToHistories.userId],
+        references: [user_1.users.id],
     }),
 }));

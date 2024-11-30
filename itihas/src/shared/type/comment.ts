@@ -7,6 +7,8 @@ export type Comment = {
 	content: string;
 	userId: number;
 	createdAt: string;
+	likes: CommentLike[];
+
 	updatedAt: string;
 };
 
@@ -30,7 +32,6 @@ export type CommentReply = {
 
 export type CommentWithUser = Comment & {
 	user: User;
-	likes: CommentLike[];
 };
 
 export type CommentInsert = {

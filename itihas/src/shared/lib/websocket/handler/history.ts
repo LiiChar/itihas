@@ -1,3 +1,3 @@
-export const historyAddSocketHandler = (data: any) => {};
+export const historyAddSocketHandler = (_data: any) => {};
 
-export const historyAddLikeSocketHandler = (data: any) => {};
+export const historyAddLikeSocketHandler = (_data: any) => {};

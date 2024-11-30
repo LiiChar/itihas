@@ -1,5 +1,5 @@
-import { useQuery, useField } from '@siberiacancode/reactuse';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@siberiacancode/reactuse';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
 import { getHistory, updateHistory } from '@/shared/api/history';
@@ -19,8 +19,6 @@ import { getTimeAgo } from '@/shared/lib/time';
 import { Textarea } from '@/shared/ui/textarea';
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel';
 import { CharacterElement } from '@/component/pages/History/CharacterElement';
-import { create } from 'zustand';
-import { stat } from 'fs';
 
 export const HistoryEdit = () => {
 	const { id } = useParams();

@@ -7,7 +7,6 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
 import { Separator } from '@/shared/ui/separator';
 import { CreatePageModal } from './Board/CreatePageModal';
-import { randomFloat } from '@/shared/lib/number';
 import { Actions } from './Board/Actions';
 import { deleteActionPage, updateActionPage } from '@/shared/api/page';
 import { useListenerStore } from '@/shared/store/ListenerStore';

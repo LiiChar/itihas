@@ -88,7 +88,7 @@ const updateAction = (actionId, data) => __awaiter(void 0, void 0, void 0, funct
     const newAction = yield db_1.db
         .update(page_1.pagePoints)
         .set(data)
-        .where((0, drizzle_orm_1.eq)(page_1.pagePoints, actionId))
+        .where((0, drizzle_orm_1.eq)(page_1.pagePoints.id, actionId))
         .returning();
     return newAction[0];
 });
