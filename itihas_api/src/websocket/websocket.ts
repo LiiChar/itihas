@@ -66,7 +66,10 @@ export const runWebsocket = (): Server<
 					},
 					{ positiveLike: 0, negativeLike: 0 }
 				);
-				io.to('history:' + historyId).emit('history_like_update', likes);
+				io.to('history:' + historyId).emit(
+					'history_like_update',
+					Object.assign({ userId, historyId }, likes)
+				);
 			}
 		);
 		// handle comment history
@@ -96,7 +99,7 @@ export const runWebsocket = (): Server<
 				);
 				io.to('history:' + commentLikes?.historyId).emit(
 					'comment_like_update',
-					likes
+					Object.assign({ userId, commentId, variant }, likes)
 				);
 			}
 		);
@@ -135,7 +138,7 @@ export const runWebsocket = (): Server<
 				);
 				io.to('history:' + commentsCommentId).emit(
 					'comments_comment_like_update',
-					likes
+					Object.assign({ userId, commentsCommentId, variant }, likes)
 				);
 			}
 		);

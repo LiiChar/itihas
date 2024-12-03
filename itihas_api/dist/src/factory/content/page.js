@@ -4,7 +4,7 @@ exports.pointsPageContent = exports.pagesContent = void 0;
 const faker_1 = require("@faker-js/faker");
 exports.pagesContent = [
     {
-        historyId: 1,
+        historyId: 100,
         id: 1,
         name: 'Пробуждение',
         description: 'Ты просыпаешься в заброшенной хижине в Зоне.',
@@ -12,7 +12,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 2,
         name: 'Развилка',
         description: 'Перед тобой две дороги: одна ведет к заводу, другая к деревне.',
@@ -20,7 +20,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 3,
         name: 'Завод',
         description: 'Ты подходишь к старому заводу.',
@@ -28,7 +28,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 4,
         name: 'Встреча',
         description: 'Ты находишь двух сталкеров внутри завода.',
@@ -36,7 +36,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 5,
         name: 'Безопасность',
         description: 'Ты решаешь уйти и найти укрытие.',
@@ -44,7 +44,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 6,
         name: 'Тайна',
         description: 'Ты находишь старую карту в заброшенном доме.',
@@ -52,7 +52,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 7,
         name: 'Аномалия',
         description: 'Ты подходишь к аномалии, отмеченной на карте.',
@@ -60,7 +60,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 8,
         name: 'Выбор',
         description: 'Ты слышишь крик неподалеку от аномалии.',
@@ -68,7 +68,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 9,
         name: 'Спасение',
         description: 'Ты находишь сталкера, попавшего в аномалию.',
@@ -76,7 +76,7 @@ exports.pagesContent = [
         image: faker_1.faker.image.url(),
     },
     {
-        historyId: 1,
+        historyId: 100,
         id: 10,
         name: 'Награда',
         description: 'Ты спас сталкера, и он предлагает помочь тебе.',

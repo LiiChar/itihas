@@ -484,15 +484,9 @@ export const getComponent = (
 	return <Component c={component} key={index} />;
 };
 
-export const ContentLayout = ({ c }: { c: LayoutComponent }) => {
+export const ContentLayout = ({}: { c: LayoutComponent }) => {
 	return (
-		<div
-			style={{
-				float: c.align == 'center' ? 'none' : c.align,
-				width: c.align == 'center' ? '100%' : '49%',
-			}}
-			className='text-pretty'
-		>
+		<div className='text-pretty'>
 			<div className=' flex justify-center items-center aspect-[16/4] animate-pulse bg-background'>
 				Содержание
 			</div>
@@ -500,15 +494,9 @@ export const ContentLayout = ({ c }: { c: LayoutComponent }) => {
 	);
 };
 
-export const PointLayout = ({ c }: { c: LayoutComponent }) => {
+export const PointLayout = ({}: { c: LayoutComponent }) => {
 	return (
-		<div
-			style={{
-				float: c.align == 'center' ? 'none' : c.align,
-				width: c.align == 'center' ? '100%' : '49%',
-			}}
-			className='flex aspect-[16/5] flex-col gap-2 justify-start items-start'
-		>
+		<div className='flex aspect-[16/5] flex-col gap-2 justify-start items-start'>
 			<div className='w-full h-1/3 animate-pulse bg-background'></div>
 			<div className='flex justify-center items-center w-full h-1/3 animate-pulse bg-background'>
 				Пункты выбора
@@ -518,15 +506,9 @@ export const PointLayout = ({ c }: { c: LayoutComponent }) => {
 	);
 };
 
-export const ImageLayout = ({ c }: { c: LayoutComponent }) => {
+export const ImageLayout = ({}: { c: LayoutComponent }) => {
 	return (
-		<div
-			style={{
-				float: c.align == 'center' ? 'none' : c.align,
-				width: c.align == 'center' ? '100%' : '49%',
-			}}
-			className='relative aspect-[12/9] w-full animate-pulse bg-background  flex justify-center items-center'
-		>
+		<div className='relative aspect-[12/9] w-full animate-pulse bg-background  flex justify-center items-center'>
 			<img
 				className='absolute top-0 left-0 h-full aspect-[12/9] object-cover w-full rounded-tl-lg rounded-tr-lg'
 				src={''}
@@ -545,6 +527,8 @@ const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
-	custom: CustomLayout,
-	dialog: '',
+	action: '',
+	list: '',
+	block: '',
+	video: '',
 };

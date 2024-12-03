@@ -9,17 +9,21 @@ export type Layout = {
 };
 
 export type LayoutComponent = {
-	type: 'image' | 'points' | 'content' | 'dialog' | 'custom';
-	align: 'center' | 'left' | 'right';
+	type: 'image' | 'points' | 'content' | 'block' | 'list' | 'video' | 'action';
+	align?: 'center' | 'left' | 'right' | 'bottom' | 'top';
+	option: {
+		list_variable: string;
+		list_element_variable: string;
+		list_type: 'default' | 'dialog';
+		list_dialog_sort: string;
+		src: string;
+		autoplay: boolean;
+		volume: number;
+		script: string;
+	};
 	style: string;
-	content: null | LayoutContent;
-};
-
-export type LayoutContent = {
-	value: string | Record<string, LayoutContent> | LayoutContent[];
-	style: string;
-	type?: 'list' | 'object' | 'row';
-	variable: LayoutContentVariable[];
+	children?: LayoutComponent[];
+	variables: LayoutContentVariable[];
 };
 
 export type LayoutContentVariable = {

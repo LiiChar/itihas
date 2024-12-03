@@ -229,14 +229,14 @@ export const updateHistory = async (
 };
 
 export const updateLikeHistory = async (data: LikeHistoryInsertType) => {
-	const likes = await db.query.likesToHistories.findMany({
+	const likes = await db.query.likesToHistories.findFirst({
 		where: and(
 			eq(likesToHistories.historyId, data.historyId),
 			eq(likesToHistories.userId, data.userId)
 		),
 	});
 
-	if (likes.find(l => l.variant == data.variant)) {
+	if (likes) {
 		await db
 			.delete(likesToHistories)
 			.where(
@@ -245,7 +245,9 @@ export const updateLikeHistory = async (data: LikeHistoryInsertType) => {
 					eq(likesToHistories.userId, data.userId)
 				)
 			);
-		return;
+		if (likes.variant == data.variant) {
+			return;
+		}
 	}
 
 	const like = await db.insert(likesToHistories).values(data).returning();
@@ -253,23 +255,25 @@ export const updateLikeHistory = async (data: LikeHistoryInsertType) => {
 };
 
 export const updateCommentHistory = async (data: LikeCommentInsertType) => {
-	const likes = await db.query.likeToComments.findMany({
+	const likes = await db.query.likeToComments.findFirst({
 		where: and(
-			eq(likeToComments.id, data.commentId),
+			eq(likeToComments.commentId, data.commentId),
 			eq(likeToComments.userId, data.userId)
 		),
 	});
 
-	if (likes.find(l => l.variant == data.variant)) {
+	if (likes) {
 		await db
 			.delete(likeToComments)
 			.where(
 				and(
-					eq(likeToComments.id, data.commentId),
+					eq(likeToComments.commentId, data.commentId),
 					eq(likeToComments.userId, data.userId)
 				)
 			);
-		return;
+		if (likes.variant == data.variant) {
+			return;
+		}
 	}
 
 	const like = await db.insert(likeToComments).values(data).returning();
@@ -279,23 +283,25 @@ export const updateCommentHistory = async (data: LikeCommentInsertType) => {
 export const updateCommentsCommentHistory = async (
 	data: LikeCommentsCommentInsertType
 ) => {
-	const likes = await db.query.likeToCommentComments.findMany({
+	const likes = await db.query.likeToCommentComments.findFirst({
 		where: and(
-			eq(likeToCommentComments.id, data.commentsCommentId),
+			eq(likeToCommentComments.commentsCommentId, data.commentsCommentId),
 			eq(likeToCommentComments.userId, data.userId)
 		),
 	});
 
-	if (likes.find(l => l.variant == data.variant)) {
+	if (likes) {
 		await db
 			.delete(likeToCommentComments)
 			.where(
 				and(
-					eq(likeToCommentComments.id, data.commentsCommentId),
+					eq(likeToCommentComments.commentsCommentId, data.commentsCommentId),
 					eq(likeToCommentComments.userId, data.userId)
 				)
 			);
-		return;
+		if (likes.variant == data.variant) {
+			return;
+		}
 	}
 
 	const like = await db.insert(likeToCommentComments).values(data).returning();

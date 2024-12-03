@@ -155,6 +155,8 @@ const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
-	custom: CustomLayout,
-	dialog: '',
+	action: '',
+	block: '',
+	list: '',
+	video: '',
 };

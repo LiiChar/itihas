@@ -2,8 +2,10 @@ import { getHistoriesFilter } from '../shared/api/history';
 import { useQuery } from '@siberiacancode/reactuse';
 import { Slider } from '@/component/pages/Main/Slider';
 import { getCurrentDateAtMinute } from '@/shared/lib/data';
+import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
 
 export const Main = () => {
+	useBreadcrumble('/');
 	const { data: newHistory } = useQuery(() =>
 		getHistoriesFilter({
 			filter: [

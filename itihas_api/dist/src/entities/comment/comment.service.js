@@ -10,10 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createReplyComment = exports.createComment = void 0;
+const __1 = require("../..");
 const db_1 = require("../../database/db");
 const history_1 = require("../history/model/history");
 const createComment = (comment) => __awaiter(void 0, void 0, void 0, function* () {
     const commentCreated = (yield db_1.db.insert(history_1.comments).values(comment).returning())[0];
+    __1.socket.to('history:' + comment.historyId).emit('history_add_comment');
     return commentCreated;
 });
 exports.createComment = createComment;

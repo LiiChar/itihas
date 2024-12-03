@@ -3,7 +3,7 @@ import { PageInsertType, PointPageInsertType } from '../../database/db';
 
 export const pagesContent: PageInsertType[] = [
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 1,
 		name: 'Пробуждение',
 		description: 'Ты просыпаешься в заброшенной хижине в Зоне.',
@@ -12,7 +12,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 2,
 		name: 'Развилка',
 		description:
@@ -22,7 +22,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 3,
 		name: 'Завод',
 		description: 'Ты подходишь к старому заводу.',
@@ -31,7 +31,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 4,
 		name: 'Встреча',
 		description: 'Ты находишь двух сталкеров внутри завода.',
@@ -40,7 +40,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 5,
 		name: 'Безопасность',
 		description: 'Ты решаешь уйти и найти укрытие.',
@@ -49,7 +49,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 6,
 		name: 'Тайна',
 		description: 'Ты находишь старую карту в заброшенном доме.',
@@ -58,7 +58,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 7,
 		name: 'Аномалия',
 		description: 'Ты подходишь к аномалии, отмеченной на карте.',
@@ -67,7 +67,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 8,
 		name: 'Выбор',
 		description: 'Ты слышишь крик неподалеку от аномалии.',
@@ -76,7 +76,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 9,
 		name: 'Спасение',
 		description: 'Ты находишь сталкера, попавшего в аномалию.',
@@ -85,7 +85,7 @@ export const pagesContent: PageInsertType[] = [
 		image: faker.image.url(),
 	},
 	{
-		historyId: 1,
+		historyId: 100,
 		id: 10,
 		name: 'Награда',
 		description: 'Ты спас сталкера, и он предлагает помочь тебе.',

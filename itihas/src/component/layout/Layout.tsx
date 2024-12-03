@@ -3,6 +3,7 @@ import { addComponent, useLayoutStore } from '@/shared/store/LayoutStore';
 import { useMount } from '@siberiacancode/reactuse';
 import { Outlet } from 'react-router-dom';
 import { Sooner } from './sooner';
+import { Breadcrumble } from '../widget/breadcrumble/Breadcrumble';
 // import { AudioMenu } from '../widget/sound/AudioMenu';
 
 export const Layout = () => {
@@ -10,6 +11,7 @@ export const Layout = () => {
 		useLayoutStore();
 	useMount(() => {
 		addComponent(11, () => <Sooner />);
+		addComponent(12, () => <Breadcrumble />);
 		socketListener();
 	});
 	return (

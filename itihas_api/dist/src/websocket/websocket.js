@@ -42,7 +42,7 @@ const runWebsocket = () => {
                 }
                 return acc;
             }, { positiveLike: 0, negativeLike: 0 });
-            io.to('history:' + historyId).emit('history_like_update', likes);
+            io.to('history:' + historyId).emit('history_like_update', Object.assign({ userId, historyId }, likes));
         }));
         // handle comment history
         socket.on('comment_like_add', (_b) => __awaiter(void 0, [_b], void 0, function* ({ commentId, userId, variant }) {
@@ -62,7 +62,7 @@ const runWebsocket = () => {
                 }
                 return acc;
             }, { positiveLike: 0, negativeLike: 0 });
-            io.to('history:' + (commentLikes === null || commentLikes === void 0 ? void 0 : commentLikes.historyId)).emit('comment_like_update', likes);
+            io.to('history:' + (commentLikes === null || commentLikes === void 0 ? void 0 : commentLikes.historyId)).emit('comment_like_update', Object.assign({ userId, commentId, variant }, likes));
         }));
         socket.on('comments_comment_like_add', (_c) => __awaiter(void 0, [_c], void 0, function* ({ commentsCommentId, userId, variant, }) {
             yield (0, history_service_1.updateCommentsCommentHistory)({
@@ -85,7 +85,7 @@ const runWebsocket = () => {
                 }
                 return acc;
             }, { positiveLike: 0, negativeLike: 0 });
-            io.to('history:' + commentsCommentId).emit('comments_comment_like_update', likes);
+            io.to('history:' + commentsCommentId).emit('comments_comment_like_update', Object.assign({ userId, commentsCommentId, variant }, likes));
         }));
         socket.on('room_join', ({ id, typeRoom, }) => {
             socket.join(`${typeRoom}:${id}`);

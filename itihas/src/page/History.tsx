@@ -16,18 +16,28 @@ import { BookMarkedIcon, Edit } from 'lucide-react';
 import { SelectBookmarks } from '@/component/widget/bookmarks/SelectBookmarks';
 import { joinToRoom } from '@/shared/lib/websocket/websocket';
 import { HistoryLike } from '@/component/pages/History/HistoryLike';
+import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
+import { useListenerStore } from '@/shared/store/ListenerStore';
 
 export const History = () => {
 	const { id } = useParams();
+	useBreadcrumble('/history/[historyId]', { historyId: `${id}` });
 	const user = useUserStore(store => store.user);
 	const { history } = useHistoryStore();
 	const {} = useAudioStore();
 	useQuery(() => getHistory(+id!), {
 		onSuccess: data => {
-			setHistory(data);
+			if (data) {
+				setHistory(data);
+			}
 		},
 	});
+	const { addCallback } = useListenerStore();
 	useMount(() => {
+		addCallback('historyChange', async () => {
+			const history = await getHistory(+id!);
+			setHistory(history);
+		});
 		joinToRoom('history', +id!);
 	});
 	if (!history) {

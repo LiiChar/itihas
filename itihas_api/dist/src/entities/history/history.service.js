@@ -169,42 +169,48 @@ const updateHistory = (id, updatedData) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.updateHistory = updateHistory;
 const updateLikeHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const likes = yield db_1.db.query.likesToHistories.findMany({
+    const likes = yield db_1.db.query.likesToHistories.findFirst({
         where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likesToHistories.historyId, data.historyId), (0, drizzle_orm_1.eq)(history_1.likesToHistories.userId, data.userId)),
     });
-    if (likes.find(l => l.variant == data.variant)) {
+    if (likes) {
         yield db_1.db
             .delete(history_1.likesToHistories)
             .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likesToHistories.historyId, data.historyId), (0, drizzle_orm_1.eq)(history_1.likesToHistories.userId, data.userId)));
-        return;
+        if (likes.variant == data.variant) {
+            return;
+        }
     }
     const like = yield db_1.db.insert(history_1.likesToHistories).values(data).returning();
     return like;
 });
 exports.updateLikeHistory = updateLikeHistory;
 const updateCommentHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const likes = yield db_1.db.query.likeToComments.findMany({
-        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.id, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)),
+    const likes = yield db_1.db.query.likeToComments.findFirst({
+        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.commentId, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)),
     });
-    if (likes.find(l => l.variant == data.variant)) {
+    if (likes) {
         yield db_1.db
             .delete(history_1.likeToComments)
-            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.id, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)));
-        return;
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToComments.commentId, data.commentId), (0, drizzle_orm_1.eq)(history_1.likeToComments.userId, data.userId)));
+        if (likes.variant == data.variant) {
+            return;
+        }
     }
     const like = yield db_1.db.insert(history_1.likeToComments).values(data).returning();
     return like;
 });
 exports.updateCommentHistory = updateCommentHistory;
 const updateCommentsCommentHistory = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const likes = yield db_1.db.query.likeToCommentComments.findMany({
-        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.id, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)),
+    const likes = yield db_1.db.query.likeToCommentComments.findFirst({
+        where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.commentsCommentId, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)),
     });
-    if (likes.find(l => l.variant == data.variant)) {
+    if (likes) {
         yield db_1.db
             .delete(history_1.likeToCommentComments)
-            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.id, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)));
-        return;
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(history_1.likeToCommentComments.commentsCommentId, data.commentsCommentId), (0, drizzle_orm_1.eq)(history_1.likeToCommentComments.userId, data.userId)));
+        if (likes.variant == data.variant) {
+            return;
+        }
     }
     const like = yield db_1.db.insert(history_1.likeToCommentComments).values(data).returning();
     return like;

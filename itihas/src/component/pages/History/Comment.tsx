@@ -27,17 +27,45 @@ const generateLikesState = (likes: CommentLike[]) => {
 	return like;
 };
 
+const getOwnLike = (likes: CommentLike[], userId?: number) => {
+	if (!userId) {
+		return 0;
+	}
+	const like = likes.find(l => l.userId == userId);
+
+	if (!like) {
+		return 0;
+	}
+
+	return like.variant == 'positive' ? 1 : -1;
+};
+
 export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 	const { user } = useUserStore();
 	const [like, setLike] = useState(generateLikesState(comment.likes ?? []));
+	const [ownLike, setOwnLike] = useState(
+		getOwnLike(comment.likes ?? [], user?.id ?? undefined)
+	);
 
 	useMount(() => {
 		if (!user) return;
 
 		socket.on(
 			'comment_like_update',
-			(data: { positiveLike: number; negativeLike: number }) => {
-				setLike(data);
+			(data: {
+				positiveLike: number;
+				negativeLike: number;
+				commentId: number;
+				userId: number;
+				variant: 'positive' | 'negative';
+			}) => {
+				if (data.commentId == comment.id) {
+					if (user && user.id == data.userId) {
+						const intVariant = data.variant == 'negative' ? -1 : 1;
+						setOwnLike(intVariant == ownLike ? 0 : intVariant);
+					}
+					setLike(data);
+				}
 			}
 		);
 	});
@@ -93,6 +121,7 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 									onClick={() => handleLike('positive')}
 									height={18}
 									width={18}
+									className={`${ownLike == 1 ? 'fill-green-500' : ''}`}
 								/>
 							</div>
 							<div>{like.positiveLike - like.negativeLike}</div>
@@ -101,6 +130,7 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 									onClick={() => handleLike('negative')}
 									height={18}
 									width={18}
+									className={`${ownLike == -1 ? 'fill-red-500' : ''}`}
 								/>
 							</div>
 						</div>

@@ -3,9 +3,8 @@ import { CommentWithUser } from '../../../shared/type/comment';
 import { Comment } from './Comment';
 import { TextareaForm } from '@/component/widget/form/TextareaForm';
 import { createComment } from '@/shared/api/comment';
-import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
+import { useHistoryStore } from '@/shared/store/HistoryStore';
 import { useUserStore } from '@/shared/store/UserStore';
-import { getHistory } from '@/shared/api/history';
 
 export const CommentTextarea = memo(() => {
 	const { user } = useUserStore();
@@ -23,9 +22,6 @@ export const CommentTextarea = memo(() => {
 					content: value,
 					historyId: id,
 					userId: userId,
-				}).then(async () => {
-					const history = await getHistory(id);
-					setHistory(history);
 				});
 			}}
 		/>
