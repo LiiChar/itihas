@@ -87,7 +87,6 @@ const generateCharactersToUsers = () => __awaiter(void 0, void 0, void 0, functi
 });
 exports.generateCharactersToUsers = generateCharactersToUsers;
 const generateUsers = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Создание пользователей');
     // await db.delete(users);
     try {
         const idx = [];

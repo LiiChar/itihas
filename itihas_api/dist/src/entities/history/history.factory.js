@@ -16,39 +16,42 @@ const faker_1 = require("@faker-js/faker");
 const history_1 = require("./model/history");
 const num_1 = require("../../lib/num");
 const crypto_1 = require("crypto");
-const generateHistory = () => __awaiter(void 0, void 0, void 0, function* () {
+const generateHistory = (history) => __awaiter(void 0, void 0, void 0, function* () {
     yield db_1.db.delete(history_1.histories);
     const wallpapersArray = [
-        "yoon-hye.jpg",
-        "succulent.png",
-        "stairs.jpg",
-        "retro-pc.png",
-        "prakasam-mathaiyan.jpg",
-        "plant.png",
-        "lonely_tree.jpg",
-        "kien-do-uUVkzxDR1D0-unsplash.jpg",
-        "fog_forest_alt_2.png",
-        "fog_forest_2.png",
-        "clay-banks-u27Rrbs9Dwc-unsplash.jpg",
+        'yoon-hye.jpg',
+        'succulent.png',
+        'stairs.jpg',
+        'retro-pc.png',
+        'prakasam-mathaiyan.jpg',
+        'plant.png',
+        'lonely_tree.jpg',
+        'kien-do-uUVkzxDR1D0-unsplash.jpg',
+        'fog_forest_alt_2.png',
+        'fog_forest_2.png',
+        'clay-banks-u27Rrbs9Dwc-unsplash.jpg',
     ];
     const createRandomHistory = () => {
         return {
             name: faker_1.faker.person.prefix() +
-                " " +
+                ' ' +
                 faker_1.faker.person.firstName() +
-                " " +
+                ' ' +
                 faker_1.faker.person.suffix(),
             wallpaper: `/uploads/wallpaper/${wallpapersArray[(0, crypto_1.randomInt)(0, wallpapersArray.length - 1)]}`,
             image: faker_1.faker.image.url(),
             description: faker_1.faker.lorem.text(),
-            sound: "/uploads/sound/default/Apocryphos-Simulacrum-of-Stone.mp3",
+            sound: '/uploads/sound/default/Apocryphos-Simulacrum-of-Stone.mp3',
             rate: (0, crypto_1.randomInt)(0, 5),
             authorId: (0, num_1.randomRangeInt)(1, 10),
         };
     };
-    const historyArray = faker_1.faker.helpers.multiple(createRandomHistory, {
-        count: 100,
-    });
+    const historyArray = [
+        ...faker_1.faker.helpers.multiple(createRandomHistory, {
+            count: 100,
+        }),
+        ...(history !== null && history !== void 0 ? history : []),
+    ];
     try {
         const idx = [];
         historyArray.forEach((history) => __awaiter(void 0, void 0, void 0, function* () {
@@ -56,25 +59,25 @@ const generateHistory = () => __awaiter(void 0, void 0, void 0, function* () {
             idx.push(id);
         }));
         return {
-            factory: "Создание истории",
+            factory: 'Создание истории',
             status: true,
-            message: "Все истории успешно созданы",
+            message: 'Все истории успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание пользователей",
+                factory: 'Создание пользователей',
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание пользователей",
+                factory: 'Создание пользователей',
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -103,25 +106,25 @@ const generateGenre = () => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         return {
-            factory: "Создание жарнов",
+            factory: 'Создание жарнов',
             status: true,
-            message: "Все жанры успешно созданы",
+            message: 'Все жанры успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание жарнов",
+                factory: 'Создание жарнов',
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание жанров",
+                factory: 'Создание жанров',
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -146,25 +149,25 @@ const generateComments = () => __awaiter(void 0, void 0, void 0, function* () {
             idx.push(id);
         }));
         return {
-            factory: "Создание данных комментарии",
+            factory: 'Создание данных комментарии',
             status: true,
-            message: "Все данные успешно созданы",
+            message: 'Все данные успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание данных комментарии",
+                factory: 'Создание данных комментарии',
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание данных комментарии",
+                factory: 'Создание данных комментарии',
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -172,7 +175,7 @@ const generateComments = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.generateComments = generateComments;
 const generateReplyComment = () => __awaiter(void 0, void 0, void 0, function* () {
     const table = history_1.commentsToComments;
-    const name = "ответы к комментариям";
+    const name = 'ответы к комментариям';
     yield db_1.db.delete(table);
     const createRandom = () => {
         return {
@@ -191,25 +194,25 @@ const generateReplyComment = () => __awaiter(void 0, void 0, void 0, function* (
             idx.push(id);
         }));
         return {
-            factory: "Создание данных " + name,
+            factory: 'Создание данных ' + name,
             status: true,
-            message: "Все данные успешно созданы",
+            message: 'Все данные успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -220,7 +223,7 @@ const generateSimilar = () => __awaiter(void 0, void 0, void 0, function* () {
     yield db_1.db.delete(table);
     const createRandom = () => {
         return {
-            historyId: (0, num_1.randomRangeInt)(1, 10),
+            historyId: (0, num_1.randomRangeInt)(1, 100),
             similarHistoryId: (0, num_1.randomRangeInt)(1, 10),
         };
     };
@@ -234,25 +237,25 @@ const generateSimilar = () => __awaiter(void 0, void 0, void 0, function* () {
             idx.push(id);
         }));
         return {
-            factory: "Создание данных похожие",
+            factory: 'Создание данных похожие',
             status: true,
-            message: "Все данные успешно созданы",
+            message: 'Все данные успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание данных похожие",
+                factory: 'Создание данных похожие',
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание данных похожие",
+                factory: 'Создание данных похожие',
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -260,8 +263,7 @@ const generateSimilar = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.generateSimilar = generateSimilar;
 const generateCharacters = () => __awaiter(void 0, void 0, void 0, function* () {
     const table = history_1.characters;
-    const name = "персонажи";
-    console.log("Создание " + name);
+    const name = 'персонажи';
     yield db_1.db.delete(table);
     const createRandom = () => {
         return {
@@ -280,25 +282,25 @@ const generateCharacters = () => __awaiter(void 0, void 0, void 0, function* () 
             idx.push(id);
         }));
         return {
-            factory: "Создание данных " + name,
+            factory: 'Создание данных ' + name,
             status: true,
-            message: "Все данные успешно созданы",
+            message: 'Все данные успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }
@@ -306,8 +308,7 @@ const generateCharacters = () => __awaiter(void 0, void 0, void 0, function* () 
 exports.generateCharacters = generateCharacters;
 const generateBookmarkToHistory = () => __awaiter(void 0, void 0, void 0, function* () {
     const table = history_1.bookmarksToHistories;
-    const name = "истории в закладки";
-    console.log("Создание " + name);
+    const name = 'истории в закладки';
     yield db_1.db.delete(table);
     const createRandom = () => {
         return {
@@ -325,25 +326,25 @@ const generateBookmarkToHistory = () => __awaiter(void 0, void 0, void 0, functi
             idx.push(id);
         }));
         return {
-            factory: "Создание данных " + name,
+            factory: 'Создание данных ' + name,
             status: true,
-            message: "Все данные успешно созданы",
+            message: 'Все данные успешно созданы',
             idx: idx,
         };
     }
     catch (error) {
         if (error instanceof drizzle_orm_1.DrizzleError) {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
                 message: error.message,
             };
         }
         else {
             return {
-                factory: "Создание данных " + name,
+                factory: 'Создание данных ' + name,
                 status: false,
-                message: "Произошла непредвиденная ошибка",
+                message: 'Произошла непредвиденная ошибка',
             };
         }
     }

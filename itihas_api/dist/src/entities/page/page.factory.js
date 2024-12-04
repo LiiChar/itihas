@@ -23,14 +23,16 @@ const generatePage = (pagesDefault) => __awaiter(void 0, void 0, void 0, functio
         return {
             name: faker_1.faker.person.firstName(),
             image: faker_1.faker.image.url(),
-            historyId: 1,
+            historyId: (0, num_1.randomRangeInt)(1, 100),
             content: 'Ваше имя {=name} и сейчас начинается ваше приключение',
         };
     };
-    const pageArray = pagesDefault ||
-        faker_1.faker.helpers.multiple(createRandomPage, {
+    const pageArray = [
+        ...(pagesDefault !== null && pagesDefault !== void 0 ? pagesDefault : []),
+        ...faker_1.faker.helpers.multiple(createRandomPage, {
             count: 10,
-        });
+        }),
+    ];
     pageArray[2] = Object.assign(Object.assign({}, pageArray[2]), { sound: '/uploads/sound/default/Shoot-sound.mp3' });
     try {
         const idx = [];
@@ -63,7 +65,7 @@ const generatePage = (pagesDefault) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.generatePage = generatePage;
-const generateVariable = () => __awaiter(void 0, void 0, void 0, function* () {
+const generateVariable = (varibableContent) => __awaiter(void 0, void 0, void 0, function* () {
     yield db_1.db.delete(page_1.variables);
     const createRandomVariable = () => {
         return {
@@ -74,9 +76,12 @@ const generateVariable = () => __awaiter(void 0, void 0, void 0, function* () {
             userId: 1,
         };
     };
-    const variableArray = faker_1.faker.helpers.multiple(createRandomVariable, {
-        count: 10,
-    });
+    const variableArray = [
+        ...faker_1.faker.helpers.multiple(createRandomVariable, {
+            count: 10,
+        }),
+        ...(varibableContent !== null && varibableContent !== void 0 ? varibableContent : []),
+    ];
     variableArray.push({
         data: '100',
         type: 'number',
@@ -163,28 +168,25 @@ const generatePagePoint = (pagePointDefault) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.generatePagePoint = generatePagePoint;
-const generateLayout = () => __awaiter(void 0, void 0, void 0, function* () {
+const generateLayout = (layoutsContent) => __awaiter(void 0, void 0, void 0, function* () {
     const table = page_1.layouts;
     const name = 'оформления';
     yield db_1.db.delete(table);
     const defaultLayout = [
         {
             type: 'image',
-            align: 'center',
+            align: ['top'],
             style: '',
-            content: null,
         },
         {
             type: 'content',
-            align: 'center',
+            align: ['center'],
             style: '',
-            content: null,
         },
         {
             type: 'points',
-            align: 'center',
+            align: ['bottom'],
             style: '',
-            content: null,
         },
     ];
     const createRandom = () => {
@@ -193,9 +195,12 @@ const generateLayout = () => __awaiter(void 0, void 0, void 0, function* () {
             layout: defaultLayout,
         };
     };
-    const array = faker_1.faker.helpers.multiple(createRandom, {
-        count: 1,
-    });
+    const array = [
+        ...faker_1.faker.helpers.multiple(createRandom, {
+            count: 1,
+        }),
+        ...(layoutsContent !== null && layoutsContent !== void 0 ? layoutsContent : []),
+    ];
     try {
         const idx = [];
         array.forEach((data) => __awaiter(void 0, void 0, void 0, function* () {

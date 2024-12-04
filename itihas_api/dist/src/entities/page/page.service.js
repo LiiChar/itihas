@@ -15,6 +15,7 @@ const content_1 = require("./lib/content");
 const drizzle_orm_1 = require("drizzle-orm");
 const page_1 = require("./model/page");
 const actionV2_1 = require("./lib/actionV2");
+const string_1 = require("../../lib/string");
 const getCurrentPageByHistoryId = (id, currentPage, user) => __awaiter(void 0, void 0, void 0, function* () {
     const firstPage = yield db_1.db
         .select({ id: (0, drizzle_orm_1.min)(page_1.pages.id) })
@@ -55,16 +56,34 @@ const getCurrentPageByHistoryId = (id, currentPage, user) => __awaiter(void 0, v
     });
     const pagesWithVariables = Object.assign(page, { variables });
     pagesWithVariables['content'] = yield (0, content_1.insertDataToContent)(page.content, id, user.id);
-    if (page.layout) {
-        const promises = page.layout.layout.reduce((acc, p) => {
+    if (pagesWithVariables.layout) {
+        if (typeof pagesWithVariables.layout.layout == 'string') {
+            pagesWithVariables.layout.layout = JSON.parse(pagesWithVariables.layout.layout);
+        }
+        const promises = pagesWithVariables.layout.layout.reduce((acc, p) => {
             acc.push(p.content
-                ? (0, content_1.insertDataToContent)(p.content, page.historyId, user.id)
-                : null);
+                ? (0, content_1.insertDataToContent)(p.content, pagesWithVariables.historyId, user.id)
+                : p.content);
             return acc;
         }, []);
         const contents = yield Promise.all(promises);
         contents.forEach((c, i) => {
-            page.layout.layout[i].content = c;
+            pagesWithVariables.layout.layout[i].content = c;
+        });
+    }
+    if (pagesWithVariables.variables) {
+        pagesWithVariables.variables = pagesWithVariables.variables.map(v => {
+            try {
+                if (['array', 'object'].includes(v.type)) {
+                    v.data = JSON.parse((0, string_1.replaceAll)(v.data, '\\', ''));
+                }
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    console.log(error);
+                }
+            }
+            return v;
         });
     }
     const promises = page.history.layout.layout.reduce((acc, p) => {
