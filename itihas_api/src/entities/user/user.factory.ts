@@ -81,8 +81,6 @@ export const generateCharactersToUsers = async () => {
 };
 
 export const generateUsers = async () => {
-	console.log('Создание пользователей');
-
 	// await db.delete(users);
 	try {
 		const idx: number[] = [];

@@ -9,21 +9,48 @@ export type Layout = {
 };
 
 export type LayoutComponent = {
-	type: 'image' | 'points' | 'content' | 'block' | 'list' | 'video' | 'action';
-	align?: 'center' | 'left' | 'right' | 'bottom' | 'top';
-	option: {
-		list_variable: string;
-		list_element_variable: string;
-		list_type: 'default' | 'dialog';
-		list_dialog_sort: string;
-		src: string;
-		autoplay: boolean;
-		volume: number;
-		script: string;
+	type:
+		| 'image'
+		| 'points'
+		| 'content'
+		| 'block'
+		| 'list'
+		| 'video'
+		| 'action'
+		| 'text';
+	align?: ('center' | 'left' | 'right' | 'bottom' | 'top')[];
+	content?: string;
+	option?: {
+		list?: {
+			list_variable?: string;
+			list_type?: 'list' | 'dialog';
+			dialog?: {
+				dialog_name_variable?: string;
+				dialog_message_variable?: string;
+				dialog_action_variable?: string;
+			};
+			list?: {
+				list_element_variable?: string;
+			};
+		};
+		media?: {
+			src?: string;
+			image?: {};
+			video?: {
+				autoplay?: boolean;
+				volume?: number;
+			};
+		};
+		action?: {
+			script?: string;
+		};
+		text?: {
+			text_variable?: string;
+		};
 	};
-	style: string;
+	style?: string;
 	children?: LayoutComponent[];
-	variables: LayoutContentVariable[];
+	variables?: LayoutContentVariable[];
 };
 
 export type LayoutContentVariable = {

@@ -48,3 +48,5 @@ export type LikeCommentsCommentType =
 	typeof schema.likeToCommentComments.$inferSelect;
 export type LikeCommentsCommentInsertType =
 	typeof schema.likeToCommentComments.$inferInsert;
+export type LayoutType = typeof schema.layouts.$inferSelect;
+export type LayoutInsertType = typeof schema.layouts.$inferInsert;

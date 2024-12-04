@@ -12,6 +12,7 @@ import {
 	pagePointUpdateScheme,
 } from './page.scheme';
 import { parse, run } from './lib/actionV2';
+import { replaceAll } from '../../lib/string';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,
@@ -67,18 +68,45 @@ export const getCurrentPageByHistoryId = async (
 		user.id
 	);
 
-	if (page.layout) {
-		const promises = page.layout.layout.reduce<any>((acc: any, p: any) => {
-			acc.push(
-				p.content
-					? insertDataToContent(p.content, page.historyId, user.id)
-					: null
+	if (pagesWithVariables.layout) {
+		if (typeof pagesWithVariables.layout.layout == 'string') {
+			pagesWithVariables.layout.layout = JSON.parse(
+				pagesWithVariables.layout.layout
 			);
-			return acc;
-		}, []);
+		}
+		const promises = pagesWithVariables.layout.layout.reduce<any>(
+			(acc: any, p: any) => {
+				acc.push(
+					p.content
+						? insertDataToContent(
+								p.content,
+								pagesWithVariables.historyId,
+								user.id
+						  )
+						: p.content
+				);
+				return acc;
+			},
+			[]
+		);
 		const contents = await Promise.all(promises);
 		contents.forEach((c: any, i: number) => {
-			page.layout!.layout[i].content = c;
+			pagesWithVariables.layout!.layout[i].content = c;
+		});
+	}
+
+	if (pagesWithVariables.variables) {
+		pagesWithVariables.variables = pagesWithVariables.variables.map(v => {
+			try {
+				if (['array', 'object'].includes(v.type)) {
+					v.data = JSON.parse(replaceAll(v.data, '\\', ''));
+				}
+			} catch (error) {
+				if (error instanceof Error) {
+					console.log(error);
+				}
+			}
+			return v;
 		});
 	}
 

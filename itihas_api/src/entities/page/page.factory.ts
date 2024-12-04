@@ -2,6 +2,7 @@ import { DrizzleError, Table } from 'drizzle-orm';
 import {
 	BookmarkInsertType,
 	BookmarkType,
+	LayoutInsertType,
 	PageInsertType,
 	VariableInsertType,
 	db,
@@ -9,7 +10,7 @@ import {
 import { faker } from '@faker-js/faker';
 import { layouts, likePages, pagePoints, pages, variables } from './model/page';
 import { randomRangeInt } from '../../lib/num';
-import { layoutComponents } from './type/layout';
+import { LayoutComponent, layoutComponents } from './type/layout';
 import { comments } from '../history/model/history';
 import { createDefaulBookmarks } from '../../lib/default';
 import { bookmarks } from '../bookmark/model/bookmark';
@@ -20,15 +21,16 @@ export const generatePage = async (pagesDefault?: PageInsertType[]) => {
 		return {
 			name: faker.person.firstName(),
 			image: faker.image.url(),
-			historyId: 1,
+			historyId: randomRangeInt(1, 100),
 			content: 'Ваше имя {=name} и сейчас начинается ваше приключение',
 		};
 	};
-	const pageArray =
-		pagesDefault ||
-		faker.helpers.multiple(createRandomPage, {
+	const pageArray = [
+		...(pagesDefault ?? []),
+		...faker.helpers.multiple(createRandomPage, {
 			count: 10,
-		});
+		}),
+	];
 
 	pageArray[2] = {
 		...pageArray[2],
@@ -64,7 +66,9 @@ export const generatePage = async (pagesDefault?: PageInsertType[]) => {
 	}
 };
 
-export const generateVariable = async () => {
+export const generateVariable = async (
+	varibableContent?: VariableInsertType[]
+) => {
 	await db.delete(variables);
 	const createRandomVariable = (): VariableInsertType => {
 		return {
@@ -75,9 +79,12 @@ export const generateVariable = async () => {
 			userId: 1,
 		};
 	};
-	const variableArray = faker.helpers.multiple(createRandomVariable, {
-		count: 10,
-	});
+	const variableArray = [
+		...faker.helpers.multiple(createRandomVariable, {
+			count: 10,
+		}),
+		...(varibableContent ?? []),
+	];
 
 	variableArray.push({
 		data: '100',
@@ -169,28 +176,25 @@ export const generatePagePoint = async (
 	}
 };
 
-export const generateLayout = async () => {
+export const generateLayout = async (layoutsContent?: LayoutInsertType[]) => {
 	const table = layouts;
 	const name = 'оформления';
 	await db.delete(table);
-	const defaultLayout: layoutComponents = [
+	const defaultLayout: LayoutComponent[] = [
 		{
 			type: 'image',
-			align: 'center',
+			align: ['top'],
 			style: '',
-			content: null,
 		},
 		{
 			type: 'content',
-			align: 'center',
+			align: ['center'],
 			style: '',
-			content: null,
 		},
 		{
 			type: 'points',
-			align: 'center',
+			align: ['bottom'],
 			style: '',
-			content: null,
 		},
 	];
 	const createRandom = (): typeof table.$inferInsert => {
@@ -199,9 +203,12 @@ export const generateLayout = async () => {
 			layout: defaultLayout,
 		};
 	};
-	const array = faker.helpers.multiple(createRandom, {
-		count: 1,
-	});
+	const array = [
+		...faker.helpers.multiple(createRandom, {
+			count: 1,
+		}),
+		...(layoutsContent ?? []),
+	];
 
 	try {
 		const idx: number[] = [];

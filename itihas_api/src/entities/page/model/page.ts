@@ -7,7 +7,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/model/user';
 import { histories } from '../../history/model/history';
-import { layoutComponents } from '../type/layout';
+import { LayoutComponent, layoutComponents } from '../type/layout';
 
 export const pages = sqliteTable('pages', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
@@ -213,7 +213,7 @@ export const layouts = sqliteTable('layouts', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	name: text('name').notNull(),
 	description: text('description'),
-	layout: text('layout', { mode: 'json' }).$type<layoutComponents>().notNull(),
+	layout: text('layout', { mode: 'json' }).$type<LayoutComponent[]>().notNull(),
 	rate: integer('rate').notNull().default(0),
 	createdAt: text('created_at')
 		.notNull()

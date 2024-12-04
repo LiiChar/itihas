@@ -1,4 +1,4 @@
-import { getBreadcrumble } from '@/shared/store/BreadcrumbleStore';
+import { useBreadcrumbleStore } from '@/shared/store/BreadcrumbleStore';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -6,15 +6,18 @@ import {
 	BreadcrumbList,
 } from '@/shared/ui/breadcrumb';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Breadcrumble = memo(() => {
-	const breadcrumbles = getBreadcrumble();
+	const breadcrumbles = useBreadcrumbleStore().getBreadcrumble();
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
 				{breadcrumbles.map(b => (
 					<BreadcrumbItem key={b.name}>
-						<BreadcrumbLink href={b.path}>{b.name}</BreadcrumbLink>
+						<BreadcrumbLink>
+							<Link to={b.path}>{b.name}</Link>
+						</BreadcrumbLink>
 					</BreadcrumbItem>
 				))}
 			</BreadcrumbList>

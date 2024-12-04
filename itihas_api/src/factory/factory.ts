@@ -19,7 +19,10 @@ import {
 	generateUsers,
 	generateCharactersToUsers,
 } from '../entities/user/user.factory';
+import { historyContent } from './content/history';
+import { LayoutContent } from './content/layout';
 import { pagesContent, pointsPageContent } from './content/page';
+import { VariableContent } from './content/variable';
 
 export type StatusFactoryType = {
 	status: boolean;
@@ -32,11 +35,11 @@ try {
 	(async () => {
 		console.log(`Начало создания`);
 		console.log(1, ' Генерация расположений контента');
-		await generateLayout();
+		await generateLayout(LayoutContent);
 		console.log(2, ' Генерация пользователей');
 		await generateUsers();
 		console.log(3, ' Генерация история');
-		await generateHistory();
+		await generateHistory(historyContent);
 		console.log(4, ' Генерация закладок');
 		await generateBookmarks();
 		console.log(5, ' Генерация закладок к историям');
@@ -52,12 +55,12 @@ try {
 		console.log(10, ' Генерация пунктов выбора историй');
 		await generatePagePoint(pointsPageContent);
 		console.log(11, ' Генерация параметров');
-		await generateVariable();
+		await generateVariable(VariableContent);
 		console.log(12, ' Генерация комментариев');
 		await generateComments();
 		console.log(13, ' Генерация лайков к страницам');
 		await generateLikePages();
-		console.log(14, ' Генерация ');
+		console.log(14, ' Генерация комментариев');
 		await generateReplyComment();
 		console.log(15, ' Генерация похожих историй');
 		await generateSimilar();

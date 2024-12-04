@@ -5,7 +5,6 @@ import { getCurrentDateAtMinute } from '@/shared/lib/data';
 import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
 
 export const Main = () => {
-	useBreadcrumble('/');
 	const { data: newHistory } = useQuery(() =>
 		getHistoriesFilter({
 			filter: [
@@ -24,6 +23,7 @@ export const Main = () => {
 			limit: 15,
 		})
 	);
+	useBreadcrumble('/');
 
 	if (!newHistory) {
 		return 'Loading...';

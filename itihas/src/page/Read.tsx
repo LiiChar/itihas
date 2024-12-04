@@ -26,6 +26,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { AudioMenu } from '@/component/widget/sound/AudioMenu';
+import { parseInlineStyle } from '@/shared/lib/style';
 
 export const Read = () => {
 	const { id } = useParams();
@@ -92,12 +93,18 @@ export const Read = () => {
 
 type ComponentLayoutDic = LayoutComponent & { page: ReadPage };
 
-export const ImageLayout = ({ page }: ComponentLayoutDic) => {
+export const ImageLayout = ({ page, option, style }: ComponentLayoutDic) => {
 	return (
 		<div>
 			<img
 				className='h-[40vh] object-cover w-full rounded-tl-lg rounded-tr-lg'
-				src={getFullUrl(page.image)}
+				style={parseInlineStyle(style ?? '')}
+				src={
+					!option?.media?.src
+						? getFullUrl(page.image)
+						: page.variables.find(v => v.variable == (option?.media?.src ?? ''))
+								?.data
+				}
 				alt='Основное изображение'
 			/>
 		</div>
@@ -113,10 +120,14 @@ export const getComponent = (
 	return <Component {...layout} page={page} key={key} />;
 };
 
-export const ContentLayout = ({ page }: ComponentLayoutDic) => {
-	return <div className='text-pretty'>{page.content}</div>;
+export const ContentLayout = ({ page, style }: ComponentLayoutDic) => {
+	return (
+		<div style={parseInlineStyle(style ?? '')} className='text-pretty'>
+			{page.content}
+		</div>
+	);
 };
-export const PointLayout = ({ page }: ComponentLayoutDic) => {
+export const PointLayout = ({ page, style }: ComponentLayoutDic) => {
 	const navigate = useNavigate();
 	useKeyboard({
 		onKeyDown: async event => {
@@ -133,7 +144,10 @@ export const PointLayout = ({ page }: ComponentLayoutDic) => {
 		navigate(`?page=${id}`);
 	};
 	return (
-		<div className='flex flex-col justify-start items-start'>
+		<div
+			style={parseInlineStyle(style ?? '')}
+			className='flex flex-col justify-start items-start'
+		>
 			{page.points.map((p, i) => (
 				<Button
 					variant='ghost'
@@ -151,12 +165,33 @@ export const CustomLayout = ({}: ComponentLayoutDic) => {
 	return 'custom';
 };
 
+export const ListComponent = ({ option, page }: ComponentLayoutDic) => {
+	let variableDataList: any[] =
+		page.variables.find(v => v.variable == option?.list?.list_variable)?.data ??
+		[];
+	if (!variableDataList) return '';
+	if (!Array.isArray(variableDataList)) return '';
+	return (
+		<div>
+			{variableDataList.map(d => (
+				<div>
+					<div>Имя: {d[option?.list?.dialog?.dialog_name_variable ?? '']}</div>
+					<div>
+						Говорит: {d[option?.list?.dialog?.dialog_message_variable ?? '']}
+					</div>
+				</div>
+			))}
+		</div>
+	);
+};
+
 const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
 	action: '',
 	block: '',
-	list: '',
+	list: ListComponent,
 	video: '',
+	text: '',
 };

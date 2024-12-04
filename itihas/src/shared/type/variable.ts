@@ -1,6 +1,6 @@
 export type Variable = {
 	id: number;
-	data: string;
+	data: any;
 	historyId: number;
 	userId: number;
 	variable: string;

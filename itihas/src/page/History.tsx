@@ -21,7 +21,6 @@ import { useListenerStore } from '@/shared/store/ListenerStore';
 
 export const History = () => {
 	const { id } = useParams();
-	useBreadcrumble('/history/[historyId]', { historyId: `${id}` });
 	const user = useUserStore(store => store.user);
 	const { history } = useHistoryStore();
 	const {} = useAudioStore();
@@ -32,6 +31,10 @@ export const History = () => {
 			}
 		},
 	});
+	useBreadcrumble('/history/[historyId]', {
+		historyId: `${history?.name ?? id}`,
+	});
+
 	const { addCallback } = useListenerStore();
 	useMount(() => {
 		addCallback('historyChange', async () => {
@@ -73,14 +76,14 @@ export const History = () => {
 								Добавить в закладки
 							</Button>
 						</SelectBookmarks>
-						{user?.id == history.author.id && (
+						{user && user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/page/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
 									Писать историю
 								</Button>
 							</Link>
 						)}
-						{user?.id == history.author.id && (
+						{user && user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
 									Редактировать
@@ -92,7 +95,7 @@ export const History = () => {
 						</div>
 					</div>
 					<div className='flex sm:hidden sticky bottom-3 left-3 justify-between items-center gap-3 mt-3'>
-						{user?.id == history.author.id && (
+						{user && user?.id == history.author.id && (
 							<Link className='' to={`/history/${history.id}/page/edit`}>
 								<Edit />
 							</Link>

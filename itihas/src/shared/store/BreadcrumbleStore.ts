@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { create } from 'zustand';
 
 export interface BreadcrumbleStore {
@@ -76,28 +77,41 @@ const defaultValue: BreadcrumbleChildren = [
 export const useBreadcrumbleStore = create<{
 	breadcrumble: BreadcrumbleChildren;
 	path: string;
+	visible: boolean;
 	vars: Record<string, string>;
-}>(() => ({
+	getBreadcrumble: () => { name: string; path: string }[];
+}>((_set, get) => ({
 	breadcrumble: defaultValue,
 	vars: {},
+	visible: false,
 	path: '/',
+	getBreadcrumble() {
+		const currentPath = get().path;
+		const vars = get().vars;
+		const visible = get().visible;
+		if (!visible) return [];
+		return deepWideSearchBreadcrumble(currentPath, vars);
+	},
 }));
-
-export const getBreadcrumble = () => {
-	const currentPath = useBreadcrumbleStore.getState().path;
-	const vars = useBreadcrumbleStore.getState().vars;
-	return deepWideSearchBreadcrumble(currentPath, vars);
-};
 
 export const useBreadcrumble = (
 	path: string,
 	vars?: Record<string, string>
 ) => {
-	useBreadcrumbleStore.setState(store => {
-		store.path = path;
-		store.vars = vars ? vars : store.vars;
-		return store;
-	});
+	useEffect(() => {
+		useBreadcrumbleStore.setState(store => {
+			store.path = path;
+			store.visible = true;
+			store.vars = vars ? vars : store.vars;
+			return Object.assign({}, store);
+		});
+		return () => {
+			useBreadcrumbleStore.setState(store => {
+				store.visible = false;
+				return Object.assign({}, store);
+			});
+		};
+	}, []);
 };
 
 const deepWideSearchBreadcrumble = (
