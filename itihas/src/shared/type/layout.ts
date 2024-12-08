@@ -19,33 +19,23 @@ export type LayoutComponent = {
 		| 'action'
 		| 'text';
 	align?: ('center' | 'left' | 'right' | 'bottom' | 'top')[];
-	content?: string;
+	content: string;
+	elementStyle?: string;
+	visible?: boolean;
 	option?: {
-		list?: {
-			list_variable?: string;
-			list_type?: 'list' | 'dialog';
-			dialog?: {
-				dialog_name_variable?: string;
-				dialog_message_variable?: string;
-				dialog_action_variable?: string;
-			};
-			list?: {
-				list_element_variable?: string;
-			};
-		};
-		media?: {
-			src?: string;
-			image?: {};
-			video?: {
-				autoplay?: boolean;
-				volume?: number;
-			};
+		image?: {
+			alt?: string;
+			title?: string;
 		};
 		action?: {
-			script?: string;
+			title?: string;
+			moved?: string;
 		};
-		text?: {
-			text_variable?: string;
+		video?: {
+			autoplay?: boolean;
+			volume?: number;
+			alt?: string;
+			title?: string;
 		};
 	};
 	style?: string;

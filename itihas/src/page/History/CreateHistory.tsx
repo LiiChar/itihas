@@ -531,4 +531,5 @@ const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	list: '',
 	block: '',
 	video: '',
+	text: '',
 };

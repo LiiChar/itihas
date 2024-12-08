@@ -40,7 +40,7 @@ export const LoginForm = () => {
 	};
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmitLogin)} className=''>
+			<form onSubmit={form.handleSubmit(onSubmitLogin)}>
 				<FormField
 					control={form.control}
 					name='username'

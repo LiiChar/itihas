@@ -66,7 +66,7 @@ export const TabsInfo = memo(({ history }: { history: HistoryPages }) => {
 				{tabs.map(t => (
 					<TabsTrigger
 						key={t.value}
-						className={`rounded-none text-foreground ${
+						className={`rounded-none relative text-foreground ${
 							activeTab == t.value && 'text-accent'
 						}`}
 						value={t.value}

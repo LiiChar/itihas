@@ -38,7 +38,6 @@ bookmarkRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function
 }));
 bookmarkRouter.post('/', (0, validationMiddleware_1.validateData)(bookmark_scheme_1.bookmarkInsertSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    console.log(data);
     const bookmark = yield (0, bookmark_service_1.createBookmark)(data);
     return res.json(bookmark);
 }));

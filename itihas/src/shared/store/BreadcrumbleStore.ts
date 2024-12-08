@@ -74,42 +74,65 @@ const defaultValue: BreadcrumbleChildren = [
 	},
 ];
 
-export const useBreadcrumbleStore = create<{
+type BreadcrumbleStoreVariables = {
 	breadcrumble: BreadcrumbleChildren;
+	breadcrumblePath: { name: string; path: string }[];
 	path: string;
 	visible: boolean;
 	vars: Record<string, string>;
-	getBreadcrumble: () => { name: string; path: string }[];
-}>((_set, get) => ({
-	breadcrumble: defaultValue,
-	vars: {},
-	visible: false,
-	path: '/',
-	getBreadcrumble() {
-		const currentPath = get().path;
-		const vars = get().vars;
-		const visible = get().visible;
-		if (!visible) return [];
-		return deepWideSearchBreadcrumble(currentPath, vars);
-	},
-}));
+};
+
+export type BreadcrumbleStoreType = BreadcrumbleStoreVariables & {
+	setStore: (data: Partial<BreadcrumbleStoreVariables>) => void;
+	getBreadcrumble: (
+		path?: string,
+		variables?: Record<string, string>,
+		isVisible?: boolean
+	) => { name: string; path: string }[];
+};
+
+export const useBreadcrumbleStore = create<BreadcrumbleStoreType>(
+	(set, get) => ({
+		breadcrumble: defaultValue,
+		vars: {},
+		breadcrumblePath: [{ name: 'Главная', path: '/' }],
+		visible: false,
+		path: '/',
+		setStore(data) {
+			set(state => ({
+				...data,
+				breadcrumblePath: state.getBreadcrumble(
+					data.path,
+					data.vars,
+					data.visible
+				),
+			}));
+		},
+
+		getBreadcrumble(
+			path?: string,
+			variables?: Record<string, string>,
+			isVisible?: boolean
+		) {
+			const currentPath = path ?? get().path;
+			const vars = variables ?? get().vars;
+			const visible = isVisible ?? get().visible;
+			if (!visible) return [];
+
+			return deepWideSearchBreadcrumble(currentPath, vars);
+		},
+	})
+);
 
 export const useBreadcrumble = (
 	path: string,
 	vars?: Record<string, string>
 ) => {
+	const { setStore } = useBreadcrumbleStore();
 	useEffect(() => {
-		useBreadcrumbleStore.setState(store => {
-			store.path = path;
-			store.visible = true;
-			store.vars = vars ? vars : store.vars;
-			return Object.assign({}, store);
-		});
+		setStore({ path, vars, visible: true });
 		return () => {
-			useBreadcrumbleStore.setState(store => {
-				store.visible = false;
-				return Object.assign({}, store);
-			});
+			setStore({ path, vars, visible: false });
 		};
 	}, []);
 };

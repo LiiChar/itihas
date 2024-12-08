@@ -48,10 +48,7 @@ type Element = {
 };
 
 const parse = (str: string, { regex }: Element) => {
-	console.log(str, regex);
-
 	const exec = regex.exec(str)!;
-	console.log(exec);
 
 	const lastIndex = (exec[0] ?? exec.input).length;
 	index += lastIndex + 1;

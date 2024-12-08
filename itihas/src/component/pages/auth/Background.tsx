@@ -46,9 +46,24 @@ export const Background = ({ text }: { text: string[] }) => {
 					</div>
 				))}
 			</div>
-			<img style={layer0} src={LayerBase} alt='layer0' />
-			<img style={layer1} src={LayerMiddle} alt='layer1' />
-			<img style={layer2} src={LayerFrond} alt='layer2' />
+			<img
+				className='object-cover'
+				style={layer0}
+				src={LayerBase}
+				alt='layer0'
+			/>
+			<img
+				className='object-cover'
+				style={layer1}
+				src={LayerMiddle}
+				alt='layer1'
+			/>
+			<img
+				className='object-cover'
+				style={layer2}
+				src={LayerFrond}
+				alt='layer2'
+			/>
 		</div>
 	);
 };

@@ -155,7 +155,7 @@ export const RegisterForm = () => {
 						</FormItem>
 					)}
 				/>
-				<Button type='submit'>Войти</Button>
+				<Button type='submit'>Зарегестрироваться</Button>
 			</form>
 		</Form>
 	);

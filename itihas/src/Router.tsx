@@ -12,6 +12,7 @@ import { HistoryEdit } from './page/History/EditHistory';
 import { CreateHistory } from './page/History/CreateHistory';
 import { Constructor } from './page/Page/Constructor';
 import { Catalog } from './page/Catalog';
+import { VariableHistory } from './page/History/VariableHistory';
 
 const router = createBrowserRouter([
 	{
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
 			{
 				path: '/history/create',
 				element: <CreateHistory />,
+			},
+			{
+				path: '/history/:id/variables',
+				element: <VariableHistory />,
 			},
 			{
 				path: '/history/:id/edit',

@@ -16,7 +16,6 @@ import { BookMarkedIcon, Edit } from 'lucide-react';
 import { SelectBookmarks } from '@/component/widget/bookmarks/SelectBookmarks';
 import { joinToRoom } from '@/shared/lib/websocket/websocket';
 import { HistoryLike } from '@/component/pages/History/HistoryLike';
-import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 
 export const History = () => {
@@ -31,9 +30,6 @@ export const History = () => {
 			}
 		},
 	});
-	useBreadcrumble('/history/[historyId]', {
-		historyId: `${history?.name ?? id}`,
-	});
 
 	const { addCallback } = useListenerStore();
 	useMount(() => {
@@ -46,6 +42,10 @@ export const History = () => {
 	if (!history) {
 		return;
 	}
+
+	// useBreadcrumble('/history/[historyId]', {
+	// 	historyId: `${history?.name ?? id}`,
+	// });
 
 	return (
 		<main className='flex justify-center  dark relative pt-6'>
@@ -63,7 +63,11 @@ export const History = () => {
 						/>
 					</div>
 					<div className='hidden sm:flex flex-col gap-3 mt-3'>
-						<Link to={history.pages.length == 0 ? '' : `/history/${id}/read`}>
+						<Link
+							to={
+								history.pages.length == 0 ? '' : `/history/${history.id}/read`
+							}
+						>
 							<Button
 								disabled={history.pages.length == 0}
 								className='rounded-lg w-full bg-primary font-normal'
@@ -76,14 +80,14 @@ export const History = () => {
 								Добавить в закладки
 							</Button>
 						</SelectBookmarks>
-						{user && user?.id == history.author.id && (
+						{user && history.author && user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/page/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
 									Писать историю
 								</Button>
 							</Link>
 						)}
-						{user && user?.id == history.author.id && (
+						{user && history.author && user?.id == history.author.id && (
 							<Link className='w-full' to={`/history/${history.id}/edit`}>
 								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
 									Редактировать
@@ -95,14 +99,16 @@ export const History = () => {
 						</div>
 					</div>
 					<div className='flex sm:hidden sticky bottom-3 left-3 justify-between items-center gap-3 mt-3'>
-						{user && user?.id == history.author.id && (
+						{user && history.author && user?.id == history.author.id && (
 							<Link className='' to={`/history/${history.id}/page/edit`}>
 								<Edit />
 							</Link>
 						)}
 						<Link
 							className='w-full'
-							to={history.pages.length == 0 ? '' : `/history/${id}/read`}
+							to={
+								history.pages.length == 0 ? '' : `/history/${history.id}/read`
+							}
 						>
 							<Button
 								disabled={history.pages.length == 0}

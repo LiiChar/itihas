@@ -13,6 +13,9 @@ import {
 } from './page.scheme';
 import { parse, run } from './lib/actionV2';
 import { replaceAll } from '../../lib/string';
+import { ErrorBoundary } from '../../lib/error';
+import { users } from '../user/model/user';
+import { ReasonPhrases } from 'http-status-codes';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,
@@ -25,7 +28,10 @@ export const getCurrentPageByHistoryId = async (
 		.where(eq(pages.historyId, id));
 
 	if (firstPage.length == 0 && !firstPage[0].id) {
-		throw Error('Page not exist in story');
+		throw new ErrorBoundary(
+			'Page not exist in story',
+			ReasonPhrases.BAD_REQUEST
+		);
 	}
 	const page = await db.query.pages.findFirst({
 		where: (pages, { eq, and, or }) => {
@@ -52,7 +58,10 @@ export const getCurrentPageByHistoryId = async (
 	});
 
 	if (!page) {
-		throw Error(`Не найдено главы по id ${currentPage}`);
+		throw new ErrorBoundary(
+			`Не найдено главы по id ${currentPage}`,
+			ReasonPhrases.BAD_REQUEST
+		);
 	}
 
 	const variables = await db.query.variables.findMany({
@@ -60,13 +69,17 @@ export const getCurrentPageByHistoryId = async (
 			and(eq(variables.historyId, id), eq(variables.userId, user.id)),
 	});
 
-	const pagesWithVariables = Object.assign(page, { variables });
+	let pagesWithVariables = Object.assign(page, { variables });
 
-	pagesWithVariables['content'] = await insertDataToContent(
-		page.content,
-		id,
-		user.id
-	);
+	try {
+		pagesWithVariables['content'] = await insertDataToContent(
+			page.content,
+			id,
+			user.id
+		);
+	} catch (error) {
+		throw new ErrorBoundary('Code run failed', ReasonPhrases.BAD_REQUEST);
+	}
 
 	if (pagesWithVariables.layout) {
 		if (typeof pagesWithVariables.layout.layout == 'string') {
@@ -126,7 +139,30 @@ export const getCurrentPageByHistoryId = async (
 		page.history.layout.layout[i].content = c;
 	});
 
+	if (page.script) {
+		const tokens = parse(page.script);
+		const pageId = await run(tokens, null, user, page.historyId, new Map());
+		if (pageId) {
+			pagesWithVariables = await getCurrentPageByHistoryId(id, pageId, user);
+		}
+	}
+
 	return pagesWithVariables;
+};
+
+export const runCode = async (
+	code: string,
+	historyId: number,
+	userId: number
+) => {
+	const tokens = parse(code);
+	const user = await db.query.users.findFirst({
+		where: eq(users.id, userId),
+	});
+	if (!user) {
+		throw new ErrorBoundary('User not exist', ReasonPhrases.BAD_REQUEST);
+	}
+	await run(tokens, null, user, historyId, new Map());
 };
 
 export const deleteActionById = async (actionId: number) => {
@@ -157,7 +193,10 @@ export const executeActionPage = async (id: number, user: UserType) => {
 		},
 	});
 	if (!point) {
-		throw Error('Не найдено пункта по id - ' + id);
+		throw new ErrorBoundary(
+			'Не найдено пункта по id - ' + id,
+			ReasonPhrases.BAD_REQUEST
+		);
 	}
 
 	const tokens = parse(point.action);
@@ -177,7 +216,10 @@ export const createPage = async (id: number, data: pageInsertSchema) => {
 		where: eq(pages.name, data.name),
 	});
 	if (existPageByName) {
-		throw Error(`Страница с названием ${data.name} уже создана!`);
+		throw new ErrorBoundary(
+			`Страница с названием ${data.name} уже создана!`,
+			ReasonPhrases.BAD_REQUEST
+		);
 	}
 	const value = {
 		content: data.content,

@@ -8,6 +8,15 @@ export const getCurrentPage = async (id: number, page: number) => {
 	return pageData.data;
 };
 
+export const runCode = async (data: {
+	code: string;
+	historyId: number;
+	userId: number;
+}) => {
+	const req = await axi.post(URL + '/page/code', data);
+	return req.status == 200;
+};
+
 export const resolveAction = async (actionId: number) => {
 	const pageData = await axi.get<ReadPage>(URL + '/page/action/' + actionId);
 	return pageData.data;

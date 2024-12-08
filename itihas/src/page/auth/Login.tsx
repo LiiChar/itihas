@@ -32,7 +32,7 @@ export const Login = () => {
 				initial={{ x: -500, opacity: 0 }}
 				exit={{ x: -500 }}
 				transition={{ ease: 'easeOut', duration: 0.5 }}
-				className='w-[clamp(300px,30%,600px)] z-[70] h-full bg-secondary px-4 py-2'
+				className='w-[clamp(400px,30%,600px)] min-w-[400px] z-[70] h-full bg-secondary px-4 py-2'
 			>
 				<h2 className='text-lg'>Войти на Itihas</h2>
 				<Separator orientation='horizontal' className='bg-foreground' />

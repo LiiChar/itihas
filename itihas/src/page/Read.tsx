@@ -5,7 +5,7 @@ import {
 	useKeyboard,
 } from '@siberiacancode/reactuse';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { resolveAction } from '../shared/api/page';
+import { resolveAction, runCode } from '../shared/api/page';
 import { LayoutComponent } from '../shared/type/layout';
 import { ReadPage } from '../shared/type/page';
 import {
@@ -24,9 +24,11 @@ import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
-import { getFullUrl, handleImageError } from '@/shared/lib/image';
+import { handleImageError } from '@/shared/lib/image';
 import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 import { parseInlineStyle } from '@/shared/lib/style';
+import { runListener, useListenerStore } from '@/shared/store/ListenerStore';
+import { useUserStore } from '@/shared/store/UserStore';
 
 export const Read = () => {
 	const { id } = useParams();
@@ -43,8 +45,12 @@ export const Read = () => {
 			keys: ['currentPage'],
 		}
 	);
+	const { addCallback } = useListenerStore();
 	useMount(() => {
 		setVisibleFooter(false);
+		addCallback('readUpdate', async () => {
+			await fetchCurrentStore(+id!, currentPage);
+		});
 		setHeader(AsideHeader);
 		addComponent(5, () => <AudioMenu />);
 	});
@@ -93,18 +99,13 @@ export const Read = () => {
 
 type ComponentLayoutDic = LayoutComponent & { page: ReadPage };
 
-export const ImageLayout = ({ page, option, style }: ComponentLayoutDic) => {
+export const ImageLayout = ({ page, style, content }: ComponentLayoutDic) => {
 	return (
 		<div>
 			<img
 				className='h-[40vh] object-cover w-full rounded-tl-lg rounded-tr-lg'
 				style={parseInlineStyle(style ?? '')}
-				src={
-					!option?.media?.src
-						? getFullUrl(page.image)
-						: page.variables.find(v => v.variable == (option?.media?.src ?? ''))
-								?.data
-				}
+				src={content ?? page.image}
 				alt='Основное изображение'
 			/>
 		</div>
@@ -165,23 +166,51 @@ export const CustomLayout = ({}: ComponentLayoutDic) => {
 	return 'custom';
 };
 
-export const ListComponent = ({ option, page }: ComponentLayoutDic) => {
-	let variableDataList: any[] =
-		page.variables.find(v => v.variable == option?.list?.list_variable)?.data ??
-		[];
-	if (!variableDataList) return '';
-	if (!Array.isArray(variableDataList)) return '';
+export const ListComponent = ({
+	content,
+	style,
+	elementStyle,
+}: ComponentLayoutDic) => {
 	return (
-		<div>
-			{variableDataList.map(d => (
-				<div>
-					<div>Имя: {d[option?.list?.dialog?.dialog_name_variable ?? '']}</div>
-					<div>
-						Говорит: {d[option?.list?.dialog?.dialog_message_variable ?? '']}
-					</div>
-				</div>
+		<div style={parseInlineStyle(style ?? '')}>
+			{content.split('|||').map(el => (
+				<div style={parseInlineStyle(elementStyle ?? '')}>{el}</div>
 			))}
 		</div>
+	);
+};
+
+// const ListElement = () => {};
+
+const TextElement = ({ content, style }: ComponentLayoutDic) => {
+	return (
+		<span style={parseInlineStyle(style ?? '')} className='text-pretty'>
+			{content}
+		</span>
+	);
+};
+
+const ActionComponent = ({
+	page,
+	content,
+	style,
+	option,
+}: ComponentLayoutDic) => {
+	const { user } = useUserStore();
+	return (
+		<Button
+			style={parseInlineStyle(style ?? '')}
+			onClick={async () => {
+				await runCode({
+					code: content,
+					historyId: page.id,
+					userId: user?.id ?? 1,
+				});
+				runListener('readUpdate');
+			}}
+		>
+			{option?.action?.title ?? 'Кнопка'}
+		</Button>
 	);
 };
 
@@ -189,9 +218,9 @@ const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
-	action: '',
+	action: ActionComponent,
 	block: '',
 	list: ListComponent,
 	video: '',
-	text: '',
+	text: TextElement,
 };

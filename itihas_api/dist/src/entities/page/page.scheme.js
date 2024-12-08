@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pagePointUpdateScheme = exports.pagePointInsertScheme = exports.pageInsertSchema = void 0;
+exports.runCodeScheme = exports.pagePointUpdateScheme = exports.pagePointInsertScheme = exports.pageInsertSchema = void 0;
 const zod_1 = require("zod");
 exports.pageInsertSchema = zod_1.z.object({
     name: zod_1.z.string(),
@@ -20,3 +20,8 @@ exports.pagePointUpdateScheme = zod_1.z
     action: zod_1.z.string().nullable(),
 })
     .partial();
+exports.runCodeScheme = zod_1.z.object({
+    code: zod_1.z.string(),
+    userId: zod_1.z.number(),
+    historyId: zod_1.z.number(),
+});

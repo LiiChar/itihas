@@ -16,8 +16,20 @@ const db_1 = require("../../database/db");
 const page_service_1 = require("./page.service");
 const validationMiddleware_1 = require("../../middleware/validationMiddleware");
 const page_scheme_1 = require("./page.scheme");
+const error_1 = require("../../lib/error");
 const pageRouter = (0, express_1.Router)();
 exports.pageRouter = pageRouter;
+pageRouter.post('/code', (0, validationMiddleware_1.validateData)(page_scheme_1.runCodeScheme), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { code, historyId, userId } = req.body;
+        yield (0, page_service_1.runCode)(code, historyId, userId);
+        return res.json('Code run succeffuly').status(200);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            return res.json(error.message).status(500);
+    }
+}));
 pageRouter.post('/:id', (0, validationMiddleware_1.validateData)(page_scheme_1.pageInsertSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
@@ -29,6 +41,8 @@ pageRouter.post('/:id', (0, validationMiddleware_1.validateData)(page_scheme_1.p
     }
     catch (error) {
         if (error instanceof Error)
+            return res.json(error.message).status(500);
+        if (error instanceof error_1.ErrorBoundary)
             return res.json(error.message).status(500);
     }
 }));

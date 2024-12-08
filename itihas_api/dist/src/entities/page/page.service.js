@@ -9,20 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPagePoint = exports.updatePage = exports.createPage = exports.executeActionPage = exports.updateAction = exports.deleteActionById = exports.getCurrentPageByHistoryId = void 0;
+exports.createPagePoint = exports.updatePage = exports.createPage = exports.executeActionPage = exports.updateAction = exports.deleteActionById = exports.runCode = exports.getCurrentPageByHistoryId = void 0;
 const db_1 = require("../../database/db");
 const content_1 = require("./lib/content");
 const drizzle_orm_1 = require("drizzle-orm");
 const page_1 = require("./model/page");
 const actionV2_1 = require("./lib/actionV2");
 const string_1 = require("../../lib/string");
+const error_1 = require("../../lib/error");
+const user_1 = require("../user/model/user");
+const http_status_codes_1 = require("http-status-codes");
 const getCurrentPageByHistoryId = (id, currentPage, user) => __awaiter(void 0, void 0, void 0, function* () {
     const firstPage = yield db_1.db
         .select({ id: (0, drizzle_orm_1.min)(page_1.pages.id) })
         .from(page_1.pages)
         .where((0, drizzle_orm_1.eq)(page_1.pages.historyId, id));
     if (firstPage.length == 0 && !firstPage[0].id) {
-        throw Error('Page not exist in story');
+        throw new error_1.ErrorBoundary('Page not exist in story', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
     }
     const page = yield db_1.db.query.pages.findFirst({
         where: (pages, { eq, and, or }) => {
@@ -49,13 +52,18 @@ const getCurrentPageByHistoryId = (id, currentPage, user) => __awaiter(void 0, v
         },
     });
     if (!page) {
-        throw Error(`Не найдено главы по id ${currentPage}`);
+        throw new error_1.ErrorBoundary(`Не найдено главы по id ${currentPage}`, http_status_codes_1.ReasonPhrases.BAD_REQUEST);
     }
     const variables = yield db_1.db.query.variables.findMany({
         where: (variables, { eq, and }) => and(eq(variables.historyId, id), eq(variables.userId, user.id)),
     });
-    const pagesWithVariables = Object.assign(page, { variables });
-    pagesWithVariables['content'] = yield (0, content_1.insertDataToContent)(page.content, id, user.id);
+    let pagesWithVariables = Object.assign(page, { variables });
+    try {
+        pagesWithVariables['content'] = yield (0, content_1.insertDataToContent)(page.content, id, user.id);
+    }
+    catch (error) {
+        throw new error_1.ErrorBoundary('Code run failed', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
+    }
     if (pagesWithVariables.layout) {
         if (typeof pagesWithVariables.layout.layout == 'string') {
             pagesWithVariables.layout.layout = JSON.parse(pagesWithVariables.layout.layout);
@@ -96,9 +104,27 @@ const getCurrentPageByHistoryId = (id, currentPage, user) => __awaiter(void 0, v
     contents.forEach((c, i) => {
         page.history.layout.layout[i].content = c;
     });
+    if (page.script) {
+        const tokens = (0, actionV2_1.parse)(page.script);
+        const pageId = yield (0, actionV2_1.run)(tokens, null, user, page.historyId, new Map());
+        if (pageId) {
+            pagesWithVariables = yield (0, exports.getCurrentPageByHistoryId)(id, pageId, user);
+        }
+    }
     return pagesWithVariables;
 });
 exports.getCurrentPageByHistoryId = getCurrentPageByHistoryId;
+const runCode = (code, historyId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const tokens = (0, actionV2_1.parse)(code);
+    const user = yield db_1.db.query.users.findFirst({
+        where: (0, drizzle_orm_1.eq)(user_1.users.id, userId),
+    });
+    if (!user) {
+        throw new error_1.ErrorBoundary('User not exist', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
+    }
+    yield (0, actionV2_1.run)(tokens, null, user, historyId, new Map());
+});
+exports.runCode = runCode;
 const deleteActionById = (actionId) => __awaiter(void 0, void 0, void 0, function* () {
     yield db_1.db.delete(page_1.pagePoints).where((0, drizzle_orm_1.eq)(page_1.pagePoints.id, actionId));
 });
@@ -124,7 +150,7 @@ const executeActionPage = (id, user) => __awaiter(void 0, void 0, void 0, functi
         },
     });
     if (!point) {
-        throw Error('Не найдено пункта по id - ' + id);
+        throw new error_1.ErrorBoundary('Не найдено пункта по id - ' + id, http_status_codes_1.ReasonPhrases.BAD_REQUEST);
     }
     const tokens = (0, actionV2_1.parse)(point.action);
     const pageId = yield (0, actionV2_1.run)(tokens, null, user, 1, new Map());
@@ -137,7 +163,7 @@ const createPage = (id, data) => __awaiter(void 0, void 0, void 0, function* () 
         where: (0, drizzle_orm_1.eq)(page_1.pages.name, data.name),
     });
     if (existPageByName) {
-        throw Error(`Страница с названием ${data.name} уже создана!`);
+        throw new error_1.ErrorBoundary(`Страница с названием ${data.name} уже создана!`, http_status_codes_1.ReasonPhrases.BAD_REQUEST);
     }
     const value = {
         content: data.content,

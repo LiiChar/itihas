@@ -9,7 +9,9 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 export const Breadcrumble = memo(() => {
-	const breadcrumbles = useBreadcrumbleStore().getBreadcrumble();
+	const breadcrumbles = useBreadcrumbleStore(
+		state => [] as typeof state.breadcrumblePath
+	);
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>

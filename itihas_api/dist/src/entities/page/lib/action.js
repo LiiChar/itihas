@@ -27,9 +27,7 @@ const valid = (str, { regex }) => {
 };
 const parse = (str, { regex }) => {
     var _a;
-    console.log(str, regex);
     const exec = regex.exec(str);
-    console.log(exec);
     const lastIndex = ((_a = exec[0]) !== null && _a !== void 0 ? _a : exec.input).length;
     index += lastIndex + 1;
     return [str.slice(lastIndex), str.slice(0, lastIndex)];

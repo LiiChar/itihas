@@ -14,12 +14,15 @@ const drizzle_orm_1 = require("drizzle-orm");
 const db_1 = require("../../../database/db");
 const page_1 = require("../model/page");
 const type_1 = require("./type");
+const error_1 = require("../../../lib/error");
+const http_status_codes_1 = require("http-status-codes");
 const parse = (input) => {
     let result = [];
     const stack = [];
     let currentToken = '';
     let position = 0;
     let nested = false;
+    let isObjectOrArray = 0;
     for (let char of input) {
         if (char === '(') {
             nested = true;
@@ -48,6 +51,10 @@ const parse = (input) => {
             nested = false;
         }
         else if (char === ',') {
+            if (isObjectOrArray > 0) {
+                currentToken += char;
+                continue;
+            }
             // Запятая - разделитель значений
             if (currentToken) {
                 stack[stack.length - 1].children.push(currentToken);
@@ -59,6 +66,19 @@ const parse = (input) => {
             continue;
         }
         else {
+            if (char === '{') {
+                isObjectOrArray += 1;
+                isObjectOrArray += 1;
+            }
+            else if (char === '}') {
+                isObjectOrArray -= 1;
+            }
+            else if (char === '[') {
+                isObjectOrArray += 1;
+            }
+            else if (char === ']') {
+                isObjectOrArray -= 1;
+            }
             currentToken += char; // Собираем текущий токен
         }
         position += 1;
@@ -126,7 +146,7 @@ const run = (tokens_1, child_1, user_1, id_1, varMap_1, ...args_1) => __awaiter(
                 where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(page_1.variables.userId, user.id), (0, drizzle_orm_1.eq)(page_1.variables.historyId, id), (0, drizzle_orm_1.eq)(page_1.variables.variable, (yield (0, exports.run)(t.children, 0, user, id, varMap, isReturn)))),
             });
             if (!data) {
-                throw Error('action: query, selector: t.value, Not found variable by name');
+                throw new error_1.ErrorBoundary('action: query, selector: t.value, Not found variable by name', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
             }
             return data.data;
         }
@@ -170,7 +190,10 @@ const run = (tokens_1, child_1, user_1, id_1, varMap_1, ...args_1) => __awaiter(
         else if (t.token == 'set') {
             const value = yield (0, exports.run)(t.children, 1, user, id, vars, true);
             const key = yield (0, exports.run)(t.children, 0, user, id, vars, true);
-            const data = vars.has(value) ? vars.get(value) : value;
+            let data = vars.has(value) ? vars.get(value) : value;
+            if (Number.isInteger(data)) {
+                data = `${data}`;
+            }
             yield db_1.db
                 .update(page_1.variables)
                 .set({ data })

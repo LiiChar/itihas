@@ -46,6 +46,7 @@ export const parse = (input: string): Tokens => {
 	let currentToken: string = '';
 	let position = 0;
 	let nested = false;
+	let isObjectOrArray = 0;
 
 	for (let char of input) {
 		if (char === '(') {
@@ -73,6 +74,10 @@ export const parse = (input: string): Tokens => {
 			}
 			nested = false;
 		} else if (char === ',') {
+			if (isObjectOrArray > 0) {
+				currentToken += char;
+				continue;
+			}
 			// Запятая - разделитель значений
 			if (currentToken) {
 				stack[stack.length - 1].children.push(currentToken);
@@ -82,6 +87,17 @@ export const parse = (input: string): Tokens => {
 			position += 1;
 			continue;
 		} else {
+			if (char === '{') {
+				isObjectOrArray += 1;
+
+				isObjectOrArray += 1;
+			} else if (char === '}') {
+				isObjectOrArray -= 1;
+			} else if (char === '[') {
+				isObjectOrArray += 1;
+			} else if (char === ']') {
+				isObjectOrArray -= 1;
+			}
 			currentToken += char; // Собираем текущий токен
 		}
 		position += 1;
@@ -163,8 +179,9 @@ export const run = async (
 				),
 			});
 			if (!data) {
-				throw Error(
-					'action: query, selector: t.value, Not found variable by name'
+				throw new ErrorBoundary(
+					'action: query, selector: t.value, Not found variable by name',
+					ReasonPhrases.BAD_REQUEST
 				);
 			}
 			return data.data;
@@ -202,7 +219,12 @@ export const run = async (
 		} else if (t.token == 'set') {
 			const value = await run(t.children, 1, user, id, vars, true);
 			const key = await run(t.children, 0, user, id, vars, true);
-			const data = vars.has(value) ? vars.get(value) : value;
+			let data = vars.has(value) ? vars.get(value) : value;
+
+			if (Number.isInteger(data)) {
+				data = `${data}`;
+			}
+
 			await db
 				.update(variables)
 				.set({ data })
@@ -229,6 +251,7 @@ export const run = async (
 			const key = await run(t.children, 0, user, id, vars, true);
 			const first = vars.get(key);
 			const second = await run(t.children, 1, user, id, vars, true);
+
 			if (isReturn) {
 				return +first + +second;
 			}

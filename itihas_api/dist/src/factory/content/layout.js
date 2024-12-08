@@ -8,17 +8,8 @@ const LayoutContentType = [
         layout: [
             {
                 type: 'list',
-                option: {
-                    list: {
-                        list_type: 'dialog',
-                        list_variable: 'dialog',
-                        dialog: {
-                            dialog_message_variable: 'message',
-                            dialog_name_variable: 'name',
-                            dialog_action_variable: 'action',
-                        },
-                    },
-                },
+                content: `Говорит {=dialog.name}. 
+          Сообщение {=dialog.message}`,
             },
         ],
     },

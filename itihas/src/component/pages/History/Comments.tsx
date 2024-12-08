@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { CommentWithUser } from '../../../shared/type/comment';
 import { Comment } from './Comment';
 import { TextareaForm } from '@/component/widget/form/TextareaForm';
@@ -8,23 +8,35 @@ import { useUserStore } from '@/shared/store/UserStore';
 
 export const CommentTextarea = memo(() => {
 	const { user } = useUserStore();
+	const [text, setText] = useState('');
 	if (!user) {
 		return '';
 	}
 	return (
-		<TextareaForm
-			placeholder='Написть комментарии'
-			onSubmit={value => {
-				const id = useHistoryStore.getState().history?.id;
-				const userId = user.id;
-				if (!id || !userId) return;
-				createComment({
-					content: value,
-					historyId: id,
-					userId: userId,
-				});
-			}}
-		/>
+		<div>
+			<TextareaForm
+				placeholder='Написть комментарии'
+				onSubmit={value => {
+					const id = useHistoryStore.getState().history?.id;
+					const userId = user.id;
+					if (!value) {
+						setText('Введите комментарий');
+						return;
+					}
+					if (value.length < 3) {
+						setText('Комментарий должен быть более 3 симоволов');
+						return;
+					}
+					if (!id || !userId) return;
+					createComment({
+						content: value,
+						historyId: id,
+						userId: userId,
+					});
+				}}
+			/>
+			<div className='text-sm'>{text}</div>
+		</div>
 	);
 });
 
@@ -38,6 +50,9 @@ export const Comments = memo(
 					{comments.map(c => (
 						<Comment key={c.id} comment={c} />
 					))}
+					{comments.length == 0 && (
+						<div>Тут пусто, но ты можешь это исправить</div>
+					)}
 				</div>
 			</div>
 		);

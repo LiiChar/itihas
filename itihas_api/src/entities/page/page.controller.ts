@@ -7,6 +7,7 @@ import {
 	deleteActionById,
 	executeActionPage,
 	getCurrentPageByHistoryId,
+	runCode,
 	updateAction,
 	updatePage,
 } from './page.service';
@@ -15,11 +16,27 @@ import {
 	pageInsertSchema,
 	pagePointInsertScheme,
 	pagePointUpdateScheme,
+	runCodeScheme,
 } from './page.scheme';
 import { getUser } from '../user/user.service';
 import { parse, run } from './lib/actionV2';
+import { ErrorBoundary } from '../../lib/error';
 
 const pageRouter = Router();
+
+pageRouter.post(
+	'/code',
+	validateData(runCodeScheme),
+	async (req: Request, res: Response) => {
+		try {
+			const { code, historyId, userId } = req.body as runCodeScheme;
+			await runCode(code, historyId, userId);
+			return res.json('Code run succeffuly').status(200);
+		} catch (error) {
+			if (error instanceof Error) return res.json(error.message).status(500);
+		}
+	}
+);
 
 pageRouter.post(
 	'/:id',
@@ -38,6 +55,8 @@ pageRouter.post(
 			return res.json(resPage).status(StatusCodes.OK);
 		} catch (error) {
 			if (error instanceof Error) return res.json(error.message).status(500);
+			if (error instanceof ErrorBoundary)
+				return res.json(error.message).status(500);
 		}
 	}
 );

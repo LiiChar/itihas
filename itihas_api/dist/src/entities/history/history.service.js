@@ -62,6 +62,13 @@ const getHistory = (id, user) => __awaiter(void 0, void 0, void 0, function* () 
     if (!history) {
         throw Error('Не найдено истории по id ' + id);
     }
+    const similar = yield db_1.db.query.similarHistories.findMany({
+        where: (similar, { eq }) => eq(similar.historyId, history.id),
+        with: {
+            similarHistory: true,
+        },
+    });
+    history.similarHistories = [...history.similarHistories, ...similar];
     const promises = history.pages.reduce((acc, page) => {
         history['views'] = +history['views'] + page.views;
         acc.push((0, content_1.insertDataToContent)(page.content, history.id, user.id));

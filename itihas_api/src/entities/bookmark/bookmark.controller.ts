@@ -40,7 +40,6 @@ bookmarkRouter.post(
 	validateData(bookmarkInsertSchema),
 	async (req: Request, res: Response) => {
 		const data = req.body as bookmarkInsertSchemaType;
-		console.log(data);
 
 		const bookmark = await createBookmark(data);
 		return res.json(bookmark);

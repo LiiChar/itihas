@@ -21,6 +21,6 @@ export const handleImageError = (
 ) => {
 	currentTarget.onerror = null;
 	currentTarget.style.objectFit = 'cover';
-	// currentTarget.src = getFullUrl('/public/not-found.png');
+	currentTarget.src = getFullUrl('/assets/not_found.jpg');
 	cb && cb();
 };

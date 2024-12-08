@@ -73,6 +73,15 @@ export const getHistory = async (id: number, user: UserType) => {
 		throw Error('Не найдено истории по id ' + id);
 	}
 
+	const similar = await db.query.similarHistories.findMany({
+		where: (similar, { eq }) => eq(similar.historyId, history.id),
+		with: {
+			similarHistory: true,
+		},
+	});
+
+	history.similarHistories = [...history.similarHistories, ...similar];
+
 	const promises = history.pages.reduce<any[]>((acc: any, page: any) => {
 		history['views'] = +history['views'] + page.views;
 		acc.push(insertDataToContent(page.content, history.id, user.id));

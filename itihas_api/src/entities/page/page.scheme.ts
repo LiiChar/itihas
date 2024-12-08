@@ -26,3 +26,11 @@ export const pagePointUpdateScheme = z
 	.partial();
 
 export type pagePointUpdateScheme = (typeof pagePointUpdateScheme)['_output'];
+
+export const runCodeScheme = z.object({
+	code: z.string(),
+	userId: z.number(),
+	historyId: z.number(),
+});
+
+export type runCodeScheme = (typeof runCodeScheme)['_output'];
