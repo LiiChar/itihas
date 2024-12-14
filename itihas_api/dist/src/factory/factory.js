@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const history_factory_1 = require("../entities/history/history.factory");
 const page_factory_1 = require("../entities/page/page.factory");
 const user_factory_1 = require("../entities/user/user.factory");
+const genres_1 = require("./content/genres");
 const history_1 = require("./content/history");
 const layout_1 = require("./content/layout");
 const page_1 = require("./content/page");
@@ -34,7 +35,7 @@ try {
         console.log(7, ' Генерация персонажей к историям');
         yield (0, user_factory_1.generateCharactersToUsers)();
         console.log(8, ' Генерация жанров');
-        yield (0, history_factory_1.generateGenre)();
+        yield (0, history_factory_1.generateGenre)(genres_1.genresContent);
         console.log(9, ' Генерация страниц');
         yield (0, page_factory_1.generatePage)(page_1.pagesContent);
         console.log(10, ' Генерация пунктов выбора историй');

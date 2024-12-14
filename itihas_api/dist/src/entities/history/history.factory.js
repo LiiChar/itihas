@@ -83,23 +83,26 @@ const generateHistory = (history) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.generateHistory = generateHistory;
-const generateGenre = () => __awaiter(void 0, void 0, void 0, function* () {
+const generateGenre = (genre) => __awaiter(void 0, void 0, void 0, function* () {
     yield db_1.db.delete(history_1.genres);
     const createRandomGenre = () => {
         return {
             name: faker_1.faker.word.words(1),
         };
     };
-    const genreArray = faker_1.faker.helpers.multiple(createRandomGenre, {
-        count: 10,
-    });
+    const genreArray = [
+        ...faker_1.faker.helpers.multiple(createRandomGenre, {
+            count: 5,
+        }),
+        ...(genre !== null && genre !== void 0 ? genre : []),
+    ];
     try {
         const idx = [];
         genreArray.forEach((genre) => __awaiter(void 0, void 0, void 0, function* () {
             const { id } = (yield db_1.db.insert(history_1.genres).values(genre).returning())[0];
             idx.push(id);
         }));
-        for (let i = 1; i <= 100; i++) {
+        for (let i = 1; i <= 200; i++) {
             yield db_1.db.insert(history_1.genresToHistories).values({
                 genreId: (0, num_1.randomRangeInt)(1, 10),
                 historyId: i,

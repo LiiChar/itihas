@@ -95,16 +95,19 @@ export const generateHistory = async (history?: HistoryInsertType[]) => {
 	}
 };
 
-export const generateGenre = async () => {
+export const generateGenre = async (genre?: GenreInsertType[]) => {
 	await db.delete(genres);
 	const createRandomGenre = (): GenreInsertType => {
 		return {
 			name: faker.word.words(1),
 		};
 	};
-	const genreArray = faker.helpers.multiple(createRandomGenre, {
-		count: 10,
-	});
+	const genreArray = [
+		...faker.helpers.multiple(createRandomGenre, {
+			count: 5,
+		}),
+		...(genre ?? []),
+	];
 
 	try {
 		const idx: number[] = [];
@@ -113,7 +116,7 @@ export const generateGenre = async () => {
 
 			idx.push(id);
 		});
-		for (let i = 1; i <= 100; i++) {
+		for (let i = 1; i <= 200; i++) {
 			await db.insert(genresToHistories).values({
 				genreId: randomRangeInt(1, 10),
 				historyId: i,

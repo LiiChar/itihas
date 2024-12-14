@@ -6,10 +6,12 @@ import { fileRouter } from './file/file.controller';
 import { commentRouter } from './comment/comment.controller';
 import { moduleRouter } from './modules';
 import { bookmarkRouter } from './bookmark/bookmark.controller';
+import { genreRouter } from './genre/genre.controller';
 
 const route = Router();
 
 route.use('/history', historyRouter);
+route.use('/genre', genreRouter);
 route.use('/user', userRouter);
 route.use('/page', pageRouter);
 route.use('/file', fileRouter);

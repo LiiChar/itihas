@@ -19,6 +19,7 @@ import {
 	generateUsers,
 	generateCharactersToUsers,
 } from '../entities/user/user.factory';
+import { genresContent } from './content/genres';
 import { historyContent } from './content/history';
 import { LayoutContent } from './content/layout';
 import { pagesContent, pointsPageContent } from './content/page';
@@ -49,7 +50,7 @@ try {
 		console.log(7, ' Генерация персонажей к историям');
 		await generateCharactersToUsers();
 		console.log(8, ' Генерация жанров');
-		await generateGenre();
+		await generateGenre(genresContent);
 		console.log(9, ' Генерация страниц');
 		await generatePage(pagesContent);
 		console.log(10, ' Генерация пунктов выбора историй');

@@ -32,6 +32,5 @@ app.use((0, cors_1.default)({
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.json());
 app.use('/api', route_1.route);
-
 app.use(errorBoundaryMiddleware_1.errorBoundaryMiddleware);
 exports.server.listen(PORT, () => console.log(`Server has been started on http://localhost:${PORT}`));

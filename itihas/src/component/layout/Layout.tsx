@@ -17,7 +17,7 @@ export const Layout = () => {
 	return (
 		<>
 			{headerVisible && <Header />}
-			<div className='w-full h-full relative '>
+			<div className='w-full h-full relative min-h-[calc(100vh-85px)]'>
 				{/* TODO */}
 				{/* <AudioMenu /> */}
 				{Components.map(c => {

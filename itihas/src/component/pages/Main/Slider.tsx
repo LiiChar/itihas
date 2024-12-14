@@ -29,7 +29,7 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 
 	return (
 		<section className='h-min'>
-			<div className='flex justify-between'>
+			<div className='flex justify-between items-center px-2'>
 				<h4>{title}</h4>
 				<div>{link}</div>
 			</div>

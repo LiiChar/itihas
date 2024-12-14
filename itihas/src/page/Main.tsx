@@ -3,6 +3,8 @@ import { useQuery } from '@siberiacancode/reactuse';
 import { Slider } from '@/component/pages/Main/Slider';
 import { getCurrentDateAtMinute } from '@/shared/lib/data';
 import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
+import { GenresBlock } from '@/component/pages/Main/GenresBlock';
+import { Link } from 'react-router-dom';
 
 export const Main = () => {
 	const { data: newHistory } = useQuery(() =>
@@ -23,15 +25,40 @@ export const Main = () => {
 			limit: 15,
 		})
 	);
+	const { data: popularHistory } = useQuery(() =>
+		getHistoriesFilter({
+			orders: [
+				{
+					order: 'desc',
+					field: 'rate',
+				},
+			],
+			limit: 15,
+		})
+	);
 	useBreadcrumble('/');
-
-	if (!newHistory) {
-		return 'Loading...';
-	}
 
 	return (
 		<div>
-			<Slider histories={newHistory} title='Новые истории' />
+			{newHistory && (
+				<Slider
+					histories={newHistory}
+					title='Новые истории'
+					link={<Link to={'/library'}>Все новые истории</Link>}
+				/>
+			)}
+			<div className='mt-4'>
+				{popularHistory && (
+					<Slider
+						histories={popularHistory}
+						title='Популярные истории'
+						link={<Link to={'/library'}>Все популярные истории</Link>}
+					/>
+				)}
+			</div>
+			<div className='mt-6'>
+				<GenresBlock />
+			</div>
 		</div>
 	);
 };

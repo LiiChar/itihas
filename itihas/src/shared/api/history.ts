@@ -19,6 +19,7 @@ export const getHistoriesFilter = async (filter?: FilterParams) => {
 		URL + '/history/catalog',
 		filter
 	);
+	if (!Array.isArray(histories.data)) return [];
 	return histories.data;
 };
 

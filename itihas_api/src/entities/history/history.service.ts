@@ -13,7 +13,7 @@ import {
 	db,
 } from '../../database/db';
 import { insertDataToContent } from './lib/content';
-import { and, asc, desc, eq, SQL, sql, Table } from 'drizzle-orm';
+import { and, asc, count, desc, eq, SQL, sql, Table } from 'drizzle-orm';
 import {
 	comments,
 	histories,
@@ -180,18 +180,22 @@ export const getHistories = async (params: Params) => {
 		return buildWhereClause(params.filter, table);
 	};
 	const orderBuilder = (table: any) => {
-		const orderResult: any[] = [];
+		const orderResult: SQL[] = [];
+		const orderType = {
+			asc: asc,
+			desc: desc,
+		};
 		params.orders?.forEach(({ field, order }) => {
-			const orderType = {
-				asc: asc,
-				desc: desc,
-			};
-			orderResult.push(orderType[order](table[field as keyof HistoryType]));
+			const action = orderType[order];
+			const column = table[field as keyof HistoryType];
+			if (!action && !column) return;
+			orderResult.push(action(column));
 		});
+
 		return orderResult;
 	};
 
-	let histories = await db.query.histories.findMany({
+	let historiesFiltered = await db.query.histories.findMany({
 		with: {
 			genres: {
 				with: {
@@ -205,7 +209,7 @@ export const getHistories = async (params: Params) => {
 		where: history => whereBuilder(history),
 	});
 	if (params.genres && params.genres.length > 0) {
-		histories = histories.filter(h => {
+		historiesFiltered = historiesFiltered.filter(h => {
 			let allow = true;
 			params.genres!.forEach(g => {
 				const isFinded = !!h.genres.find(
@@ -217,7 +221,7 @@ export const getHistories = async (params: Params) => {
 			return allow;
 		});
 	}
-	return histories;
+	return historiesFiltered;
 };
 
 export const getLayouts = async () => {

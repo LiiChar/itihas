@@ -124,6 +124,7 @@ a {
 ::-webkit-scrollbar {
 	background: transparent;
 	width: 6px;
+	height: 3px;
 }
 
 @media (max-width: 600) {

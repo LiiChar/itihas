@@ -20,7 +20,7 @@ export const handleImageError = (
 	cb?: () => void
 ) => {
 	currentTarget.onerror = null;
-	currentTarget.style.objectFit = 'cover';
-	currentTarget.src = getFullUrl('/assets/not_found.jpg');
+	// currentTarget.style.objectFit = 'cover';
+	currentTarget.src = '/public/not_found_flower.jpg';
 	cb && cb();
 };

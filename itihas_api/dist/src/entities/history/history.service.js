@@ -126,16 +126,20 @@ const getHistories = (params) => __awaiter(void 0, void 0, void 0, function* () 
     const orderBuilder = (table) => {
         var _a;
         const orderResult = [];
+        const orderType = {
+            asc: drizzle_orm_1.asc,
+            desc: drizzle_orm_1.desc,
+        };
         (_a = params.orders) === null || _a === void 0 ? void 0 : _a.forEach(({ field, order }) => {
-            const orderType = {
-                asc: drizzle_orm_1.asc,
-                desc: drizzle_orm_1.desc,
-            };
-            orderResult.push(orderType[order](table[field]));
+            const action = orderType[order];
+            const column = table[field];
+            if (!action && !column)
+                return;
+            orderResult.push(action(column));
         });
         return orderResult;
     };
-    let histories = yield db_1.db.query.histories.findMany({
+    let historiesFiltered = yield db_1.db.query.histories.findMany({
         with: {
             genres: {
                 with: {
@@ -149,7 +153,7 @@ const getHistories = (params) => __awaiter(void 0, void 0, void 0, function* () 
         where: history => whereBuilder(history),
     });
     if (params.genres && params.genres.length > 0) {
-        histories = histories.filter(h => {
+        historiesFiltered = historiesFiltered.filter(h => {
             let allow = true;
             params.genres.forEach(g => {
                 const isFinded = !!h.genres.find((ig) => ig.genre.name === g.genre);
@@ -158,7 +162,7 @@ const getHistories = (params) => __awaiter(void 0, void 0, void 0, function* () 
             return allow;
         });
     }
-    return histories;
+    return historiesFiltered;
 });
 exports.getHistories = getHistories;
 const getLayouts = () => __awaiter(void 0, void 0, void 0, function* () {
