@@ -1,3 +1,5 @@
+import placeholderImage from '@/assets/not_found_flower.jpg';
+
 export const getFullUrl = (url: string) => {
 	if (url && url.includes('http')) {
 		return url;
@@ -20,7 +22,7 @@ export const handleImageError = (
 	cb?: () => void
 ) => {
 	currentTarget.onerror = null;
-	// currentTarget.style.objectFit = 'cover';
-	currentTarget.src = '/public/not_found_flower.jpg';
+	currentTarget.style.objectFit = 'cover';
+	currentTarget.src = placeholderImage;
 	cb && cb();
 };

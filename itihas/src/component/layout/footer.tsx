@@ -10,7 +10,7 @@ export const Footer = () => {
 					<div className='w-1/3'></div>
 				</div>
 				<div className=' border-t-[1px] border-foreground/40'>
-					<div className='px-4 py-1 flex justify-between text-sm'>
+					<div className='px-4 py-1 flex flex-wrap justify-between text-sm'>
 						<div>Политика конфиденциальности </div>
 						<div>Авторское право</div>
 						<div>Пользовательское соглашение</div>

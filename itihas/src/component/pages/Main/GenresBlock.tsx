@@ -48,19 +48,16 @@ export const GenresBlock = () => {
 			promises.push(prom);
 		});
 		Promise.all(promises).then(data => {
-			setCasheHistoryTabs(
-				data.reduce((acc, h, i) => {
-					acc[tabs[i]] = h;
-				}, {} as any)
-			);
+			const histories: any = data.reduce((acc, h, i) => {
+				acc[tabs[i]] = h;
+				return acc;
+			}, {} as any);
+			setCasheHistoryTabs(histories);
+			setHistory(casheHistoryTabs[tabs[0]]);
 		});
-		console.log(casheHistoryTabs);
-
-		setHistory(casheHistoryTabs[tabs[0]]);
 	});
 
 	useEffect(() => {
-		console.log(casheHistoryTabs, activeTab);
 		const hisotry = casheHistoryTabs[activeTab];
 
 		setHistory(hisotry);
@@ -74,7 +71,7 @@ export const GenresBlock = () => {
 						key={t}
 						className={`rounded-none relative text-foreground ${
 							activeTab == t && 'text-accent'
-						}`}
+						} ${casheHistoryTabs[t].length == 0 ? 'hidden' : ''}`}
 						value={t}
 						onClick={() => setActiveTab(t)}
 					>
