@@ -29,6 +29,7 @@ import { Textarea } from '@/shared/ui/textarea';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useNavigate } from 'react-router-dom';
+import { handleImageError } from '@/shared/lib/image';
 
 type HistoryStoreAction = {
 	setStore: (store: Partial<HistoryPages>) => void;
@@ -513,6 +514,7 @@ export const ImageLayout = ({}: { c: LayoutComponent }) => {
 				className='absolute top-0 left-0 h-full aspect-[12/9] object-cover w-full rounded-tl-lg rounded-tr-lg'
 				src={''}
 				alt=''
+				onError={handleImageError}
 			/>
 			Изображение
 		</div>
@@ -523,13 +525,41 @@ export const CustomLayout = ({}: { c: LayoutComponent }) => {
 	return 'custom';
 };
 
+export const ActionLayout = ({}: { c: LayoutComponent }) => {
+	return <Button>Действие</Button>;
+};
+
+export const ListLayout = ({}: { c: LayoutComponent }) => {
+	return (
+		<div className='flex aspect-[16/5] flex-col gap-2 justify-start items-start'>
+			<div className='w-full h-1/3 animate-pulse bg-background'></div>
+			<div className='flex justify-center items-center w-full h-1/3 animate-pulse bg-background'>
+				Список
+			</div>
+			<div className='w-full h-1/3 animate-pulse bg-background'></div>
+		</div>
+	);
+};
+
+export const BlockLayout = ({}: { c: LayoutComponent }) => {
+	return 'custom';
+};
+
+export const VideoLayout = ({}: { c: LayoutComponent }) => {
+	return 'custom';
+};
+
+export const TextLayout = ({}: { c: LayoutComponent }) => {
+	return 'custom';
+};
+
 const LayoutComponents: Record<LayoutComponent['type'], any> = {
 	image: ImageLayout,
 	points: PointLayout,
 	content: ContentLayout,
-	action: '',
-	list: '',
-	block: '',
-	video: '',
-	text: '',
+	action: ActionLayout,
+	list: ListLayout,
+	block: BlockLayout,
+	video: VideoLayout,
+	text: TextLayout,
 };

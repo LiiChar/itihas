@@ -1,13 +1,21 @@
-import { memo, useState } from 'react';
-import { CommentLike, CommentWithUser } from '../../../shared/type/comment';
+import { memo, useRef, useState } from 'react';
+import {
+	CommentLike,
+	CommentReply,
+	CommentReplyWithUser,
+	CommentWithUser,
+} from '../../../shared/type/comment';
 import { getTimeAgo } from '../../../shared/lib/time';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Button } from '@/shared/ui/button';
-import { ReplyIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Heart, ReplyIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
 import { socket } from '@/shared/lib/websocket/websocket';
+import { TextareaForm } from '@/component/widget/form/TextareaForm';
+import { createReplyComment, getReplyComment } from '@/shared/api/comment';
+import { ReplyComment } from './ReplyComment';
 
 const generateLikesState = (likes: CommentLike[]) => {
 	const like = likes.reduce<{
@@ -46,10 +54,17 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 	const [ownLike, setOwnLike] = useState(
 		getOwnLike(comment.likes ?? [], user?.id ?? undefined)
 	);
+	const [visibleReplyInput, setVisibleReplyInput] = useState(false);
+	const [visibleReplyComments, setVisibleReplyComments] = useState(false);
+	const [replyComments, setReplyComments] = useState<
+		CommentReplyWithUser[] | null
+	>(null);
 
 	useMount(() => {
 		if (!user) return;
-
+		getReplyComment(comment.id).then(data => {
+			setReplyComments(data);
+		});
 		socket.on(
 			'comment_like_update',
 			(data: {
@@ -60,10 +75,6 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 				variant: 'positive' | 'negative';
 			}) => {
 				if (data.commentId == comment.id) {
-					if (user && user.id == data.userId) {
-						const intVariant = data.variant == 'negative' ? -1 : 1;
-						setOwnLike(intVariant == ownLike ? 0 : intVariant);
-					}
 					setLike(data);
 				}
 			}
@@ -71,6 +82,10 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 	});
 	const handleLike = (variant: 'negative' | 'positive') => {
 		if (!user && !comment.id) return;
+
+		setOwnLike(prev => (prev == 0 ? 1 : 0));
+		console.log(ownLike);
+
 		socket.emit('comment_like_add', {
 			commentId: comment.id,
 			userId: user!.id,
@@ -113,33 +128,78 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 						)}
 					</div>
 				</div>
-				<div className='flex justify-between mt-1 ml-2 items-center'>
+				<div className='flex justify-between mt-1 ml-0 items-center'>
 					<div className='flex gap-3 items-center'>
-						<div className='flex gap-2 items-center'>
+						<div className='flex gap-1 items-center'>
 							<div>
-								<ThumbsUp
+								<Heart
 									onClick={() => handleLike('positive')}
 									height={18}
 									width={18}
 									className={`${ownLike == 1 ? 'fill-green-500' : ''}`}
 								/>
+								{/* <ThumbsUp
+									onClick={() => handleLike('positive')}
+									height={18}
+									width={18}
+									className={`${ownLike == 1 ? 'fill-green-500' : ''}`}
+								/> */}
 							</div>
 							<div>{like.positiveLike - like.negativeLike}</div>
-							<div>
+							{/* <div>
 								<ThumbsDown
 									onClick={() => handleLike('negative')}
 									height={18}
 									width={18}
 									className={`${ownLike == -1 ? 'fill-red-500' : ''}`}
 								/>
-							</div>
+							</div> */}
 						</div>
-						<div>
-							<ReplyIcon height={18} width={18} />
+						{user && (
+							<div
+								onClick={() =>
+									setVisibleReplyInput(prev => (prev ? false : true))
+								}
+							>
+								<ReplyIcon height={18} width={18} />
+							</div>
+						)}
+						<div
+							onClick={() =>
+								setVisibleReplyComments(prev => (prev ? false : true))
+							}
+						>
+							<Button
+								className={`${visibleReplyComments ? '!text-primary' : ''}`}
+								loading={replyComments == null}
+								variant={'ghost'}
+							>
+								Ответы ({Array.isArray(replyComments) && replyComments.length})
+							</Button>
 						</div>
 					</div>
 					<div className='text-xs'>{getTimeAgo(comment.updatedAt)}</div>
 				</div>
+				{visibleReplyInput && user && (
+					<div className='mt-2'>
+						<TextareaForm
+							onSubmit={e => {
+								createReplyComment({
+									commentId: comment.id,
+									userId: user!.id,
+									content: e,
+								});
+							}}
+						/>
+					</div>
+				)}
+				{visibleReplyComments && replyComments && (
+					<div className='mt-2'>
+						{replyComments.map(r => (
+							<ReplyComment comment={r} />
+						))}
+					</div>
+				)}
 			</div>
 		</article>
 	);

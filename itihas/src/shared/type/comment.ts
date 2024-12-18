@@ -1,3 +1,4 @@
+import { LikePage } from './like';
 import { User } from './user';
 
 export type Comment = {
@@ -28,6 +29,11 @@ export type CommentReply = {
 	userId: number;
 	createdAt: string;
 	updatedAt: string;
+};
+
+export type CommentReplyWithUser = CommentReply & {
+	user: User;
+	likes: CommentLike[];
 };
 
 export type CommentWithUser = Comment & {

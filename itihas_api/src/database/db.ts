@@ -50,3 +50,7 @@ export type LikeCommentsCommentInsertType =
 	typeof schema.likeToCommentComments.$inferInsert;
 export type LayoutType = typeof schema.layouts.$inferSelect;
 export type LayoutInsertType = typeof schema.layouts.$inferInsert;
+export type TagsHistoryType = typeof schema.tagsHistory.$inferSelect;
+export type TagsHistoryInsertType = typeof schema.tagsHistory.$inferInsert;
+export type TeamType = typeof schema.teams.$inferSelect;
+export type TeamInsertType = typeof schema.teams.$inferInsert;

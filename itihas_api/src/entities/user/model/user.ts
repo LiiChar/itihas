@@ -70,3 +70,69 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 	characters: many(charactersToUsers),
 	likes: many(likePages),
 }));
+
+export const teams = sqliteTable('teams', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name'),
+	image: text('image'),
+	description: text('description').notNull(),
+	rating: integer('rating').default(0),
+	createdAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const teamsToUsers = sqliteTable('teams_to_users', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	teamsId: integer('teams_id')
+		.notNull()
+		.references(() => teams.id, { onDelete: 'cascade' }),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	created_at: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const teamsToUsersRelations = relations(teamsToUsers, ({ one }) => ({
+	user: one(users, {
+		fields: [teamsToUsers.userId],
+		references: [users.id],
+	}),
+	team: one(teams, {
+		fields: [teamsToUsers.teamsId],
+		references: [teams.id],
+	}),
+}));
+export const teamsToHistories = sqliteTable('teams_to_histories', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	historyId: integer('history_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	teamsId: integer('teams_id')
+		.notNull()
+		.references(() => teams.id, { onDelete: 'cascade' }),
+	created_at: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const teamsToHistoriesRelations = relations(
+	teamsToHistories,
+	({ one }) => ({
+		histories: one(histories, {
+			fields: [teamsToHistories.historyId],
+			references: [histories.id],
+		}),
+		team: one(teams, {
+			fields: [teamsToHistories.teamsId],
+			references: [teams.id],
+		}),
+	})
+);
+
+export const teamsToUsersRelation = relations(teams, ({ many, one }) => ({
+	users: many(users),
+	histories: many(histories),
+}));

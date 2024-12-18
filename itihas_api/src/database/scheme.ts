@@ -3,6 +3,12 @@ import {
 	usersRelations,
 	dignity,
 	dignityRelations,
+	teams,
+	teamsToHistories,
+	teamsToHistoriesRelations,
+	teamsToUsers,
+	teamsToUsersRelation,
+	teamsToUsersRelations,
 } from '../entities/user/model/user';
 import {
 	likePages,
@@ -49,6 +55,9 @@ import {
 	likeToComments,
 	likeToCommentsCommentRelations,
 	likeToCommentsRelations,
+	tags as tagsHistory,
+	tagsToHistories,
+	tagsToHistoriesRelations,
 } from '../entities/history/model/history';
 import {
 	bookmarks,
@@ -62,7 +71,7 @@ export {
 	usersRelations,
 	histories,
 	historiesRelations,
-	tags,
+	tags as tagsPage,
 	tagsToPages,
 	tagsToPagesRelations,
 	comments,
@@ -103,4 +112,13 @@ export {
 	likeToComments,
 	likeToCommentsCommentRelations,
 	likeToCommentsRelations,
+	teams,
+	teamsToHistories,
+	teamsToHistoriesRelations,
+	teamsToUsers,
+	teamsToUsersRelation,
+	teamsToUsersRelations,
+	tagsHistory,
+	tagsToHistories,
+	tagsToHistoriesRelations,
 };

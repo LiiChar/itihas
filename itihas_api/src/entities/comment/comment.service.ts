@@ -11,10 +11,29 @@ export const createComment = async (comment: commentInsertSchema) => {
 	return commentCreated;
 };
 
-export const createReplyComment = async (comment: replyInsertSchema) => {
+export const createReplyComment = async (
+	comment: replyInsertSchema,
+	historyId?: number
+) => {
 	const commentReplyCreated = (
 		await db.insert(commentsToComments).values(comment).returning()
 	)[0];
 
+	if (historyId) {
+		socket.to('history:' + historyId).emit('history_add_comment');
+	}
+
 	return commentReplyCreated;
+};
+
+export const getReplyComments = async (commentId: number) => {
+	const replyComment = await db.query.commentsToComments.findMany({
+		where: (c, { eq }) => eq(c.commentId, commentId),
+		with: {
+			user: true,
+			// likes: true,
+		},
+	});
+
+	return replyComment;
 };

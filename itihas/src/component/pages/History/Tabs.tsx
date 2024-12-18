@@ -21,7 +21,7 @@ export const Characters = memo(({ history }: { history: HistoryPages }) => {
 		<Carousel
 			opts={{
 				align: 'start',
-				loop: true,
+				loop: false,
 				dragFree: true,
 			}}
 			className='h-full flex gap-2 '
@@ -66,8 +66,8 @@ export const TabsInfo = memo(({ history }: { history: HistoryPages }) => {
 				{tabs.map(t => (
 					<TabsTrigger
 						key={t.value}
-						className={`rounded-none relative text-foreground ${
-							activeTab == t.value && 'text-accent'
+						className={`rounded-none relative  ${
+							activeTab === t.value ? '!text-primary' : 'text-foreground'
 						}`}
 						value={t.value}
 						onClick={() => setActiveTab(t.value)}

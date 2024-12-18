@@ -286,7 +286,7 @@ export const commentsToComments = sqliteTable('comments_to_comments', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	commentId: integer('comment_id')
 		.notNull()
-		.references(() => histories.id, { onDelete: 'cascade' }),
+		.references(() => comments.id, { onDelete: 'cascade' }),
 	userId: integer('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
@@ -348,6 +348,38 @@ export const genresToHistoriesRelations = relations(
 		genre: one(genres, {
 			fields: [genresToHistories.genreId],
 			references: [genres.id],
+		}),
+	})
+);
+
+export const tags = sqliteTable('tags', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull().unique(),
+});
+
+export const tagsToHistories = sqliteTable('tags_to_histories', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	historyId: integer('history_id')
+		.notNull()
+		.references(() => histories.id, { onDelete: 'cascade' }),
+	genreId: integer('genre_id')
+		.notNull()
+		.references(() => tags.id, { onDelete: 'cascade' }),
+	created_at: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const tagsToHistoriesRelations = relations(
+	tagsToHistories,
+	({ one }) => ({
+		history: one(histories, {
+			fields: [tagsToHistories.historyId],
+			references: [histories.id],
+		}),
+		genre: one(tags, {
+			fields: [tagsToHistories.genreId],
+			references: [tags.id],
 		}),
 	})
 );

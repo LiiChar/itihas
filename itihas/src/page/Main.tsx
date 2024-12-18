@@ -44,7 +44,7 @@ export const Main = () => {
 				<Slider
 					histories={newHistory}
 					title='Новые истории'
-					link={<Link to={'/library'}>Все новые истории</Link>}
+					link={{ src: '/library', title: 'Все новые истории' }}
 				/>
 			)}
 			<div className='mt-4'>
@@ -52,7 +52,7 @@ export const Main = () => {
 					<Slider
 						histories={popularHistory}
 						title='Популярные истории'
-						link={<Link to={'/library'}>Все популярные истории</Link>}
+						link={{ src: '/library', title: 'Все популярные истории' }}
 					/>
 				)}
 			</div>

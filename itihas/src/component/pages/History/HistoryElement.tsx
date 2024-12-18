@@ -60,7 +60,9 @@ export const HistoryElement = ({
 				className={`px-1 overflow-hidden pb-1 pt-1 text-[70%] sm:text-[12px] md:text-[14px] lg:text-[16px] ${infoVariant}`}
 			>
 				<div className='flex justify-between gap-2 text-muted-foreground text-[0.8em]'>
-					<div>{history.genres.length > 0 && history.genres[0].genre.name}</div>
+					<div className='line-clamp-1 hover:line-clamp-none z-10 hover:bg-secondary	 hover:whitespace-nowrap hover:absolute'>
+						{history.genres.length > 0 && history.genres[0].genre.name}
+					</div>
 					<div>{history.rate}</div>
 				</div>
 				<div

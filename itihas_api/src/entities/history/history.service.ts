@@ -225,7 +225,13 @@ export const getHistories = async (params: Params) => {
 };
 
 export const getLayouts = async () => {
-	const layouts = await db.query.layouts.findMany();
+	let layouts = await db.query.layouts.findMany();
+	layouts = layouts.map(l => {
+		if (!Array.isArray(l.layout)) {
+			l.layout = JSON.parse(l.layout);
+		}
+		return l;
+	});
 	return layouts;
 };
 
