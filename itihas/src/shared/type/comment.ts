@@ -1,4 +1,3 @@
-import { LikePage } from './like';
 import { User } from './user';
 
 export type Comment = {

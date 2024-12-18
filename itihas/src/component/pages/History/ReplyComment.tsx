@@ -1,14 +1,9 @@
 import { memo, useState } from 'react';
-import {
-	CommentLike,
-	CommentReply,
-	CommentReplyWithUser,
-	CommentWithUser,
-} from '../../../shared/type/comment';
+import { CommentReplyWithUser } from '../../../shared/type/comment';
 import { getTimeAgo } from '../../../shared/lib/time';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Button } from '@/shared/ui/button';
-import { Heart, ReplyIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ReplyIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
@@ -16,36 +11,36 @@ import { socket } from '@/shared/lib/websocket/websocket';
 import { TextareaForm } from '@/component/widget/form/TextareaForm';
 import { createReplyComment, getReplyComment } from '@/shared/api/comment';
 
-const generateLikesState = (likes: CommentLike[]) => {
-	const like = likes.reduce<{
-		positiveLike: number;
-		negativeLike: number;
-	}>(
-		(acc, like) => {
-			if (like.variant == 'positive') {
-				acc.positiveLike++;
-			} else {
-				acc.negativeLike++;
-			}
-			return acc;
-		},
-		{ positiveLike: 0, negativeLike: 0 }
-	);
-	return like;
-};
+// const generateLikesState = (likes: CommentLike[]) => {
+// 	const like = likes.reduce<{
+// 		positiveLike: number;
+// 		negativeLike: number;
+// 	}>(
+// 		(acc, like) => {
+// 			if (like.variant == 'positive') {
+// 				acc.positiveLike++;
+// 			} else {
+// 				acc.negativeLike++;
+// 			}
+// 			return acc;
+// 		},
+// 		{ positiveLike: 0, negativeLike: 0 }
+// 	);
+// 	return like;
+// };
 
-const getOwnLike = (likes: CommentLike[], userId?: number) => {
-	if (!userId) {
-		return 0;
-	}
-	const like = likes.find(l => l.userId == userId);
+// const getOwnLike = (likes: CommentLike[], userId?: number) => {
+// 	if (!userId) {
+// 		return 0;
+// 	}
+// 	const like = likes.find(l => l.userId == userId);
 
-	if (!like) {
-		return 0;
-	}
+// 	if (!like) {
+// 		return 0;
+// 	}
 
-	return like.variant == 'positive' ? 1 : -1;
-};
+// 	return like.variant == 'positive' ? 1 : -1;
+// };
 
 export const ReplyComment = memo(
 	({ comment }: { comment: CommentReplyWithUser }) => {
@@ -67,7 +62,7 @@ export const ReplyComment = memo(
 			});
 			socket.on(
 				'comment_like_update',
-				(data: {
+				(_data: {
 					positiveLike: number;
 					negativeLike: number;
 					commentId: number;

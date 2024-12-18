@@ -1,14 +1,13 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useState } from 'react';
 import {
 	CommentLike,
-	CommentReply,
 	CommentReplyWithUser,
 	CommentWithUser,
 } from '../../../shared/type/comment';
 import { getTimeAgo } from '../../../shared/lib/time';
 import { getFullUrl } from '../../../shared/lib/image';
 import { Button } from '@/shared/ui/button';
-import { Heart, ReplyIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Heart, ReplyIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { useUserStore } from '@/shared/store/UserStore';
 import { useMount } from '@siberiacancode/reactuse';
