@@ -9,6 +9,7 @@ import {
 	LikeHistoryType,
 	PageInsertType,
 	PageType,
+	SimilarInsertType,
 	UserType,
 	db,
 } from '../../database/db';
@@ -20,6 +21,7 @@ import {
 	likesToHistories,
 	likeToCommentComments,
 	likeToComments,
+	similarHistories,
 } from './model/history';
 import { ErrorBoundary } from '../../lib/error';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
@@ -49,6 +51,7 @@ export const getHistory = async (id: number, user: UserType) => {
 				with: {
 					similarHistory: true,
 				},
+				orderBy: (sim, { desc }) => [desc(sim.similar)],
 			},
 			points: true,
 			bookmarks: {
@@ -325,4 +328,40 @@ export const updateCommentsCommentHistory = async (
 
 	const like = await db.insert(likeToCommentComments).values(data).returning();
 	return like;
+};
+
+export const getSimilarHistory = async (historyId: number) => {
+	const similars = await db.query.similarHistories.findMany({
+		where: eq(similarHistories.historyId, historyId),
+		with: {
+			history: true,
+			similarHistory: true,
+		},
+	});
+	return similars;
+};
+
+export const addSimilarHistory = async (similar: SimilarInsertType) => {
+	const createdSimilar = await db
+		.insert(similarHistories)
+		.values(similar)
+		.returning();
+
+	return createdSimilar[0];
+};
+
+export const updateSimilarHistoryRate = async ({
+	rate,
+	similarId,
+}: {
+	similarId: number;
+	rate: number;
+}) => {
+	const updatedSimilar = await db
+		.update(similarHistories)
+		.set({ similar: rate })
+		.where(eq(similarHistories.id, similarId))
+		.returning();
+
+	return updatedSimilar[0];
 };

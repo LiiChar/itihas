@@ -7,6 +7,7 @@ import {
 	HistoryPages,
 } from '../type/history';
 import { Layout } from '../type/layout';
+import { SimilarType, SimilarWithHistory } from '../type/similar';
 import { axi } from './axios/axios';
 
 export const getHistories = async () => {
@@ -65,4 +66,30 @@ export const addHistoryToBookmark = async (
 		bookmarkData
 	);
 	return bookmark.data;
+};
+
+export const addSimilarHistory = async (similarData: SimilarType) => {
+	const similar = await axi.post<SimilarType>(
+		URL + '/history/similar',
+		similarData
+	);
+	return similar;
+};
+
+export const updateSimilarHistoryRate = async (similarData: {
+	similarId: number;
+	rate: number;
+}) => {
+	const similar = await axi.put<SimilarType>(
+		URL + '/history/similar/rate',
+		similarData
+	);
+	return similar;
+};
+
+export const getSimilarHistory = async (historyId: number) => {
+	const similar = await axi.get<SimilarWithHistory>(
+		URL + `/history/${historyId}/similar`
+	);
+	return similar;
 };

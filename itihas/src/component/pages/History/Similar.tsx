@@ -3,6 +3,9 @@ import { HistoryPages } from '../../../shared/type/history';
 import { getFullUrl, handleImageError } from '../../../shared/lib/image';
 import { Minus, Plus } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import { updateSimilarHistoryRate } from '@/shared/api/history';
+import { runListener } from '@/shared/store/ListenerStore';
+import { AddSimilarModal } from './AddSimilarModal';
 
 export const Similar = memo(({ history }: { history: HistoryPages }) => {
 	return (
@@ -10,12 +13,12 @@ export const Similar = memo(({ history }: { history: HistoryPages }) => {
 			<div className='flex items-center'>
 				<h4>Похожее</h4>
 				<div>
-					<Button
-						variant='link'
-						className='font-normal text-primary normal-case'
-					>
-						Добавить
-					</Button>
+					<AddSimilarModal
+						historyId={history.id}
+						onSubmit={() => {
+							runListener('historyChange');
+						}}
+					/>
 				</div>
 			</div>
 			{history.similarHistories.map(s => (
@@ -34,9 +37,29 @@ export const Similar = memo(({ history }: { history: HistoryPages }) => {
 						</div>
 
 						<div className='flex flex-col gap-1 items-center'>
-							<Plus width={14} height={14} />
+							<Plus
+								onClick={() => {
+									updateSimilarHistoryRate({
+										rate: (s.similar ?? 0) + 1,
+										similarId: s.id,
+									});
+									runListener('historyChange');
+								}}
+								width={14}
+								height={14}
+							/>
 							<div>{s.similar ?? 0}</div>
-							<Minus width={14} height={14} />
+							<Minus
+								onClick={() => {
+									updateSimilarHistoryRate({
+										rate: (s.similar ?? 0) - 1,
+										similarId: s.id,
+									});
+									runListener('historyChange');
+								}}
+								width={14}
+								height={14}
+							/>
 						</div>
 					</div>
 				</div>

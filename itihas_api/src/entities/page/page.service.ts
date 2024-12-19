@@ -122,22 +122,23 @@ export const getCurrentPageByHistoryId = async (
 			return v;
 		});
 	}
-
-	const promises = page.history.layout.layout.reduce<any[]>(
-		(acc: any, p: any) => {
-			acc.push(
-				p.content
-					? insertDataToContent(p.content, page.historyId, user.id)
-					: null
-			);
-			return acc;
-		},
-		[]
-	);
-	const contents = await Promise.all(promises);
-	contents.forEach((c: any, i: number) => {
-		page.history.layout.layout[i].content = c;
-	});
+	if (Array.isArray(page.history.layout.layout)) {
+		const promises = page.history.layout.layout.reduce<any[]>(
+			(acc: any, p: any) => {
+				acc.push(
+					p.content
+						? insertDataToContent(p.content, page.historyId, user.id)
+						: null
+				);
+				return acc;
+			},
+			[]
+		);
+		const contents = await Promise.all(promises);
+		contents.forEach((c: any, i: number) => {
+			page.history.layout.layout[i].content = c;
+		});
+	}
 
 	if (page.script) {
 		const tokens = parse(page.script);

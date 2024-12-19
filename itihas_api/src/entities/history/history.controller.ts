@@ -1,15 +1,19 @@
 import { Request, Response, Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import {
+	addSimilarHistory,
 	createHistory,
 	getHistories,
 	getHistory,
 	getLayouts,
+	getSimilarHistory,
 	updateHistory,
+	updateSimilarHistoryRate,
 } from './history.service';
-import { db } from '../../database/db';
+import { db, SimilarInsertType } from '../../database/db';
 import { ReplOptions } from 'repl';
 import { socket } from '../..';
+import { ErrorBoundary } from '../../lib/error';
 
 const historyRouter = Router();
 
@@ -22,18 +26,6 @@ historyRouter.get('/', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.log(error);
 		return res.json('Get history failed').status(404);
-	}
-});
-
-historyRouter.put('/:id', async (req: Request, res: Response) => {
-	try {
-		const id = req.params.id;
-		const data = req.body;
-		const history = await updateHistory(+id!, data);
-		return res.json(history).status(StatusCodes.OK);
-	} catch (error) {
-		console.log(error);
-		return res.json('Update history failed').status(404);
 	}
 });
 
@@ -70,6 +62,40 @@ historyRouter.post('/', async (req: Request, res: Response) => {
 historyRouter.get('/layout', async (req: Request, res: Response) => {
 	const layouts = await getLayouts();
 	return res.json(layouts);
+});
+
+historyRouter.get('/:id/similar', async (req: Request, res: Response) => {
+	const id = req.params.id;
+	if (!id) {
+		throw new ErrorBoundary('Params not request', ReasonPhrases.BAD_REQUEST);
+	}
+	const similars = await getSimilarHistory(+id!);
+	return res.json(similars);
+});
+
+historyRouter.post('/similar', async (req: Request, res: Response) => {
+	const data = req.body as SimilarInsertType;
+	const createdSimilar = await addSimilarHistory(data);
+	return res.json(createdSimilar);
+});
+
+historyRouter.put('/similar/rate', async (req: Request, res: Response) => {
+	const rate = req.body as { rate: number };
+	const data = req.body as any;
+	const createdSimilar = await updateSimilarHistoryRate(data);
+	return res.json(createdSimilar);
+});
+
+historyRouter.put('/:id', async (req: Request, res: Response) => {
+	try {
+		const id = req.params.id;
+		const data = req.body;
+		const history = await updateHistory(+id!, data);
+		return res.json(history).status(StatusCodes.OK);
+	} catch (error) {
+		console.log(error);
+		return res.json('Update history failed').status(404);
+	}
 });
 
 historyRouter.get('/:id', async (req: Request, res: Response) => {

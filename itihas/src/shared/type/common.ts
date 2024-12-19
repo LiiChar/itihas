@@ -1,3 +1,4 @@
+import { ObjectHTMLAttributes } from 'react';
 import { History } from './history';
 import { Page } from './page';
 

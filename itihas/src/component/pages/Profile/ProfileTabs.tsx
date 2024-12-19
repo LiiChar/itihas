@@ -12,9 +12,9 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 
 	return (
 		<Tabs value={activeTab}>
-			<TabsList className='bg-secondary p-4 overflow-x-auto overflow-y-hidden w-full mb-1'>
+			<TabsList className='bg-secondary p-4 w-full mb-1'>
 				<TabsTrigger
-					className={`text-foreground ${
+					className={`text-foreground rounded-none ${
 						activeTab == 'bookmarks' && 'text-primary'
 					}`}
 					value={'bookmarks'}
@@ -24,7 +24,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 				</TabsTrigger>
 				{user.authorHistories.length > 0 && (
 					<TabsTrigger
-						className={`text-foreground ${
+						className={`text-foreground rounded-none ${
 							activeTab == 'histories' && 'text-primary'
 						}`}
 						value={'histories'}
@@ -35,7 +35,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 				)}
 				{user.comments.length > 0 && (
 					<TabsTrigger
-						className={`text-foreground ${
+						className={`text-foreground rounded-none ${
 							activeTab == 'comments' && 'text-primary'
 						}`}
 						value={'comments'}
@@ -46,7 +46,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 				)}
 				{user.characters.length > 0 && (
 					<TabsTrigger
-						className={`text-foreground ${
+						className={`text-foreground rounded-none ${
 							activeTab == 'characters' && 'text-primary'
 						}`}
 						value={'characters'}
@@ -57,7 +57,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 				)}
 				{user.likes.length > 0 && (
 					<TabsTrigger
-						className={`text-foreground ${
+						className={`text-foreground rounded-none ${
 							activeTab == 'likes' && 'text-primary'
 						}`}
 						value={'likes'}

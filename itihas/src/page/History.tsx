@@ -126,10 +126,10 @@ export const History = () => {
 				</section>
 				<section className='w-full'>
 					<div>
-						<h5 className='text-secondary-foreground'>
+						<h5 className='text-secondary-foreground/60 -mb-2'>
 							История {getYear(history.created_at)}
 						</h5>
-						<h1>{history?.name}</h1>
+						<h1 className='h-min'>{history?.name}</h1>
 					</div>
 					<div className='border-b-[1px] pb-3 border-foreground/30'>
 						<Info history={history} />
