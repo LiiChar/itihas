@@ -7,6 +7,7 @@ import {
 	deleteActionById,
 	executeActionPage,
 	getCurrentPageByHistoryId,
+	getPages,
 	runCode,
 	updateAction,
 	updatePage,
@@ -23,6 +24,12 @@ import { parse, run } from './lib/actionV2';
 import { ErrorBoundary } from '../../lib/error';
 
 const pageRouter = Router();
+
+pageRouter.post('/filter', async (req: Request, res: Response) => {
+	const params: Record<string, string> = Object.assign(req.query, req.body);
+	const pages = await getPages(params);
+	return res.json(pages);
+});
 
 pageRouter.post(
 	'/code',
@@ -128,8 +135,14 @@ pageRouter.post(
 pageRouter.get('/:id/:currentPage', async (req: Request, res: Response) => {
 	try {
 		const id = req.params.id;
+		const userId = req.query.userId;
 		const currentPage = req.params.currentPage;
-		const user = (await db.query.users.findMany())[0];
+		let user = (await db.query.users.findMany()).find(
+			el => el.id == +`${userId ?? 1}`
+		);
+		if (!user) {
+			user = (await db.query.users.findMany())[0];
+		}
 		const page = await getCurrentPageByHistoryId(
 			parseInt(id),
 			parseInt(currentPage),

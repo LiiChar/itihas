@@ -21,8 +21,10 @@ export const handleImageError = (
 	_url?: string,
 	cb?: () => void
 ) => {
-	currentTarget.onerror = null;
-	currentTarget.style.objectFit = 'cover';
-	currentTarget.src = placeholderImage;
-	cb && cb();
+	try {
+		currentTarget.onerror = null;
+		currentTarget.style.objectFit = 'cover';
+		currentTarget.src = placeholderImage;
+		cb && cb();
+	} catch (error) {}
 };

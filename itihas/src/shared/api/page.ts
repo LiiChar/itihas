@@ -1,10 +1,25 @@
 import { URL } from '../const/const';
+import { useUserStore } from '../store/UserStore';
 import { HistoryPage } from '../type/history';
-import { Page, PageInsert, PagePointInsert, ReadPage } from '../type/page';
+import { FilterParamsPage } from '../type/like';
+import {
+	Page,
+	PageInsert,
+	PagePointInsert,
+	PageWithHistory,
+	ReadPage,
+} from '../type/page';
 import { axi } from './axios/axios';
 
 export const getCurrentPage = async (id: number, page: number) => {
-	const pageData = await axi.get<ReadPage>(URL + '/page/' + id + '/' + page);
+	const pageData = await axi.get<ReadPage>(
+		URL +
+			'/page/' +
+			id +
+			'/' +
+			page +
+			`?userId=${useUserStore.getState().user?.id}`
+	);
 	return pageData.data;
 };
 
@@ -51,4 +66,9 @@ export const createPagePoint = async (
 
 export const updatePage = async (pageId: number, data: Partial<Page>) => {
 	await axi.put(`${URL}/page/${pageId}`, data);
+};
+
+export const getPages = async (filter: FilterParamsPage) => {
+	const pages = await axi.post<PageWithHistory[]>(`${URL}/page/filter`, filter);
+	return pages.data;
 };

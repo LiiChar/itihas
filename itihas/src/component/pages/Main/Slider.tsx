@@ -33,30 +33,30 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 	const [slides, _setSlides] = useState<HistoryAll[]>(histories);
 
 	return (
-		<section className='h-min'>
+		<section className='h-min w-full'>
 			<div className='flex justify-between items-center px-2'>
 				<h4>{title}</h4>
-				{link && (
+				{link && ( 
 					<div>
 						<Link title={link.title} to={link.src}>
 							<span className='md:inline hidden '>{link.title}</span>
-							<span className='md:hidden  flex relative after:content-[""] after:absolute  after:border-[1px] after:w-6 after:top-[calc(50%-1px)] hover:after:w-9 hover:after:-ml-3 after:transition-all transition-all text-foreground	 after:rotate-180 after:-left-2 duration-300'>
-								<ChevronRightIcon />
+							<span className='md:hidden  flex relative after:content-[""] after:absolute  after:border-b-[1px] after:w-4 after:top-[calc(50%-1px)] hover:after:w-8 hover:after:-ml-4 after:transition-all transition-all text-foreground	 after:rotate-180 after:-left-1 duration-300'>
+								<ChevronRightIcon className='w-5 h-5' />
 							</span>
 						</Link>
 					</div>
 				)}
 			</div>
-			<div className='h-full'>
+			<div className='h-full w-full'>
 				<Carousel
 					opts={{
 						align: 'start',
 						loop: false,
 						dragFree: true,
 					}}
-					className='h-full flex gap-2 '
+					className='h-full w-full flex gap-2 '
 				>
-					<CarouselContent className='h-min px-6 flex gap-2'>
+					<CarouselContent className='h-min w-full px-6 flex gap-2'>
 						{slides.map(s => (
 							<CarouselItem
 								id={`${s.id}`}

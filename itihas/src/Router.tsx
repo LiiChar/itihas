@@ -13,6 +13,7 @@ import { CreateHistory } from './page/History/CreateHistory';
 import { Constructor } from './page/Page/Constructor';
 import { Catalog } from './page/Catalog';
 import { VariableHistory } from './page/History/VariableHistory';
+import { LayoutConstructor } from './page/History/LayoutConstructor';
 
 const router = createBrowserRouter([
 	{
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
 			{
 				path: '/history/:id/edit',
 				element: <HistoryEdit />,
+			},
+			{
+				path: '/history/:id/layout',
+				element: <LayoutConstructor />,
 			},
 			{
 				path: '/history/:id',

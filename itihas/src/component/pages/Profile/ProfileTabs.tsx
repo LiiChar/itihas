@@ -12,7 +12,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 
 	return (
 		<Tabs value={activeTab}>
-			<TabsList className='bg-secondary p-4 w-full mb-1'>
+			<TabsList className='bg-secondary flex flex-wrap h-full p-4 w-full mb-1'>
 				<TabsTrigger
 					className={`text-foreground rounded-none ${
 						activeTab == 'bookmarks' && 'text-primary'

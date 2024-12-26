@@ -53,7 +53,7 @@ export const GenresBlock = () => {
 				return acc;
 			}, {} as any);
 			setCasheHistoryTabs(histories);
-			setHistory(casheHistoryTabs[tabs[0]]);
+			setHistory(histories[activeTab]);
 		});
 	});
 
@@ -64,24 +64,30 @@ export const GenresBlock = () => {
 	}, [activeTab]);
 
 	return (
-		<Tabs value={activeTab} className=''>
-			<TabsList className='bg-transparent w-full overflow-x-auto overflow-y-hidden -ml-1 text-xs '>
-				{tabs.map(t => (
-					<TabsTrigger
-						key={t}
-						className={`rounded-none relative text-foreground ${
-							activeTab == t && 'text-accent'
-						} ${casheHistoryTabs[t].length == 0 ? 'hidden' : ''}`}
-						value={t}
-						onClick={() => setActiveTab(t)}
-					>
-						{t}
-					</TabsTrigger>
+		<Tabs value={activeTab} className='w-full'>
+			<TabsList className='bg-transparent flex gap-2 flex-wrap w-full overflow-x-auto overflow-y-hidden text-xs '>
+				{tabs.map((t, i) => (
+					<>
+						{casheHistoryTabs[t].length ? (
+							<TabsTrigger
+								key={'header' + t + i}
+								className={`rounded-none relative px-0 block text-foreground ${
+									activeTab == t && 'text-accent'
+								}`}
+								value={t}
+								onClick={() => setActiveTab(t)}
+							>
+								{t}
+							</TabsTrigger>
+						) : (
+							''
+						)}
+					</>
 				))}
 			</TabsList>
-			{tabs.map(t => (
+			{tabs.map((t, i) => (
 				<TabsContent
-					key={t}
+					key={'content' + t + i}
 					className='text-foreground  p-0 px-4 font-normal text-sm  flex gap-2 flex-wrap flex-row'
 					value={t}
 				>
@@ -95,16 +101,14 @@ export const GenresBlock = () => {
 								className='object-cover rounded-t-sm w-full aspect-[3/4]'
 								alt={history.name}
 							/>
-							<div className='px-1 overflow-hidden pb-1 pt-1 text-[60%] sm:text-[10px] md:text-[12px] lg:text-[14px]'>
-								<div className='flex gap-2 text-muted-foreground text-[0.8em]'>
-									<div>
-										{history.genres.length > 0 && history.genres[0].genre.name}
-									</div>
-									<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs pb-[4px] right-1'>
-										{history.rate}
-									</div>
-								</div>
-								<div>{history.name}</div>
+							<div className='	 overflow-hidden pb-1 pt-1 text-md sm:text-sm md:text-md lg:text-lg'>
+								<p className='h-min text-muted-foreground text-[0.7em] leading-3'>
+									{history.genres.length > 0 && history.genres[0].genre.name}
+								</p>
+								<h5 className='text-[0.78em]'>{history.name}</h5>
+							</div>
+							<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs pb-[4px] right-1'>
+								{history.rate}
 							</div>
 						</div>
 					))}

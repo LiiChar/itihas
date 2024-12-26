@@ -3,6 +3,7 @@ import { Layout } from './layout';
 import { PointPage } from './point';
 import { Variable } from './variable';
 import { Wallpaper } from './wallpaper';
+import { History } from './history';
 
 export type PageInsert = {
 	name: string;
@@ -50,4 +51,8 @@ export type SimilarHistory = {
 	historyId: number;
 	similarHistoryId: number;
 	similar: number | null;
+};
+
+export type PageWithHistory = Page & {
+	history: History;
 };

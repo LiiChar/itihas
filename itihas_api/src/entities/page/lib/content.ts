@@ -13,6 +13,8 @@ export const insertDataToContent = async (
 			eq(variables.userId, userId)
 		),
 	});
+	console.log(content, variabs);
+
 	const mathchesVariable = Array.from(content.matchAll(/{=([^{}=]+)}/gm));
 
 	let value = insertDataToString(content, variabs, mathchesVariable);

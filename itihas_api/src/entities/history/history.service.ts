@@ -116,7 +116,7 @@ export const createHistory = async (data: HistoryInsertType) => {
 
 type KeyParam = 'offset' | 'page' | 'order' | 'genres' | 'author' | 'limit';
 
-type Filter = {
+export type Filter = {
 	field?: string;
 	value?: string;
 	innerFilters?: Filter[];

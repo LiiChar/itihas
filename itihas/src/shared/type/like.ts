@@ -17,3 +17,20 @@ export type LikeHistory = {
 	variant: 'negative' | 'positive';
 	createAt: string;
 };
+
+export type FilterPage = {
+	field?: keyof History;
+	value?: string;
+	innerFilters?: FilterPage[];
+	variant?: 'or' | 'and';
+	operator?: 'like' | '=' | '<' | '>' | '!=';
+};
+
+export type FilterParamsPage = {
+	offset?: number;
+	page?: number;
+	orders?: { order: 'asc' | 'desc'; field: string }[];
+	filter?: FilterPage[];
+	author?: string;
+	limit?: number;
+};

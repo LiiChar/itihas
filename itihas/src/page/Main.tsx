@@ -4,6 +4,7 @@ import { Slider } from '@/component/pages/Main/Slider';
 import { getCurrentDateAtMinute } from '@/shared/lib/data';
 import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
 import { GenresBlock } from '@/component/pages/Main/GenresBlock';
+import { PageUpdate } from '@/component/pages/Main/PageUpdate';
 
 export const Main = () => {
 	const { data: newHistory } = useQuery(() =>
@@ -57,6 +58,9 @@ export const Main = () => {
 			</div>
 			<div className='mt-6'>
 				<GenresBlock />
+			</div>
+			<div>
+				<PageUpdate />
 			</div>
 		</div>
 	);

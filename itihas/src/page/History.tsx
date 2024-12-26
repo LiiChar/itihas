@@ -94,6 +94,24 @@ export const History = () => {
 								</Button>
 							</Link>
 						)}
+						{user && (
+							// history.author &&
+							// (user?.id == history.author.id || user.role == 'admin') &&
+							<Link className='w-full' to={`/history/${history.id}/variables/`}>
+								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
+									Упаковать рюкзак
+								</Button>
+							</Link>
+						)}
+						{user && (
+							// history.author &&
+							// (user?.id == history.author.id || user.role == 'admin') &&
+							<Link className='w-full' to={`/history/${history.id}/layout/`}>
+								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
+									Изменить шаблон
+								</Button>
+							</Link>
+						)}
 						<div>
 							<HistoryLike likes={history.likes} historyId={history.id} />
 						</div>

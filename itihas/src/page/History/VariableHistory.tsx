@@ -4,7 +4,7 @@ import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import type { VariableHistory as Variables } from '@/shared/type/variable';
 import { useMount, useQuery } from '@siberiacancode/reactuse';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export const VariableHistory = () => {
 	const { id } = useParams();
@@ -24,5 +24,10 @@ export const VariableHistory = () => {
 	if (!data) {
 		return '';
 	}
-	return <Variable variable={data} />;
+	return (
+		<div>
+			<Variable variable={data} />
+			<Link to={`/history/${id}`}>Вернуться</Link>
+		</div>
+	);
 };

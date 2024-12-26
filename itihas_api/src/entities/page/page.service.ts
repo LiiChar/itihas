@@ -1,7 +1,7 @@
 import { access } from 'fs/promises';
 import { PageInsertType, PageType, UserType, db } from '../../database/db';
 import { insertDataToContent } from './lib/content';
-import { eq, min, sql } from 'drizzle-orm';
+import { asc, desc, eq, min, SQL, sql } from 'drizzle-orm';
 import { pagePoints, pages } from './model/page';
 import { histories } from '../history/model/history';
 import { layoutComponents } from './type/layout';
@@ -16,6 +16,7 @@ import { replaceAll } from '../../lib/string';
 import { ErrorBoundary } from '../../lib/error';
 import { users } from '../user/model/user';
 import { ReasonPhrases } from 'http-status-codes';
+import { Filter } from '../history/history.service';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,
@@ -78,9 +79,15 @@ export const getCurrentPageByHistoryId = async (
 			user.id
 		);
 	} catch (error) {
-		throw new ErrorBoundary('Code run failed', ReasonPhrases.BAD_REQUEST);
+		throw new ErrorBoundary('Insert data failed', ReasonPhrases.BAD_REQUEST);
 	}
 
+	if (
+		pagesWithVariables.layoutId == null &&
+		pagesWithVariables.layout == null
+	) {
+		pagesWithVariables.layout = pagesWithVariables.history.layout as any;
+	}
 	if (pagesWithVariables.layout) {
 		if (typeof pagesWithVariables.layout.layout == 'string') {
 			pagesWithVariables.layout.layout = JSON.parse(
@@ -263,4 +270,91 @@ export const createPagePoint = async (
 		name: data.name,
 		pageId: pageId,
 	});
+};
+
+type ParamsPage = {
+	offset?: number;
+	page?: number;
+	orders?: { order: 'asc' | 'desc'; field: string }[];
+	filter?: Filter[];
+	author?: string;
+	limit?: number;
+};
+
+export const getPages = async (params: ParamsPage) => {
+	function buildWhereClause(filters: Filter[], table: any): SQL {
+		const buildFilter = (filter: Filter): SQL => {
+			const parts: SQL[] = [];
+
+			if (filter.field && filter.value && filter.operator) {
+				const field = filter.field;
+				if (!(field in table)) {
+					throw new ErrorBoundary(
+						`Filed ${field} not exist in table`,
+						ReasonPhrases.BAD_REQUEST
+					);
+				}
+				parts.push(
+					sql`${table[field]} ${sql.raw(filter.operator)} '${sql.raw(
+						filter.value
+					)}'`
+				);
+			}
+
+			if (filter.innerFilters && filter.innerFilters.length > 0) {
+				const innerParts: SQL[] = filter.innerFilters.map(innerFilter =>
+					buildFilter(innerFilter)
+				);
+				const conjunction = filter.variant === 'or' ? 'OR' : 'AND';
+				parts.push(sql.join(innerParts, sql.raw(` ${conjunction} `)));
+			}
+
+			return sql.join(parts, sql.raw(' '));
+		};
+
+		return sql.join(
+			filters.map(filter => buildFilter(filter)),
+			sql.raw(' AND ')
+		);
+	}
+	const whereBuilder = (table: any) => {
+		if (!params.filter) {
+			return undefined;
+		}
+
+		return buildWhereClause(params.filter, table);
+	};
+	const orderBuilder = (table: any) => {
+		const orderResult: SQL[] = [];
+		const orderType = {
+			asc: asc,
+			desc: desc,
+		};
+		params.orders?.forEach(({ field, order }) => {
+			const action = orderType[order];
+			const column = table[field as any];
+			if (!action && !column) return;
+			orderResult.push(action(column));
+		});
+
+		return orderResult;
+	};
+	try {
+		let pagesFiltered = await db.query.pages.findMany({
+			with: {
+				history: true,
+			},
+			limit: params.limit,
+			offset: params.offset,
+			orderBy: pages => orderBuilder(pages),
+			where: pages => whereBuilder(pages),
+		});
+
+		return pagesFiltered;
+	} catch (error) {
+		throw new ErrorBoundary(
+			'Error has been get pages',
+			ReasonPhrases.BAD_REQUEST
+		);
+	}
 };

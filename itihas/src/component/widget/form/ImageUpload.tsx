@@ -54,7 +54,7 @@ export const ImageUpload = memo(
 			>
 				<div className='relative bg-white rounded-t-sm'>
 					<img
-						className={`w-full object-containt rounded-t-sm`}
+						className={`w-full object-contain rounded-t-sm `}
 						src={getFullUrl(src)}
 						onError={e => {
 							e.currentTarget.src = placeholderImage;
