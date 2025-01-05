@@ -110,6 +110,10 @@ a {
 	}
 }
 
+.content-height {
+	@apply min-h-[calc(100vh-85px)] h-full;
+}
+
 @media (max-width: 400px) {
 	h1,
 	h2,
@@ -156,10 +160,10 @@ a {
 	background: white;
 }
 @layer base {
-  * {
-    @apply border-border;
+	* {
+		@apply border-border;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
 }

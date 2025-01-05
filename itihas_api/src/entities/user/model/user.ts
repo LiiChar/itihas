@@ -95,6 +95,17 @@ export const teamsToUsers = sqliteTable('teams_to_users', {
 		.default(sql`CURRENT_TIMESTAMP`),
 });
 
+export const optionsUsers = sqliteTable('options_users', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	options: text('options').notNull().default(''),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	updated_at: text('updated_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
 export const teamsToUsersRelations = relations(teamsToUsers, ({ one }) => ({
 	user: one(users, {
 		fields: [teamsToUsers.userId],

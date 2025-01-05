@@ -22,6 +22,7 @@ import {
 import { getUser } from '../user/user.service';
 import { parse, run } from './lib/actionV2';
 import { ErrorBoundary } from '../../lib/error';
+import { notificationEvent } from '../modules/socket/notification';
 
 const pageRouter = Router();
 
@@ -58,6 +59,10 @@ pageRouter.post(
 				page.historyId,
 				page.id,
 				user
+			);
+			await notificationEvent(
+				'page:update',
+				Object.assign(page, { userId: +user.id, id: +page.id })
 			);
 			return res.json(resPage).status(StatusCodes.OK);
 		} catch (error) {
@@ -110,6 +115,11 @@ pageRouter.put('/:id', async (req: Request, res: Response) => {
 		const user = (await db.query.users.findMany())[0];
 		const data: Partial<PageType> = req.body;
 		const page = await updatePage(parseInt(id), data);
+		await notificationEvent(
+			'page:add',
+			Object.assign(page, { userId: +user.id, id: +page.id })
+		);
+
 		return res.json(page).status(StatusCodes.OK);
 	} catch (error) {
 		if (error instanceof Error) return res.json(error.message).status(500);

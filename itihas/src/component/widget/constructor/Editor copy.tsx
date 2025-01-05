@@ -112,7 +112,7 @@ const CodeComponent = ({ nodes }: { nodes: Node[] }) => {
 		<>
 			{nodes.map(n => {
 				let Component: ReactNode;
-				console.log(n, isPrimaryToken(n.token));
+
 				if (isPrimaryToken(n.token)) {
 					Component = <PrimaryNode node={n} propsRect={{ fill: '#fff' }} />;
 				}

@@ -302,6 +302,27 @@
       "when": 1732990844750,
       "tag": "0042_vengeful_fat_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "6",
+      "when": 1736071540661,
+      "tag": "0043_panoramic_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "6",
+      "when": 1736074505080,
+      "tag": "0044_tan_bulldozer",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "6",
+      "when": 1736086190832,
+      "tag": "0045_jittery_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

@@ -28,7 +28,6 @@ export type RegisterUser = {
 
 export const registerUser = async (user: RegisterUser) => {
 	const data = await axi.post<User>(`${BASE_URL}/register`, user);
-	console.log(data);
 
 	return data;
 };

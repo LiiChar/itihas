@@ -11,5 +11,4 @@ export const actionsTest = async () => {
 	const variablesList = await db.query.variables.findFirst({
 		where: and(eq(variables.userId, user.id), eq(variables.historyId, 1)),
 	});
-	console.log(variablesList);
 };

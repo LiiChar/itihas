@@ -1,4 +1,4 @@
-import { getFullUrl } from '@/shared/lib/image';
+import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
 import { useEvent, useInterval } from '@siberiacancode/reactuse';
@@ -390,6 +390,7 @@ export const BoardNode = memo(({ node }: { node: Node }) => {
 				<img
 					className='select-none h-[140px] object-fill aspect-video'
 					src={getFullUrl(node.page.image)}
+					onError={handleImageError}
 				/>
 			</div>
 			<div className='text-base px-1 min-h-[16.8px] line-clamp-1'>

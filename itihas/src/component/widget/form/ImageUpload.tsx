@@ -30,7 +30,7 @@ export const ImageUpload = memo(
 			event.preventDefault();
 			setIsDragOver(false);
 			const droppedFiles = event.dataTransfer.files;
-			console.log(droppedFiles);
+
 			if (droppedFiles.length > 0) {
 				const newFiles = Array.from(droppedFiles);
 

@@ -218,7 +218,7 @@ const execute = (str: string): Token[] => {
 				str = string;
 				string = newStr.trim();
 				const token = t.getToken(value);
-				console.log(value);
+
 
 				if (Array.isArray(token.value) && token.type == 'if') {
 					token.value[0] = execute(token.value[0]);

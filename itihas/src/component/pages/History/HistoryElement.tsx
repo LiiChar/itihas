@@ -44,7 +44,7 @@ export const HistoryElement = ({
 	const infoVariant = Classes[option?.variant ?? 'vertical'].info;
 	return (
 		<div
-			className={`w-full  h-full ${wrapperVariant}`}
+			className={`w-full hover:opacity-70 transition-opacity cursor-pointer h-full ${wrapperVariant}`}
 			onClick={() => link && navigate(link)}
 		>
 			<img

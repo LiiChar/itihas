@@ -78,8 +78,6 @@ export const useLibraryStore = create<LibraryStore & LibraryStoreAction>(
 			}));
 		},
 		setOrdering(order) {
-			console.log(order);
-
 			set(state => {
 				state.ordering = order;
 				state.options = Object.assign(state.options, {
@@ -117,8 +115,6 @@ export const useLibraryStore = create<LibraryStore & LibraryStoreAction>(
 		},
 		updateLibraryHistories() {
 			set(state => {
-				console.log(state.options);
-
 				getHistoriesFilter(state.options).then(data => {
 					state.setHistories(data);
 				});

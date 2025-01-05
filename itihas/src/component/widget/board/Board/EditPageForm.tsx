@@ -57,7 +57,6 @@ export const EditPageForm = ({ page }: { page: HistoryPage }) => {
 	}
 	const onSubmitEdit = async (values: z.infer<typeof loginFormScheme>) => {
 		const data: unknown = removeNullableValues(values);
-		console.log('[submit]', data);
 
 		await updatePage(page.id, data as unknown as Partial<Page>);
 		await Promise.all(

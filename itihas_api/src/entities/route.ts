@@ -7,6 +7,7 @@ import { commentRouter } from './comment/comment.controller';
 import { moduleRouter } from './modules';
 import { bookmarkRouter } from './bookmark/bookmark.controller';
 import { genreRouter } from './genre/genre.controller';
+import { notifiactionRouter } from './notification/notification.controller';
 
 const route = Router();
 
@@ -17,6 +18,7 @@ route.use('/page', pageRouter);
 route.use('/file', fileRouter);
 route.use('/comment', commentRouter);
 route.use('/bookmark', bookmarkRouter);
+route.use('/notification', notifiactionRouter);
 route.use('/', moduleRouter);
 
 export { route };

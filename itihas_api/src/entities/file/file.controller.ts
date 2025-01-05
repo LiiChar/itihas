@@ -42,16 +42,7 @@ fileRouter.post('/', async (req: Request, res: Response) => {
 			file.name
 		);
 
-		const isExist = await fsExistOrCreate(
-			pathDir.slice(0, pathDir.lastIndexOf('/'))
-		);
-		if (isExist) {
-			console.log(pathDir);
-
-			return res
-				.json(slicePathByDir(pathDir, 'uploads'))
-				.status(StatusCodes.OK);
-		}
+		await fsExistOrCreate(pathDir.slice(0, pathDir.lastIndexOf('/')));
 
 		await file.mv(pathDir);
 		const isCreated = await fsExistOrCreate(pathDir);

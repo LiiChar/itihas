@@ -17,6 +17,7 @@ import { ErrorBoundary } from '../../lib/error';
 import { users } from '../user/model/user';
 import { ReasonPhrases } from 'http-status-codes';
 import { Filter } from '../history/history.service';
+import { notificationEvent } from '../modules/socket/notification';
 
 export const getCurrentPageByHistoryId = async (
 	id: number,

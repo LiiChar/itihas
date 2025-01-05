@@ -24,7 +24,7 @@ import { AsideHeader } from '@/component/layout/aside';
 import { Header } from '@/component/layout/header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
-import { handleImageError } from '@/shared/lib/image';
+import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { AudioMenu } from '@/component/widget/sound/AudioMenu';
 import { parseInlineStyle } from '@/shared/lib/style';
 import { runListener, useListenerStore } from '@/shared/store/ListenerStore';
@@ -99,13 +99,20 @@ export const Read = () => {
 
 type ComponentLayoutDic = LayoutComponent & { page: ReadPage };
 
-export const ImageLayout = ({ page, style, content }: ComponentLayoutDic) => {
+export const ImageLayout = ({
+	page: _layout,
+	style,
+	content,
+}: ComponentLayoutDic) => {
+	const { page } = usePageStore();
+
 	return (
 		<div>
 			<img
 				className='h-[40vh] object-cover w-full rounded-tl-lg rounded-tr-lg'
 				style={parseInlineStyle(style ?? '')}
-				src={content ?? page.image}
+				onError={handleImageError}
+				src={getFullUrl(content ?? page?.image ?? '')}
 				alt='Основное изображение'
 			/>
 		</div>

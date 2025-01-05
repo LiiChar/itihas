@@ -54,3 +54,6 @@ export type TagsHistoryType = typeof schema.tagsHistory.$inferSelect;
 export type TagsHistoryInsertType = typeof schema.tagsHistory.$inferInsert;
 export type TeamType = typeof schema.teams.$inferSelect;
 export type TeamInsertType = typeof schema.teams.$inferInsert;
+export type NotificationType = typeof schema.notificationEvents.$inferSelect;
+export type NotificationInsertType =
+	typeof schema.notificationEvents.$inferInsert;

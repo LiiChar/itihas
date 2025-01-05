@@ -69,6 +69,7 @@ export const getHistory = async (id: number, user: UserType) => {
 					genre: true,
 				},
 			},
+			layout: true,
 		},
 	});
 

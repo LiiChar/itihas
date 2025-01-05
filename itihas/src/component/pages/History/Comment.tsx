@@ -83,7 +83,6 @@ export const Comment = memo(({ comment }: { comment: CommentWithUser }) => {
 		if (!user && !comment.id) return;
 
 		setOwnLike(prev => (prev == 0 ? 1 : 0));
-		console.log(ownLike);
 
 		socket.emit('comment_like_add', {
 			commentId: comment.id,

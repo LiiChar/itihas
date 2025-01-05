@@ -7,7 +7,6 @@ const checkValideUser = async () => {
 
 	const tokenCookie = await authicated(useUserStore.getState().user!.id);
 	// TODO
-	console.log(tokenCookie);
 
 	// if (tokenCookie) return;
 	if (tokenCookie.data) return;

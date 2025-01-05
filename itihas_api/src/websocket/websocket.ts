@@ -12,6 +12,16 @@ import {
 	updateCommentsCommentHistory,
 	updateLikeHistory,
 } from '../entities/history/history.service';
+import { notificationFacade } from '../entities/modules/socket/notification';
+
+export type SocketClient = Socket<
+	DefaultEventsMap,
+	DefaultEventsMap,
+	DefaultEventsMap,
+	any
+>;
+
+export let socketClients: Record<number, SocketClient> = {};
 
 export const runWebsocket = (): Server<
 	DefaultEventsMap,
@@ -31,7 +41,7 @@ export const runWebsocket = (): Server<
 		DefaultEventsMap,
 		any
 	> | null = null;
-
+	notificationFacade();
 	io.on('connection', socket => {
 		// handle like history
 		socket.on(
@@ -142,6 +152,21 @@ export const runWebsocket = (): Server<
 				);
 			}
 		);
+
+		socket.on('notification_subscribe', (data: { userId: number }) => {
+			if (!data.userId) {
+				return;
+			}
+			socketClients[data.userId] = socket;
+			socket.join(`notification:${data.userId}`);
+		});
+		socket.on('notification_unscribe', (data: { userId: number }) => {
+			if (!data.userId) {
+				return;
+			}
+			delete socketClients[data.userId];
+			socket.leave(`notification:${data.userId}`);
+		});
 
 		socket.on(
 			'room_join',

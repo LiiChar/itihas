@@ -232,8 +232,6 @@ const execute = (str: string): Token[] => {
 	while (string.length > 0) {
 		token.forEach(t => {
 			if (valid(string, t) && string.length > 0) {
-				console.log('Start parse');
-
 				const [newStr, value] = parse(string.trim(), t);
 				str = string;
 				string = newStr.trim();
@@ -257,8 +255,6 @@ const run = async (
 	varMap?: Map<any, any>,
 	isReturn: boolean = false
 ): Promise<any> => {
-	console.log(isReturn ? '' : 'Start run code');
-
 	let pageIndex: number = 0;
 	const vars = varMap ?? new Map();
 	for (let i = 0; i < tokens.length; i++) {

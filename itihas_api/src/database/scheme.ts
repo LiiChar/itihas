@@ -63,6 +63,11 @@ import {
 	bookmarks,
 	bookmarksRelations,
 } from '../entities/bookmark/model/bookmark';
+import {
+	notificationEvents,
+	notificationEventsToUsers,
+	notificationUsersRelations,
+} from '../entities/notification/model/notification';
 export {
 	dignity,
 	layouts,
@@ -121,4 +126,7 @@ export {
 	tagsHistory,
 	tagsToHistories,
 	tagsToHistoriesRelations,
+	notificationEvents,
+	notificationEventsToUsers,
+	notificationUsersRelations,
 };
