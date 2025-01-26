@@ -24,7 +24,12 @@ export const GenresBlock = () => {
 	});
 
 	const [history, setHistory] = useState<HistoryAll[]>([]);
-	const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>(tabs[0]);
+
+	const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>(
+		(Object.entries(casheHistoryTabs).find(
+			([_k, t]) => t && t.length > 0
+		)?.[0] ?? 'Романтика') as (typeof tabs)[number]
+	);
 
 	useMount(() => {
 		const promises: Promise<HistoryAll[]>[] = [];
@@ -53,6 +58,11 @@ export const GenresBlock = () => {
 				return acc;
 			}, {} as any);
 			setCasheHistoryTabs(histories);
+			setActiveTab(
+				(Object.entries(casheHistoryTabs).find(
+					([_k, t]) => t && t.length > 0
+				)?.[0] ?? 'Романтика') as (typeof tabs)[number]
+			);
 			setHistory(histories[activeTab]);
 		});
 	});
@@ -65,10 +75,10 @@ export const GenresBlock = () => {
 
 	return (
 		<Tabs value={activeTab} className='w-full'>
-			<TabsList className='bg-transparent flex gap-2 flex-wrap w-full overflow-x-auto overflow-y-hidden text-xs '>
+			<TabsList className='bg-transparent flex gap-3 flex-wrap w-full overflow-x-auto overflow-y-hidden text-md '>
 				{tabs.map((t, i) => (
 					<>
-						{casheHistoryTabs[t].length ? (
+						{casheHistoryTabs[t] && casheHistoryTabs[t].length ? (
 							<TabsTrigger
 								key={'header' + t + i}
 								className={`rounded-none relative px-0 block text-foreground ${
@@ -88,10 +98,10 @@ export const GenresBlock = () => {
 			{tabs.map((t, i) => (
 				<TabsContent
 					key={'content' + t + i}
-					className='text-foreground  p-0 px-4 font-normal text-sm  flex gap-2 flex-wrap flex-row'
+					className='empty:hidden text-foreground  p-0 px-4 font-normal text-sm  flex gap-2 flex-wrap flex-row'
 					value={t}
 				>
-					{history.length == 0 && <div>Пусто как в тумане</div>}
+					{history && history.length == 0 && <div>Пусто как в тумане</div>}
 					{history.map(history => (
 						<div className='w-[calc(20%-6px)] max-w-[120px] relative'>
 							<img
@@ -103,7 +113,9 @@ export const GenresBlock = () => {
 							/>
 							<div className='	 overflow-hidden pb-1 pt-1 text-md sm:text-sm md:text-md lg:text-lg'>
 								<p className='h-min text-muted-foreground text-[0.7em] leading-3'>
-									{history.genres.length > 0 && history.genres[0].genre.name}
+									{history.genres &&
+										history.genres.length > 0 &&
+										history.genres[0].genre.name}
 								</p>
 								<h5 className='text-[0.78em]'>{history.name}</h5>
 							</div>

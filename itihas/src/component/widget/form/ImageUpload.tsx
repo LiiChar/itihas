@@ -1,15 +1,22 @@
 import { uploadFile } from '@/shared/api/file';
 import { getFullUrl } from '@/shared/lib/image';
-import React, { memo, useRef, useState } from 'react';
+import React, { ComponentProps, memo, useRef, useState } from 'react';
 import placeholderImage from '@/assets/placeholder.png';
+import { cn } from '@/shared/lib/lib';
 
 export const ImageUpload = memo(
 	({
 		src,
 		onUpload,
-	}: {
+		className,
+		options,
+		...props
+	}: ComponentProps<'img'> & {
 		src: string;
-		onUpload: (filePath: string) => void;
+		onUpload?: (filePath: string) => void;
+		options?: {
+			visiblePath?: boolean;
+		};
 	}) => {
 		const inputFileRef = useRef<HTMLInputElement>(null);
 		const [isDragOver, setIsDragOver] = useState(false);
@@ -18,7 +25,7 @@ export const ImageUpload = memo(
 				const formData = new FormData();
 				formData.append('file', e.target.files[0]);
 				const filePath = await uploadFile(formData);
-				onUpload(filePath.data);
+				onUpload && onUpload(filePath.data);
 			}
 		};
 
@@ -37,7 +44,7 @@ export const ImageUpload = memo(
 				const formData = new FormData();
 				formData.append('file', newFiles[0] as any);
 				const filePath = await uploadFile(formData);
-				onUpload(filePath.data);
+				onUpload && onUpload(filePath.data);
 			}
 		};
 
@@ -51,10 +58,12 @@ export const ImageUpload = memo(
 				}}
 				onDragEnter={() => setIsDragOver(true)}
 				onDragExit={() => setIsDragOver(false)}
+				className='w-full h-full'
 			>
-				<div className='relative bg-white rounded-t-sm'>
+				<div className='w-full h-full relative rounded-t-sm'>
 					<img
-						className={`w-full object-contain rounded-t-sm `}
+						{...props}
+						className={cn(`w-full object-contain rounded-t-sm `, className)}
 						src={getFullUrl(src)}
 						onError={e => {
 							e.currentTarget.src = placeholderImage;

@@ -6,15 +6,19 @@ import {
 	DialogTrigger,
 } from '@/shared/ui/dialog';
 import { EditPageForm } from './EditPageForm';
-import { Edit } from 'lucide-react';
 import { HistoryPage } from '@/shared/type/history';
+import { ReactNode } from 'react';
 
-export const EditPageModal = ({ page }: { page: HistoryPage }) => {
+export const EditPageModal = ({
+	page,
+	children,
+}: {
+	page: HistoryPage;
+	children?: ReactNode;
+}) => {
 	return (
 		<Dialog>
-			<DialogTrigger>
-				<Edit width={16} className='cursor-pointer' />
-			</DialogTrigger>
+			<DialogTrigger>{children}</DialogTrigger>
 			<DialogContent onMouseDown={e => e.stopPropagation()}>
 				<DialogHeader>
 					<DialogTitle>Изменить страницу</DialogTitle>

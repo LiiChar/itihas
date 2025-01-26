@@ -7,18 +7,18 @@ import {
 } from '@/shared/ui/dialog';
 import { HistoryPage } from '@/shared/type/history';
 import { CreatePageForm } from './CreatePageForm';
-import { PlusSquare } from 'lucide-react';
+import { ReactNode } from 'react';
 
 export const CreatePageModal = ({
 	onCreate,
+	children,
 }: {
 	onCreate: (page: HistoryPage) => void;
+	children?: ReactNode;
 }) => {
 	return (
 		<Dialog>
-			<DialogTrigger className='w-min h-min'>
-				<PlusSquare className='w-min h-min' />
-			</DialogTrigger>
+			<DialogTrigger className='w-min h-min'>{children}</DialogTrigger>
 			<DialogContent onMouseDown={e => e.stopPropagation()}>
 				<DialogHeader>
 					<DialogTitle>Создать содержание</DialogTitle>

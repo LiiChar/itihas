@@ -24,7 +24,8 @@ type ResizeDirection =
 
 export function useBlockResize<T extends HTMLElement>(
 	ref: React.MutableRefObject<T>,
-	options?: UseBlockResizeOptions
+	options?: UseBlockResizeOptions,
+	onResize?: (isResize: boolean) => void
 ): [React.RefObject<T>, BlockSize] {
 	let {
 		initialWidth = ref.current?.offsetWidth ?? 0,
@@ -61,6 +62,7 @@ export function useBlockResize<T extends HTMLElement>(
 			e.preventDefault();
 			e.stopPropagation();
 			setIsResizing(true);
+			onResize && onResize(true);
 			const rect = blockRef.current.getBoundingClientRect();
 			let direction: ResizeDirection = null;
 
@@ -197,6 +199,7 @@ export function useBlockResize<T extends HTMLElement>(
 
 	const handleMouseUp = useCallback(() => {
 		setIsResizing(false);
+		onResize && onResize(false);
 		setResizeDirection(null);
 	}, []);
 

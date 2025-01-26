@@ -24,7 +24,10 @@ export const AsideHeader = () => {
 					{!user ? <MenuIcon /> : <Avatar className='w-7 h-7' user={user} />}
 				</Button>
 			</SheetTrigger>
-			<SheetContent className='md:min-w-1/2 sm:min-w-[50%]' side={'right'}>
+			<SheetContent
+				className='md:min-w-[35%] lg:min-w-[25%] sm:min-w-[40%] min-w-[50%]'
+				side={'right'}
+			>
 				<SheetTitle>
 					<Link
 						to={`/profile/${id}`}

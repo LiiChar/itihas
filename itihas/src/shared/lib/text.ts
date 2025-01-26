@@ -75,3 +75,18 @@ export const minifyData = (obj: any): string => {
 	}
 	return ''; //  Для неизвестных типов
 };
+
+export const formatJSON = () => {};
+
+export function replaceMoveValue(
+	inputString: string,
+	newValue: string
+): string {
+	// Регулярное выражение для поиска 'move(...)', где "..." может содержать другие скобки
+	const pattern = /move\(([^()]*|\((?:[^()]*|\([^()]*\))*\))*\);/g;
+
+	// Замена значения внутри скобок
+	const newString = inputString.replace(pattern, newValue);
+
+	return newString;
+}

@@ -2,7 +2,6 @@ import { memo } from 'react';
 import { HistoryPages } from '../../../shared/type/history';
 import { getFullUrl, handleImageError } from '../../../shared/lib/image';
 import { Minus, Plus } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
 import { updateSimilarHistoryRate } from '@/shared/api/history';
 import { runListener } from '@/shared/store/ListenerStore';
 import { AddSimilarModal } from './AddSimilarModal';
@@ -22,7 +21,10 @@ export const Similar = memo(({ history }: { history: HistoryPages }) => {
 				</div>
 			</div>
 			{history.similarHistories.map(s => (
-				<div key={s.id} className='flex flex-col gap-1'>
+				<div
+					key={s.id + s.historyId + s.similarHistoryId}
+					className='flex flex-col gap-1'
+				>
 					<div className='flex justify-between'>
 						<div className='w-full'>
 							<img

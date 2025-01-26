@@ -11,8 +11,8 @@ export const AudioMenu = memo(() => {
 	return (
 		<>
 			<DropdownMenu>
-				<DropdownMenuTrigger className='fixed top-2 left-1'>
-					<LucideVolume2 />
+				<DropdownMenuTrigger className='fixed top-3 left-3'>
+					<LucideVolume2 className='hover:stroke-primary' />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<SoundBar />

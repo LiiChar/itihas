@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"scripts": {
 		"itihas": "cd itihas && npm run dev && cd ../itihas_api && npm run dev",
-		"apitihas": "cd ./itihas_api/ && npm i && cd ./dist/src && node index.js"
+		"apitihas": "cd ./apitihas/ && npm i && cd ./dist/src && node index.js"
 	},
 	"keywords": [],
 	"author": "",

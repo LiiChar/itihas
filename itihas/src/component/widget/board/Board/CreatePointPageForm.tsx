@@ -17,6 +17,8 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { DialogFooter } from '@/shared/ui/dialog';
 import { PagePointInsert } from '@/shared/type/page';
 import { useListenerStore } from '@/shared/store/ListenerStore';
+import { PageSearch } from '../../page/PageSearch';
+import { replaceMoveValue } from '@/shared/lib/text';
 
 const pageloginFormScheme = z.object({
 	name: z.string(),
@@ -31,7 +33,7 @@ export const CreatePointPageForm = ({ pageId }: { pageId: number }) => {
 			name: '',
 		},
 	});
-	const {runListener} = useListenerStore();
+	const { runListener } = useListenerStore();
 	function removeNullableValues<T extends object>(obj: T): T {
 		return Object.fromEntries(
 			Object.entries(obj).filter(
@@ -73,19 +75,55 @@ export const CreatePointPageForm = ({ pageId }: { pageId: number }) => {
 						control={form.control}
 						name='action'
 						render={({ field }) => (
-							<FormItem>
-								<FormLabel className='text-foreground'>
-									Опишите действия соединения
-								</FormLabel>
-								<FormControl>
-									<Textarea
-										className='bg-background -translate-y-2'
-										placeholder='Введите название страницы'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className='-translate-y-4' />
-							</FormItem>
+							<>
+								<FormItem>
+									<FormLabel className='text-foreground'>
+										Выберите страницу
+									</FormLabel>
+
+									<FormControl>
+										<PageSearch
+											onSubmit={h => {
+												if (field.value.includes('move(')) {
+													form.setValue(
+														'action',
+														replaceMoveValue(field.value, `move(${h.id});`)
+													);
+													return;
+												}
+												form.setValue('action', field.value + `move(${h.id});`);
+											}}
+											className=''
+											option={{ listVisible: false }}
+										/>
+									</FormControl>
+									<FormMessage className='-translate-y-4' />
+								</FormItem>
+							</>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='action'
+						render={({ field }) => (
+							<>
+								<FormItem>
+									<FormLabel className='text-foreground'>
+										Опишите действия соединения
+									</FormLabel>
+
+									<FormControl>
+										<Textarea
+											className='bg-background -translate-y-2'
+											placeholder='Введите название страницы'
+											{...field}
+										>
+											{field.value ?? ''}
+										</Textarea>
+									</FormControl>
+									<FormMessage className='-translate-y-4' />
+								</FormItem>
+							</>
 						)}
 					/>
 				</div>

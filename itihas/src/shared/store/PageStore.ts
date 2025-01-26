@@ -28,7 +28,7 @@ export const setPage = (page: NonNullable<PageStore['page']>) => {
 		preloadImage(page.image);
 	}
 	if (page.sound) setMedia(getFullUrl(page.sound), 'music');
-	setMedia(getFullUrl(page.history.sound), 'background');
+	setMedia(getFullUrl(page.history.sound ?? ''), 'background');
 	return usePageStore.setState({ page });
 };
 

@@ -5,12 +5,7 @@ import { formatDate } from '@/shared/lib/time';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { ExitIcon } from '@radix-ui/react-icons';
-import {
-	useClipboard,
-	useMount,
-	useQuery,
-	useTextSelection,
-} from '@siberiacancode/reactuse';
+import { useClipboard, useMount, useQuery } from '@siberiacancode/reactuse';
 import { Edit, Trash } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 

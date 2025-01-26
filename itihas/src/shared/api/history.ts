@@ -34,6 +34,13 @@ export const getLayouts = async () => {
 	return layouts.data;
 };
 
+export const updateHistoryLayouts = async (
+	layout: Partial<Layout> & { id: number }
+) => {
+	const layouts = await axi.put<Layout>(URL + '/history/layout', layout);
+	return layouts.data;
+};
+
 export const updateHistory = async (id: number, data: History) => {
 	const newHistory = await axi.put<HistoryPages>(URL + '/history/' + id, data);
 	return newHistory;

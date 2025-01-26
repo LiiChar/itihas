@@ -14,15 +14,24 @@ import { Constructor } from './page/Page/Constructor';
 import { Catalog } from './page/Catalog';
 import { VariableHistory } from './page/History/VariableHistory';
 import { LayoutConstructor } from './page/History/LayoutConstructor';
+import { Notfound } from './page/Notfound';
+import { LayoutConstructorPage } from './page/Page/LayoutConstructor';
+import { NotAuthorize } from './page/auth/NotAuthorize';
+import { Chat } from './page/Chat';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <Layout />,
+
 		children: [
 			{
 				path: '/',
 				element: <Main />,
+			},
+			{
+				path: '/chat',
+				element: <Chat />,
 			},
 			{
 				path: '/page/:id/constructor',
@@ -68,7 +77,10 @@ const router = createBrowserRouter([
 				path: '/page/:id/edit',
 				element: <PageEditBoard />,
 			},
-
+			{
+				path: '/page/:id/layout',
+				element: <LayoutConstructorPage />,
+			},
 			{
 				path: '/profile/:id',
 				element: <ProfilePage />,
@@ -76,6 +88,14 @@ const router = createBrowserRouter([
 			{
 				path: '/library',
 				element: <Catalog />,
+			},
+			{
+				path: '/unouthorize',
+				element: <NotAuthorize />,
+			},
+			{
+				path: '*',
+				element: <Notfound />,
 			},
 		],
 	},

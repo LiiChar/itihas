@@ -51,39 +51,51 @@ export const TabsInfo = memo(({ history }: { history: HistoryPages }) => {
 	const tabs = [
 		{
 			value: 'Описание',
+			visible: history.description || history.genres.length > 0,
 			content: <Description history={history} />,
 		},
 		{
 			value: 'Персонажи',
+			visible: history.characters.length > 0,
 			content: <Characters history={history} />,
 		},
 	];
-	const [activeTab, setActiveTab] = useState(tabs[0].value);
+	const [activeTab, setActiveTab] = useState(
+		tabs.find(el => el.visible)?.value ?? tabs[0].value
+	);
 
 	return (
-		<Tabs value={activeTab}>
+		<Tabs className='has-[.tabs-triggers]:block hidden' value={activeTab}>
 			<TabsList className='bg-transparent -ml-1 text-xs'>
 				{tabs.map(t => (
-					<TabsTrigger
-						key={t.value}
-						className={`rounded-none relative  ${
-							activeTab === t.value ? '!text-primary' : 'text-foreground'
-						}`}
-						value={t.value}
-						onClick={() => setActiveTab(t.value)}
-					>
-						{t.value}
-					</TabsTrigger>
+					<>
+						{t.visible && (
+							<TabsTrigger
+								key={t.value + 'trigger'}
+								className={`rounded-none tabs-triggers relative  ${
+									activeTab === t.value ? '!text-primary' : 'text-foreground'
+								}`}
+								value={t.value}
+								onClick={() => setActiveTab(t.value)}
+							>
+								{t.value}
+							</TabsTrigger>
+						)}
+					</>
 				))}
 			</TabsList>
 			{tabs.map(t => (
-				<TabsContent
-					key={t.value}
-					className='text-foreground p-0 font-normal text-sm'
-					value={t.value}
-				>
-					{t.content}
-				</TabsContent>
+				<>
+					{t.visible && (
+						<TabsContent
+							key={t.value + 'content'}
+							className='text-foreground p-0 font-normal text-sm'
+							value={t.value}
+						>
+							{t.content}
+						</TabsContent>
+					)}
+				</>
 			))}
 		</Tabs>
 	);

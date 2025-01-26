@@ -8,16 +8,13 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { updateVariables } from '@/shared/api/variable';
-import { formatData, minifyData } from '@/shared/lib/text';
 import { runListener } from '@/shared/store/ListenerStore';
 import { useUserStore } from '@/shared/store/UserStore';
 import { Variable as VType, VariableHistory } from '@/shared/type/variable';
 import { Button } from '@/shared/ui/button';
-import { CodeBlock } from '@/shared/ui/code-block';
 import { Input } from '@/shared/ui/input';
 import {
 	Table,
-	TableCaption,
 	TableBody,
 	TableCell,
 	TableHead,
@@ -26,7 +23,7 @@ import {
 } from '@/shared/ui/table';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-type DataVariable = Record<
+export type DataVariable = Record<
 	string,
 	{
 		key: string;
@@ -34,7 +31,22 @@ type DataVariable = Record<
 	}
 >;
 
-export const Variable = ({ variable }: { variable: VariableHistory[] }) => {
+export const Variable = ({
+	variable,
+	onSubmit,
+}: {
+	variable: VariableHistory[];
+	onSubmit?: (
+		data: Record<
+			string,
+			{
+				data: string;
+				key: string;
+				type: VType['type'];
+			}
+		>
+	) => void;
+}) => {
 	const [variables, setVariables] = useState(
 		Object.assign(changeDataToVariable(variable), {
 			'': {
@@ -76,7 +88,7 @@ export const Variable = ({ variable }: { variable: VariableHistory[] }) => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{Object.entries(variables).map(([k, v], i) => (
+					{Object.entries(variables).map(([k, v]) => (
 						<TableRow key={k}>
 							<TableCell>
 								<Input
@@ -93,11 +105,7 @@ export const Variable = ({ variable }: { variable: VariableHistory[] }) => {
 							</TableCell>
 							<TableCell>
 								<Input
-									value={formatData(
-										v.type == 'object' || v.type == 'array'
-											? JSON.parse(v.data)
-											: v.data
-									)}
+									value={v.data}
 									onChange={e =>
 										handleUpdateVar(
 											k,
@@ -141,7 +149,9 @@ export const Variable = ({ variable }: { variable: VariableHistory[] }) => {
 			<div className='mb-2'>
 				<Button
 					onClick={async () => {
-						await updateVariables(changeDataToAction(variables), +id, user.id);
+						const parsedVariable = changeDataToAction(variables);
+						await updateVariables(parsedVariable, +id, user.id);
+						onSubmit && onSubmit(parsedVariable);
 						runListener('variableUpdate');
 					}}
 				>

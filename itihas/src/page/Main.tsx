@@ -40,14 +40,16 @@ export const Main = () => {
 
 	return (
 		<div>
-			{newHistory && (
-				<Slider
-					histories={newHistory}
-					title='Новые истории'
-					link={{ src: '/library', title: 'Все новые истории' }}
-				/>
-			)}
-			<div className='mt-4'>
+			<div className='px-3'>
+				{newHistory && (
+					<Slider
+						histories={newHistory}
+						title='Новые истории'
+						link={{ src: '/library', title: 'Все новые истории' }}
+					/>
+				)}
+			</div>
+			<div className='mt-4 mx-3'>
 				{popularHistory && (
 					<Slider
 						histories={popularHistory}
@@ -56,7 +58,7 @@ export const Main = () => {
 					/>
 				)}
 			</div>
-			<div className='mt-6'>
+			<div className='my-8'>
 				<GenresBlock />
 			</div>
 			<div>

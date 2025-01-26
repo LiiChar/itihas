@@ -15,11 +15,14 @@ import {
 import { useMount } from '@siberiacancode/reactuse';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowUpDown } from 'lucide-react';
+import { useLayout } from '@/shared/hooks/useLayout';
+import { ScrollTop } from '@/shared/ui/scroll-top';
 
 export const Catalog = () => {
 	const [searchParams, _setSearchParams] = useSearchParams();
 	const { histories, setCountHistory, setOptions, ordering, setOrdering } =
 		useLibraryStore();
+	useLayout({ components: [{ id: 66, component: ScrollTop as any }] });
 	// const { ref } = useIntersectionObserver<HTMLDivElement>({
 	// 	onChange() {
 	// 		setCurrentPage(currentPage + 1);
@@ -80,7 +83,7 @@ export const Catalog = () => {
 					</div>
 					<div className='flex h-full flex-wrap  gap-3'>
 						{histories.map(h => (
-							<div className='w-[15%] h-full'>
+							<div className='lg:w-[calc(20%-10px)] md:w-[calc(25%-8px)] sm:w-[calc(33%-6px)] min-[320px]:w-[calc(50%-6px)] w-full h-full'>
 								<HistoryElement
 									option={{ nameHeight: 1, variant: 'catalog' }}
 									history={h}
@@ -91,7 +94,7 @@ export const Catalog = () => {
 						{/* <div className='mt-28s' ref={ref}></div> */}
 					</div>
 				</div>
-				<div className='w-1/4'>
+				<div className='w-1/4 top-20 right-0 sticky h-min'>
 					<LibraryAside />
 				</div>
 			</div>

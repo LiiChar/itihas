@@ -48,7 +48,7 @@
 		--popover-foreground: 0 0% 95%;
 		--primary: 142.1 70.6% 45.3%;
 		--primary-foreground: 144.9 80.4% 10%;
-		--secondary: 240 3.7% 15.9%;
+		--secondary: 240deg 2.18% 11.95%;
 		--secondary-foreground: 0 0% 98%;
 		--muted: 0 0% 15%;
 		--muted-foreground: 240 5% 64.9%;
@@ -98,10 +98,11 @@ a {
 
 @layer base {
 	* {
-		@apply border-border box-border font-serif font-normal;
+		@apply border-border box-border font-normal;
 	}
 	body {
 		@apply bg-background text-foreground;
+		font-family: 'PT Sans', sans-serif;
 	}
 	html,
 	body,
@@ -166,4 +167,32 @@ a {
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Italic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-BoldItalic.ttf') format('truetype');
+	font-weight: bold;
+	font-style: italic;
 }

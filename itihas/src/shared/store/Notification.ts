@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Notification, NotificationUserResponse } from '../type/notification';
+import { NotificationUserResponse } from '../type/notification';
 
 export type NotificationProperty = {
 	notification: NotificationUserResponse[];

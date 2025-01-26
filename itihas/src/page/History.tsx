@@ -39,7 +39,7 @@ export const History = () => {
 		});
 		joinToRoom('history', +id!);
 	});
-	if (!history) {
+	if (!history || typeof history == 'string') {
 		return;
 	}
 
@@ -125,11 +125,13 @@ export const History = () => {
 						<Link
 							className='w-full'
 							to={
-								history.pages.length == 0 ? '' : `/history/${history.id}/read`
+								history.pages && history.pages.length == 0
+									? ''
+									: `/history/${history.id}/read`
 							}
 						>
 							<Button
-								disabled={history.pages.length == 0}
+								disabled={history.pages && history.pages.length == 0}
 								className='rounded-lg w-full bg-primary font-normal'
 							>
 								Читать

@@ -2,7 +2,7 @@ import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { HistoryPage, HistoryPages } from '@/shared/type/history';
 
 import { useEvent, useInterval } from '@siberiacancode/reactuse';
-import { BoxSelect, Trash2 } from 'lucide-react';
+import { BoxSelect, Edit, PlusSquare, Trash2 } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { EditPageModal } from './Board/EditPageModal';
 import { Separator } from '@/shared/ui/separator';
@@ -12,6 +12,8 @@ import { deleteActionPage, updateActionPage } from '@/shared/api/page';
 import { useListenerStore } from '@/shared/store/ListenerStore';
 import { UpdatePointPageModal } from './Board/UpdatePointPageModal';
 import { CreatePointPageModal } from './Board/CreatePointPageModal';
+import { toast } from 'sonner';
+import { ReadLayoutModal } from '../page/ReadLayoutModal';
 
 type Node = {
 	id: number;
@@ -29,13 +31,12 @@ type Point = {
 const NODE_WIDTH = 200; // ширина ноды
 const NODE_HEIGHT = 300; // высота ноды
 
-function calculatePath(start: Point, end: Point, i: number) {
+function calculatePath(start: Point, end: Point, i: number, _nodes: Node[]) {
 	const dx = end.x - start.x;
 
-	// Определение стороны относительно начальной точки
-	const side = dx > 0 ? 1 : -1; // Если конечная точка справа, side = 1, иначе -1
-	const HEIGHT_CONTENT_NODE = 47;
-	const HEIGHT_POINT = 17;
+	const side = dx > 0 ? 1 : -1;
+	const HEIGHT_POINT = 13;
+	const HEIGHT_CONTENT_NODE = NODE_HEIGHT * 0.13;
 
 	// Коррекция начала и конца линии
 	const startOffset = {
@@ -45,7 +46,7 @@ function calculatePath(start: Point, end: Point, i: number) {
 
 	const endOffset = {
 		x: end.x + ((NODE_WIDTH - 10) / 2) * -side,
-		y: end.y + HEIGHT_CONTENT_NODE + HEIGHT_POINT * i,
+		y: end.y - 1 + HEIGHT_CONTENT_NODE + HEIGHT_POINT * i,
 	};
 
 	const controlPoint1 = {
@@ -251,13 +252,19 @@ export const Board = ({ history }: { history: HistoryPages }) => {
 						action: () => {},
 						element: (
 							<CreatePageModal
-								onCreate={page =>
+								onCreate={page => {
+									if (typeof page == 'string') {
+										toast(page);
+										return;
+									}
 									setNodes(prev => [
 										...prev,
 										...generateNodesByHistories([page]),
-									])
-								}
-							/>
+									]);
+								}}
+							>
+								<PlusSquare className='w-min h-min' />
+							</CreatePageModal>
 						),
 						alt: 'Добавить страницу',
 					},
@@ -319,17 +326,25 @@ export const BoardNodes = memo(
 								NODE_HEIGHT / 2
 							}px)`, // Центрируем ноду
 						}}
-						className='absolute h-full select-none bg-secondary z-30 text-secondary-foreground rounded-md'
+						className='absolute h-full select-none bg-secondary z-30 text-secondary-foreground rounded-md flex flex-col'
 					>
 						<div className='absolute top-1 right-1 aspect-square w-[25px] h-[25px] text-center bg-black/60 p-1'>
 							{n.page.id}
 						</div>
-						<BoardNode node={n} />
+						<div className='absolute top-1 left-1 stroke-primary aspect-square w-[15px] h-[15px] text-center p-1'>
+							<ReadLayoutModal
+								historyId={n.page.historyId}
+								pageId={n.page.id}
+							/>
+						</div>
+						<div className='h-[63%]'>
+							<BoardNode node={n} />
+						</div>
 						<Separator
 							orientation='horizontal'
 							className='h-[1px] mt-1 w-full bg-background'
 						/>
-						<div className='h-14 overflow-auto'>
+						<div className='flex-grow overflow-auto'>
 							{n.page.points.map(p => (
 								<div
 									className='px-1 h-4 gap-1 flex justify-center items-center'
@@ -368,14 +383,16 @@ export const BoardNodes = memo(
 								</div>
 							))}
 						</div>
-						<div className='flex h-7 justify-around items-center'>
+						<div className='flex h-7 py-3 justify-around items-center'>
 							<CreatePointPageModal pageId={n.id} />
 							<BoxSelect
 								width={20}
 								className='cursor-pointer'
 								onMouseDown={e => handleMouseDown(e, i)}
 							/>
-							<EditPageModal page={n.page} />
+							<EditPageModal page={n.page}>
+								<Edit width={16} className='cursor-pointer' />
+							</EditPageModal>
 						</div>
 					</div>
 				))}
@@ -386,19 +403,15 @@ export const BoardNodes = memo(
 export const BoardNode = memo(({ node }: { node: Node }) => {
 	return (
 		<div className='overflow-hidden'>
-			<div>
-				<img
-					className='select-none h-[140px] object-fill aspect-video'
-					src={getFullUrl(node.page.image)}
-					onError={handleImageError}
-				/>
-			</div>
+			<img
+				className='select-none object-cover max-h-36 aspect-auto w-full'
+				src={getFullUrl(node.page.image)}
+				onError={handleImageError}
+			/>
 			<div className='text-base px-1 min-h-[16.8px] line-clamp-1'>
 				{node.page.name}
 			</div>
-			<div className='text-xs min-h-[33.6px] px-1 line-clamp-3'>
-				{node.page.content}
-			</div>
+			<div className='text-xs px-1 line-clamp-3'>{node.page.content}</div>
 		</div>
 	);
 });
@@ -411,11 +424,18 @@ export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 					const startNode = n;
 					const endNode = nodes.find(n => n.id === r.nodeId);
 					if (!endNode) return null;
-
+					const relationNodes = n.relation.reduce<Node[]>((acc, r) => {
+						const findedNodes = nodes.find(n => n.id === r.nodeId);
+						if (findedNodes) {
+							acc.push(findedNodes);
+						}
+						return acc;
+					}, []);
 					const { path, startOffset } = calculatePath(
 						startNode.position,
 						endNode.position,
-						j + 1
+						j + 1,
+						relationNodes
 					);
 
 					// Отрисовка белого круга в начале линии
@@ -425,7 +445,7 @@ export const BoardRelation = memo(({ nodes }: { nodes: Node[] }) => {
 					return (
 						<g key={crypto.randomUUID()}>
 							{/* Белый круг на начале соединения */}
-							<circle cx={circleX} cy={circleY} r='5' fill='white' />
+							<circle cx={circleX} cy={circleY} r='2' fill='white' />
 							{/* Линия со стрелкой на конце */}
 							<path
 								d={path}

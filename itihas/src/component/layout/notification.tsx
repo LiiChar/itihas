@@ -1,23 +1,15 @@
 import { getNotification } from '@/shared/api/notification';
-import { useNotification } from '@/shared/hooks/useNotification';
 import { handleImageError } from '@/shared/lib/image';
 import { useNotificationStore } from '@/shared/store/Notification';
 import { useUserStore } from '@/shared/store/UserStore';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
-import { Button } from '@/shared/ui/button';
-import { DropdownMenuShortcut } from '@/shared/ui/dropdown-menu';
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuSub,
-	DropdownMenuSubTrigger,
-	DropdownMenuPortal,
-	DropdownMenuSubContent,
 } from '@radix-ui/react-dropdown-menu';
 import { useMount } from '@siberiacancode/reactuse';
 import { Bell } from 'lucide-react';
