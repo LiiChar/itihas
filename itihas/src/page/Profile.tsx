@@ -8,6 +8,7 @@ import { ExitIcon } from '@radix-ui/react-icons';
 import { useClipboard, useMount, useQuery } from '@siberiacancode/reactuse';
 import { Edit, Trash } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const ProfilePage = () => {
 	const { id } = useParams();
@@ -41,50 +42,59 @@ export const ProfilePage = () => {
 	};
 
 	return (
-		<div className='flex flex-col gap-3 mt-3 mx-3'>
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.5 }}
+			className='flex flex-col gap-3 mt-3 mx-3'
+		>
 			<div>
 				<div className='bg-secondary rounded-md p-4'>
-					<div className='flex gap-3  md:flex-row items-center flex-col'>
+					<div className='flex gap-3 md:flex-row items-center flex-col'>
 						<div>
 							<Avatar className='w-36 h-36' user={user} />
 						</div>
 						<div className='w-full'>
-							<p>{formatDate(user.createdAt)}</p>
-							<h1>{user.name}</h1>
+							<p className='text-sm text-gray-500'>
+								{formatDate(user.createdAt)}
+							</p>
+							<h1 className='text-2xl font-bold'>{user.name}</h1>
 							<div className='flex gap-1 flex-wrap'>
-								{Object.entries(profileInfo).map(p => (
-									<>
-										{p[1] ? (
-											<div
-												onClick={() => copy(`${p[1]}`)}
-												className='flex overflow-hidden  gap-1 bg-background/40 p-1 rounded-sm hover:text-primary'
+								{Object.entries(profileInfo).map(
+									([key, value]) =>
+										value && (
+											<motion.div
+												key={key}
+												whileHover={{ scale: 1.05 }}
+												onClick={() => copy(`${value}`)}
+												className='flex overflow-hidden gap-1 bg-background/40 p-1 rounded-sm hover:text-primary cursor-pointer'
 											>
-												<div className='text-nowrap'>{p[0]}:</div>
-												<div>{p[1]}</div>
-											</div>
-										) : (
-											''
-										)}
-									</>
-								))}
+												<div className='text-nowrap'>{key}:</div>
+												<div>{value}</div>
+											</motion.div>
+										)
+								)}
 							</div>
-							<div>
-								<h5>Описание</h5>
-								<p>{user.description ?? 'Мы ничего не о вас, просвети нас'}</p>
+							<div className='mt-4'>
+								<h5 className='text-lg font-semibold'>Описание</h5>
+								<p className=''>
+									{user.description ??
+										'Мы ничего не знаем о вас, просветите нас'}
+								</p>
 							</div>
 						</div>
 						<div className='flex flex-row md:flex-col gap-2'>
 							<ExitIcon
 								onClick={handleSignOut}
-								className='hover:stroke-primary w-5 h-5'
+								className='hover:stroke-primary w-5 h-5 cursor-pointer'
 							/>
-							<Edit className='w-5 h-5' />
-							<Trash className='w-5 h-5' />
+							<Edit className='w-5 h-5 cursor-pointer' />
+							<Trash className='w-5 h-5 cursor-pointer' />
 						</div>
 					</div>
 				</div>
 			</div>
 			<ProfileTabs user={user} />
-		</div>
+		</motion.div>
 	);
 };

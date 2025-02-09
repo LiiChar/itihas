@@ -1,7 +1,6 @@
 import { getHistoriesFilter } from '../shared/api/history';
 import { useQuery } from '@siberiacancode/reactuse';
 import { Slider } from '@/component/pages/Main/Slider';
-import { getCurrentDateAtMinute } from '@/shared/lib/data';
 import { useBreadcrumble } from '@/shared/store/BreadcrumbleStore';
 import { GenresBlock } from '@/component/pages/Main/GenresBlock';
 import { PageUpdate } from '@/component/pages/Main/PageUpdate';

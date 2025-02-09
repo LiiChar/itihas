@@ -9,6 +9,9 @@ function _export(target, all) {
     });
 }
 _export(exports, {
+    default: function() {
+        return _default;
+    },
     server: function() {
         return server;
     },
@@ -46,4 +49,5 @@ app.use(_bodyparser.default.json());
 app.use('/api', _route.route);
 app.use(_errorBoundaryMiddleware.errorBoundaryMiddleware);
 server.listen(PORT, ()=>console.log(`Server has been started on http://localhost:${PORT}`));
+const _default = app;
 

@@ -1,4 +1,3 @@
-import { transcriptTextSend } from '@/shared/lib/websocket/handler/transcription';
 import { useEffect, useState, useCallback } from 'react';
 import Recorder from 'recorder-js';
 
@@ -9,7 +8,7 @@ export const useRecord = (options?: {
 	onListening?: (buffer: Buffer) => void;
 }) => {
 	const { onStart, onStop, onError } = options || {};
-	const [isListening, setIsListening] = useState(false);
+	const [_isListening, setIsListening] = useState(false);
 	const [recorder, setRecorder] = useState<Recorder | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [isRecording, setIsRecording] = useState(false);

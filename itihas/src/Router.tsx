@@ -18,7 +18,6 @@ import { Notfound } from './page/Notfound';
 import { LayoutConstructorPage } from './page/Page/LayoutConstructor';
 import { NotAuthorize } from './page/auth/NotAuthorize';
 import { Chat } from './page/Chat';
-import { AudioRecorderPage } from './page/Transcription';
 import { Progress } from './page/History/Progress';
 
 const router = createBrowserRouter([

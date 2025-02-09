@@ -42,7 +42,7 @@ import { HistoryPages } from '@/shared/type/history';
 
 export const Read = () => {
 	const { id } = useParams();
-	const [searchParams, _setSearchParams] = useSearchParams();
+	const [_searchParams, _setSearchParams] = useSearchParams();
 	const { history } = useHistoryStore();
 	const { user } = useUserStore();
 	const { currentPage, page } = usePageStore();

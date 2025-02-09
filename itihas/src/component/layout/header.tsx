@@ -7,7 +7,6 @@ import { Search } from '../widget/Search';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Notification } from './notification';
-import { getFullUrl } from '@/shared/lib/image';
 
 export const Header = () => {
 	const { user } = useUserStore();

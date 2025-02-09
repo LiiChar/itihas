@@ -4,6 +4,7 @@ import { HistoryAll } from '@/shared/type/history';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { useMount } from '@siberiacancode/reactuse';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const GenresBlock = () => {
 	const tabs = [
@@ -116,7 +117,10 @@ export const GenresBlock = () => {
 						{history && history.length == 0 && <div>Пусто как в тумане</div>}
 						{history &&
 							history.map(history => (
-								<div className='w-[calc(20%-6px)] max-w-[120px] relative'>
+								<Link
+									to={`/history/${history.id}`}
+									className='block w-[calc(20%-6px)] max-w-[120px] relative'
+								>
 									<img
 										src={getFullUrl(history.image)}
 										onError={handleImageError}
@@ -132,10 +136,10 @@ export const GenresBlock = () => {
 										</p>
 										<h5 className='text-[0.78em]'>{history.name}</h5>
 									</div>
-									<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs pb-[4px] right-1'>
-										{history.rate}
+									<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs right-1'>
+										<span className='h-min w-min '>{history.rate}</span>
 									</div>
-								</div>
+								</Link>
 							))}
 					</TabsContent>
 				))}

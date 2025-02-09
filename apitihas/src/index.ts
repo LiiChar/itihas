@@ -20,6 +20,7 @@ export const socket = runWebsocket();
 app.get('/', (req, res) => {
 	res.json('Server has been started');
 });
+
 app.use('/api', express.static(path.join(__dirname, '..', 'public')));
 app.use(cors({}));
 app.use(cookieParser());
@@ -30,3 +31,6 @@ app.use(errorBoundaryMiddleware);
 server.listen(PORT, () =>
 	console.log(`Server has been started on http://localhost:${PORT}`)
 );
+
+// Экспортируем app и server для Vercel
+export default app;
