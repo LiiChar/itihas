@@ -23,12 +23,7 @@ app.get('/', (req, res) => {
     res.json('Server has been started');
 });
 app.use('/api', express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
-app.use((0, cors_1.default)({
-// origin: '*',
-// methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-// preflightContinue: false,
-// optionsSuccessStatus: 204,
-}));
+app.use((0, cors_1.default)({}));
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.json());
 app.use('/api', route_1.route);

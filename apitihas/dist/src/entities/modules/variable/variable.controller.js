@@ -22,12 +22,19 @@ variableRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, functio
     return res.json(varableValues).status(http_status_codes_1.StatusCodes.OK);
 }));
 variableRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { history, user } = req.query;
-    if (!history && !user) {
-        return res.json('Не пришли параметры').status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+    try {
+        const { history, user } = req.query;
+        if (!history && !user) {
+            return res.json('Не пришли параметры').status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        }
+        const varableValues = yield (0, variable_service_1.getVariables)(+history, +user);
+        return res.json(varableValues).status(http_status_codes_1.StatusCodes.OK);
     }
-    const varableValues = yield (0, variable_service_1.getVariables)(+history, +user);
-    return res.json(varableValues).status(http_status_codes_1.StatusCodes.OK);
+    catch (error) {
+        if (error instanceof Error) {
+            return res.json(error.message).status(500);
+        }
+    }
 }));
 variableRouter.get('/user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.query.user;

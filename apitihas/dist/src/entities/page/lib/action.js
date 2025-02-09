@@ -199,7 +199,6 @@ const execute = (str) => {
     while (string.length > 0) {
         token.forEach(t => {
             if (valid(string, t) && string.length > 0) {
-                console.log('Start parse');
                 const [newStr, value] = parse(string.trim(), t);
                 str = string;
                 string = newStr.trim();
@@ -214,7 +213,6 @@ const execute = (str) => {
     return tokens;
 };
 const run = (tokens_1, user_1, id_1, varMap_1, ...args_1) => __awaiter(void 0, [tokens_1, user_1, id_1, varMap_1, ...args_1], void 0, function* (tokens, user, id, varMap, isReturn = false) {
-    console.log(isReturn ? '' : 'Start run code');
     let pageIndex = 0;
     const vars = varMap !== null && varMap !== void 0 ? varMap : new Map();
     for (let i = 0; i < tokens.length; i++) {

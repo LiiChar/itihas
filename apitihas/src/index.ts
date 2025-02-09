@@ -21,14 +21,7 @@ app.get('/', (req, res) => {
 	res.json('Server has been started');
 });
 app.use('/api', express.static(path.join(__dirname, '..', 'public')));
-app.use(
-	cors({
-		// origin: '*',
-		// methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-		// preflightContinue: false,
-		// optionsSuccessStatus: 204,
-	})
-);
+app.use(cors({}));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use('/api', route);

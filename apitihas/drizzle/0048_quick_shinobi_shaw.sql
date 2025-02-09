@@ -1,0 +1,1 @@
+ALTER TABLE `user_history_progreses` ADD `wrapper_style` text;

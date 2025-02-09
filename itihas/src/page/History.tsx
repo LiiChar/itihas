@@ -112,6 +112,15 @@ export const History = () => {
 								</Button>
 							</Link>
 						)}
+						{user && (
+							// history.author &&
+							// (user?.id == history.author.id || user.role == 'admin') &&
+							<Link className='w-full' to={`/history/${history.id}/progress/`}>
+								<Button className='rounded-lg bg-primary w-full font-normal text-wrap'>
+									Прохождение
+								</Button>
+							</Link>
+						)}
 						<div>
 							<HistoryLike likes={history.likes} historyId={history.id} />
 						</div>

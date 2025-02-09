@@ -9,13 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCommentsCommentHistory = exports.updateCommentHistory = exports.updateLikeHistory = exports.updateHistory = exports.getLayouts = exports.getHistories = exports.createHistory = exports.getHistory = void 0;
+exports.updateSimilarHistoryRate = exports.addSimilarHistory = exports.getSimilarHistory = exports.updateCommentsCommentHistory = exports.updateCommentHistory = exports.updateLikeHistory = exports.updateHistory = exports.updateLayout = exports.getLayouts = exports.getHistories = exports.createHistory = exports.getHistory = void 0;
 const db_1 = require("../../database/db");
 const content_1 = require("./lib/content");
 const drizzle_orm_1 = require("drizzle-orm");
 const history_1 = require("./model/history");
 const error_1 = require("../../lib/error");
 const http_status_codes_1 = require("http-status-codes");
+const page_1 = require("../page/model/page");
 const getHistory = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     const history = yield db_1.db.query.histories.findFirst({
         extras: {
@@ -40,6 +41,7 @@ const getHistory = (id, user) => __awaiter(void 0, void 0, void 0, function* () 
                 with: {
                     similarHistory: true,
                 },
+                orderBy: (sim, { desc }) => [desc(sim.similar)],
             },
             points: true,
             bookmarks: {
@@ -57,6 +59,7 @@ const getHistory = (id, user) => __awaiter(void 0, void 0, void 0, function* () 
                     genre: true,
                 },
             },
+            layout: true,
         },
     });
     if (!history) {
@@ -166,10 +169,43 @@ const getHistories = (params) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.getHistories = getHistories;
 const getLayouts = () => __awaiter(void 0, void 0, void 0, function* () {
-    const layouts = yield db_1.db.query.layouts.findMany();
+    let layouts = yield db_1.db.query.layouts.findMany();
+    layouts = layouts.map(l => {
+        if (!Array.isArray(l.layout)) {
+            l.layout = JSON.parse(l.layout);
+        }
+        return l;
+    });
     return layouts;
 });
 exports.getLayouts = getLayouts;
+const updateLayout = (userId, layoutId, layoutData) => __awaiter(void 0, void 0, void 0, function* () {
+    const existLayout = yield db_1.db.query.layouts.findFirst({
+        where: (0, drizzle_orm_1.eq)(page_1.layouts.id, layoutId),
+    });
+    if (!existLayout) {
+        throw new error_1.ErrorBoundary(`Layout by id ${layoutId} not exist`, http_status_codes_1.ReasonPhrases.BAD_REQUEST);
+    }
+    if (userId != existLayout.userId) {
+        let newDataLayout = Object.assign(existLayout, layoutData);
+        newDataLayout.id = null;
+        const createdLayout = yield db_1.db
+            .insert(page_1.layouts)
+            .values(newDataLayout)
+            .returning();
+        yield db_1.db.update(history_1.histories).set({
+            layoutId: createdLayout[0].id,
+        });
+        return createdLayout[0];
+    }
+    const updatedLayout = yield db_1.db
+        .update(page_1.layouts)
+        .set(layoutData)
+        .where((0, drizzle_orm_1.eq)(page_1.layouts.id, layoutId))
+        .returning();
+    return updatedLayout[0];
+});
+exports.updateLayout = updateLayout;
 const updateHistory = (id, updatedData) => __awaiter(void 0, void 0, void 0, function* () {
     const updatedHistory = yield db_1.db
         .update(history_1.histories)
@@ -227,3 +263,31 @@ const updateCommentsCommentHistory = (data) => __awaiter(void 0, void 0, void 0,
     return like;
 });
 exports.updateCommentsCommentHistory = updateCommentsCommentHistory;
+const getSimilarHistory = (historyId) => __awaiter(void 0, void 0, void 0, function* () {
+    const similars = yield db_1.db.query.similarHistories.findMany({
+        where: (0, drizzle_orm_1.eq)(history_1.similarHistories.historyId, historyId),
+        with: {
+            history: true,
+            similarHistory: true,
+        },
+    });
+    return similars;
+});
+exports.getSimilarHistory = getSimilarHistory;
+const addSimilarHistory = (similar) => __awaiter(void 0, void 0, void 0, function* () {
+    const createdSimilar = yield db_1.db
+        .insert(history_1.similarHistories)
+        .values(similar)
+        .returning();
+    return createdSimilar[0];
+});
+exports.addSimilarHistory = addSimilarHistory;
+const updateSimilarHistoryRate = (_a) => __awaiter(void 0, [_a], void 0, function* ({ rate, similarId, }) {
+    const updatedSimilar = yield db_1.db
+        .update(history_1.similarHistories)
+        .set({ similar: rate })
+        .where((0, drizzle_orm_1.eq)(history_1.similarHistories.id, similarId))
+        .returning();
+    return updatedSimilar[0];
+});
+exports.updateSimilarHistoryRate = updateSimilarHistoryRate;

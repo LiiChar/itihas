@@ -8,7 +8,7 @@ import {
 } from '../../database/db';
 import { insertDataToContent } from './lib/content';
 import { and, asc, desc, eq, min, SQL, sql } from 'drizzle-orm';
-import { layouts, pagePoints, pages } from './model/page';
+import { layouts, pagePoints, pages, userHistoryProgreses } from './model/page';
 import { histories } from '../history/model/history';
 import { layoutComponents } from './type/layout';
 import { executeAction } from './lib/action';
@@ -26,30 +26,42 @@ import { Filter } from '../history/history.service';
 import { notificationEvent } from '../modules/socket/notification';
 
 export const getCurrentPageByHistoryId = async (
-	id: number,
-	currentPage: number,
+	historyId: number,
+	pageId: number,
 	user: UserType
 ) => {
-	const firstPage = await db
-		.select({ id: min(pages.id) })
-		.from(pages)
-		.where(eq(pages.historyId, id));
+	const currentPage = await db.query.pages.findFirst({
+		where: eq(pages.id, pageId),
+	});
 
-	if (firstPage.length == 0 && !firstPage[0].id) {
+	const userProgress = await db.query.userHistoryProgreses.findFirst({
+		where: and(
+			eq(userHistoryProgreses.userId, user.id),
+			eq(userHistoryProgreses.historyId, historyId)
+		),
+		orderBy: (userHistoryProgreses, { desc }) => [
+			desc(userHistoryProgreses.completedAt),
+		],
+	});
+
+	if (!currentPage && pageId != 0 && userProgress) {
 		throw new ErrorBoundary(
 			'Page not exist in story',
 			ReasonPhrases.BAD_REQUEST
 		);
 	}
-	const page = await db.query.pages.findFirst({
-		where: (pages, { eq, and, or }) => {
+
+	let page = await db.query.pages.findFirst({
+		where: (pages, { eq, and }) => {
 			let ex;
-			if (currentPage == 0) {
-				ex = or(eq(pages.type, 'start'), eq(pages.id, firstPage[0]!.id!));
+			if (!userProgress) {
+				ex = eq(pages.type, 'start');
+			} else if (pageId != 0) {
+				ex = eq(pages.id, pageId);
 			} else {
-				ex = eq(pages.id, currentPage);
+				ex = eq(pages.id, userProgress.pageId);
 			}
-			return and(ex, eq(pages.historyId, id));
+			return and(ex, eq(pages.historyId, historyId));
 		},
 		with: {
 			points: true,
@@ -64,6 +76,22 @@ export const getCurrentPageByHistoryId = async (
 	});
 
 	if (!page) {
+		page = await db.query.pages.findFirst({
+			where: (pages, { eq }) => eq(pages.historyId, historyId),
+			orderBy: (pages, { asc }) => [asc(pages.id)],
+			with: {
+				points: true,
+
+				history: {
+					with: {
+						layout: true,
+					},
+				},
+				layout: true,
+			},
+		});
+	}
+	if (!page) {
 		throw new ErrorBoundary(
 			`Не найдено главы по id ${currentPage}`,
 			ReasonPhrases.BAD_REQUEST
@@ -72,7 +100,7 @@ export const getCurrentPageByHistoryId = async (
 
 	const variables = await db.query.variables.findMany({
 		where: (variables, { eq, and }) =>
-			and(eq(variables.historyId, id), eq(variables.userId, user.id)),
+			and(eq(variables.historyId, historyId), eq(variables.userId, user.id)),
 	});
 
 	let pagesWithVariables = Object.assign(page, { variables });
@@ -80,7 +108,7 @@ export const getCurrentPageByHistoryId = async (
 	try {
 		pagesWithVariables['content'] = await insertDataToContent(
 			page.content,
-			id,
+			historyId,
 			user.id
 		);
 	} catch (error) {
@@ -158,7 +186,55 @@ export const getCurrentPageByHistoryId = async (
 		const tokens = parse(page.script);
 		const pageId = await run(tokens, null, user, page.historyId, new Map());
 		if (pageId) {
-			pagesWithVariables = await getCurrentPageByHistoryId(id, pageId, user);
+			pagesWithVariables = await getCurrentPageByHistoryId(
+				historyId,
+				pageId,
+				user
+			);
+		}
+	}
+
+	if (!!page.keypage) {
+		const existedProgress = await db.query.userHistoryProgreses.findFirst({
+			where: and(
+				eq(userHistoryProgreses.pageId, page.id),
+				eq(userHistoryProgreses.userId, user.id),
+
+				eq(userHistoryProgreses.historyId, page.historyId)
+			),
+		});
+
+		if (!existedProgress) {
+			let prevPageId: null | number = null;
+			const prevPageByTime = await db.query.userHistoryProgreses.findFirst({
+				where: and(
+					eq(userHistoryProgreses.userId, user.id),
+					eq(userHistoryProgreses.historyId, pagesWithVariables.historyId)
+				),
+				orderBy: (userHistoryProgreses, { desc }) => [
+					desc(userHistoryProgreses.id),
+				],
+			});
+			if (prevPageByTime) {
+				prevPageId = prevPageByTime.pageId;
+			}
+			console.log(prevPageByTime);
+			if (prevPageId != pagesWithVariables.id) {
+				await db.insert(userHistoryProgreses).values({
+					historyId: pagesWithVariables.historyId,
+					pageId: pagesWithVariables.id,
+					userId: user.id,
+					prevPageId: prevPageId,
+				});
+				if (prevPageByTime && !prevPageByTime.nextPageId) {
+					await db
+						.update(userHistoryProgreses)
+						.set({
+							nextPageId: pagesWithVariables.id,
+						})
+						.where(eq(userHistoryProgreses.id, prevPageByTime.id));
+				}
+			}
 		}
 	}
 
@@ -427,11 +503,15 @@ export const updateLayoutPage = async (
 	}
 	const page = await db.query.pages.findFirst({
 		where: eq(pages.id, pageId),
+		with: {
+			history: true,
+		},
 	});
 	if (!page) {
 		throw Error('Page of layout not found');
 	}
-	if (userId != existLayout.userId && page.layoutId) {
+
+	if (!page.layoutId || page.history.layoutId == page.layoutId) {
 		let newDataLayout = Object.assign(existLayout, layoutData);
 		newDataLayout.id = null as unknown as number;
 		const createdLayout = await db

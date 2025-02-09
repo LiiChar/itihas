@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.layouts = exports.commentsToCommentsPageRelations = exports.pageCommentsToPageComments = exports.pageCommentsRelations = exports.pageComments = exports.pagePointsRelations = exports.pagePoints = exports.variablesRelations = exports.variables = exports.likePagesRelations = exports.likePages = exports.tagsToPagesRelations = exports.tagsToPages = exports.tags = exports.pagesRelations = exports.pages = void 0;
+exports.userHistoryProgressRelations = exports.userHistoryProgreses = exports.layoutsRelation = exports.layouts = exports.commentsToCommentsPageRelations = exports.pageCommentsToPageComments = exports.pageCommentsRelations = exports.pageComments = exports.pagePointsRelations = exports.pagePoints = exports.variablesRelations = exports.variables = exports.likePagesRelations = exports.likePages = exports.tagsToPagesRelations = exports.tagsToPages = exports.tags = exports.pagesRelations = exports.pages = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const sqlite_core_1 = require("drizzle-orm/sqlite-core");
 const user_1 = require("../../user/model/user");
@@ -18,9 +18,11 @@ exports.pages = (0, sqlite_core_1.sqliteTable)('pages', {
     sound: (0, sqlite_core_1.text)('sound'),
     script: (0, sqlite_core_1.text)('script'),
     wallpaper: (0, sqlite_core_1.text)('wallpaper'),
+    wrapperStyle: (0, sqlite_core_1.text)('wrapper_style'),
     views: (0, sqlite_core_1.integer)('views').notNull().default(0),
     type: (0, sqlite_core_1.text)('type', { enum: ['start', 'end', 'default'] }).default('default'),
     description: (0, sqlite_core_1.text)('description'),
+    keypage: (0, sqlite_core_1.integer)('keypage').default(1),
     mountAction: (0, sqlite_core_1.text)('mount_action'),
     unmountAction: (0, sqlite_core_1.text)('unmount_action'),
     content: (0, sqlite_core_1.text)('content').notNull(),
@@ -41,6 +43,7 @@ exports.pagesRelations = (0, drizzle_orm_1.relations)(exports.pages, ({ many, on
         fields: [exports.pages.historyId],
         references: [history_1.histories.id],
     }),
+    progreses: many(exports.userHistoryProgreses),
     tags: many(exports.tagsToPages),
 }));
 exports.tags = (0, sqlite_core_1.sqliteTable)('tags', {
@@ -187,6 +190,9 @@ exports.layouts = (0, sqlite_core_1.sqliteTable)('layouts', {
     description: (0, sqlite_core_1.text)('description'),
     layout: (0, sqlite_core_1.text)('layout', { mode: 'json' }).$type().notNull(),
     rate: (0, sqlite_core_1.integer)('rate').notNull().default(0),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => user_1.users.id, { onDelete: 'cascade' }),
     createdAt: (0, sqlite_core_1.text)('created_at')
         .notNull()
         .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
@@ -194,3 +200,54 @@ exports.layouts = (0, sqlite_core_1.sqliteTable)('layouts', {
         .notNull()
         .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
 });
+exports.layoutsRelation = (0, drizzle_orm_1.relations)(exports.layouts, ({ one }) => ({
+    user: one(user_1.users, {
+        fields: [exports.layouts.userId],
+        references: [user_1.users.id],
+    }),
+}));
+exports.userHistoryProgreses = (0, sqlite_core_1.sqliteTable)('user_history_progreses', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name'),
+    description: (0, sqlite_core_1.text)('description'),
+    prevPageId: (0, sqlite_core_1.integer)('prev_page_id').references(() => exports.pages.id, {
+        onDelete: 'set null',
+    }),
+    nextPageId: (0, sqlite_core_1.integer)('next_page_id').references(() => exports.pages.id, {
+        onDelete: 'set null',
+    }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .references(() => user_1.users.id, { onDelete: 'cascade' })
+        .notNull(),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .references(() => history_1.histories.id, { onDelete: 'cascade' })
+        .notNull(),
+    pageId: (0, sqlite_core_1.integer)('page_id')
+        .references(() => exports.pages.id, { onDelete: 'cascade' })
+        .notNull(),
+    completedAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.userHistoryProgressRelations = (0, drizzle_orm_1.relations)(exports.userHistoryProgreses, ({ one }) => ({
+    user: one(user_1.users, {
+        fields: [exports.userHistoryProgreses.userId],
+        references: [user_1.users.id],
+    }),
+    history: one(history_1.histories, {
+        fields: [exports.userHistoryProgreses.historyId],
+        references: [history_1.histories.id],
+    }),
+    page: one(exports.pages, {
+        fields: [exports.userHistoryProgreses.pageId],
+        references: [exports.pages.id],
+    }),
+    nextPage: one(exports.pages, {
+        fields: [exports.userHistoryProgreses.nextPageId],
+        references: [exports.pages.id],
+    }),
+    prevPage: one(exports.pages, {
+        fields: [exports.userHistoryProgreses.prevPageId],
+        references: [exports.pages.id],
+    }),
+}));

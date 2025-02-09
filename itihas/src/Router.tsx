@@ -18,6 +18,8 @@ import { Notfound } from './page/Notfound';
 import { LayoutConstructorPage } from './page/Page/LayoutConstructor';
 import { NotAuthorize } from './page/auth/NotAuthorize';
 import { Chat } from './page/Chat';
+import { AudioRecorderPage } from './page/Transcription';
+import { Progress } from './page/History/Progress';
 
 const router = createBrowserRouter([
 	{
@@ -72,6 +74,10 @@ const router = createBrowserRouter([
 			{
 				path: '/history/:id/page/edit',
 				element: <HistoryEditBoard />,
+			},
+			{
+				path: '/history/:id/progress',
+				element: <Progress />,
 			},
 			{
 				path: '/page/:id/edit',

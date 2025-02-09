@@ -6,7 +6,12 @@ import {
 	primaryKey,
 } from 'drizzle-orm/sqlite-core';
 import { users } from '../../user/model/user';
-import { layouts, pages } from '../../page/model/page';
+import {
+	layouts,
+	pageCommentsToPageComments,
+	pages,
+	userHistoryProgreses,
+} from '../../page/model/page';
 import { bookmarks } from '../../bookmark/model/bookmark';
 
 export const histories = sqliteTable('histories', {
@@ -53,6 +58,7 @@ export const historiesRelations = relations(histories, ({ many, one }) => ({
 	comments: many(comments),
 	similarHistories: many(similarHistories, { relationName: 'similar' }),
 	genres: many(genresToHistories),
+	progreses: many(userHistoryProgreses),
 	bookmarks: many(bookmarksToHistories),
 	author: one(users, {
 		fields: [histories.authorId],

@@ -3,10 +3,10 @@
 	"version": "1.0.0",
 	"main": "src/index.ts",
 	"scripts": {
-		"build": "npx tsc",
-		"start": "node dist/src/index.js",
-		"start:dev": "ts-node /src/index.ts",
-		"dev": "nodemon src/index.ts",
+		"build": "tsc && npm run refresh",
+		"start": "node dist/index.js",
+		"vercel-build": "npm run build",
+		"dev": "nodemon --exec 'swc src/index.ts -o dist/index.js && node dist/index.js'",
 		"seed": "ts-node src/factory/factory.ts",
 		"test::custom": "ts-node src/test/index.ts",
 		"refresh": "rm database.sqlite & npx drizzle-kit generate & npx drizzle-kit push & npm run seed"
@@ -24,6 +24,7 @@
 		"@types/nodemailer": "^6.4.15",
 		"@types/socket.io": "^3.0.1",
 		"@types/uuid": "^10.0.0",
+		"@types/vosk": "^0.3.1",
 		"@types/ws": "^8.5.13",
 		"bcrypt": "^5.1.1",
 		"better-sqlite3": "^11.1.1",
@@ -45,6 +46,7 @@
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.5",
 		"uuid": "^10.0.0",
+		"vosk": "^0.3.39",
 		"ws": "^8.18.0",
 		"zod": "^3.23.8"
 	},

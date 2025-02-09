@@ -22,9 +22,12 @@ export const pages = sqliteTable('pages', {
 	sound: text('sound'),
 	script: text('script'),
 	wallpaper: text('wallpaper'),
+	wrapperStyle: text('wrapper_style'),
+
 	views: integer('views').notNull().default(0),
 	type: text('type', { enum: ['start', 'end', 'default'] }).default('default'),
 	description: text('description'),
+	keypage: integer('keypage').default(1),
 	mountAction: text('mount_action'),
 	unmountAction: text('unmount_action'),
 	content: text('content').notNull(),
@@ -46,6 +49,7 @@ export const pagesRelations = relations(pages, ({ many, one }) => ({
 		fields: [pages.historyId],
 		references: [histories.id],
 	}),
+	progreses: many(userHistoryProgreses),
 	tags: many(tagsToPages),
 }));
 
@@ -232,3 +236,53 @@ export const layoutsRelation = relations(layouts, ({ one }) => ({
 		references: [users.id],
 	}),
 }));
+
+export const userHistoryProgreses = sqliteTable('user_history_progreses', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name'),
+	description: text('description'),
+	prevPageId: integer('prev_page_id').references(() => pages.id, {
+		onDelete: 'set null',
+	}),
+	nextPageId: integer('next_page_id').references(() => pages.id, {
+		onDelete: 'set null',
+	}),
+	userId: integer('user_id')
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
+	historyId: integer('history_id')
+		.references(() => histories.id, { onDelete: 'cascade' })
+		.notNull(),
+	pageId: integer('page_id')
+		.references(() => pages.id, { onDelete: 'cascade' })
+		.notNull(),
+	completedAt: text('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const userHistoryProgressRelations = relations(
+	userHistoryProgreses,
+	({ one }) => ({
+		user: one(users, {
+			fields: [userHistoryProgreses.userId],
+			references: [users.id],
+		}),
+		history: one(histories, {
+			fields: [userHistoryProgreses.historyId],
+			references: [histories.id],
+		}),
+		page: one(pages, {
+			fields: [userHistoryProgreses.pageId],
+			references: [pages.id],
+		}),
+		nextPage: one(pages, {
+			fields: [userHistoryProgreses.nextPageId],
+			references: [pages.id],
+		}),
+		prevPage: one(pages, {
+			fields: [userHistoryProgreses.prevPageId],
+			references: [pages.id],
+		}),
+	})
+);

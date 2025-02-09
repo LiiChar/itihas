@@ -14,6 +14,7 @@ const express_1 = require("express");
 const http_status_codes_1 = require("http-status-codes");
 const history_service_1 = require("./history.service");
 const db_1 = require("../../database/db");
+const error_1 = require("../../lib/error");
 const historyRouter = (0, express_1.Router)();
 exports.historyRouter = historyRouter;
 historyRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,18 +26,6 @@ historyRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function*
     catch (error) {
         console.log(error);
         return res.json('Get history failed').status(404);
-    }
-}));
-historyRouter.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const data = req.body;
-        const history = yield (0, history_service_1.updateHistory)(+id, data);
-        return res.json(history).status(http_status_codes_1.StatusCodes.OK);
-    }
-    catch (error) {
-        console.log(error);
-        return res.json('Update history failed').status(404);
     }
 }));
 historyRouter.post('/catalog', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,6 +58,43 @@ historyRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function
 historyRouter.get('/layout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const layouts = yield (0, history_service_1.getLayouts)();
     return res.json(layouts);
+}));
+historyRouter.put('/layout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = (yield db_1.db.query.users.findMany())[0];
+    const data = req.body;
+    const layouts = yield (0, history_service_1.updateLayout)(user.id, data.id, data);
+    return res.json(layouts);
+}));
+historyRouter.get('/:id/similar', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    if (!id) {
+        throw new error_1.ErrorBoundary('Params not request', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
+    }
+    const similars = yield (0, history_service_1.getSimilarHistory)(+id);
+    return res.json(similars);
+}));
+historyRouter.post('/similar', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = req.body;
+    const createdSimilar = yield (0, history_service_1.addSimilarHistory)(data);
+    return res.json(createdSimilar);
+}));
+historyRouter.put('/similar/rate', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const rate = req.body;
+    const data = req.body;
+    const createdSimilar = yield (0, history_service_1.updateSimilarHistoryRate)(data);
+    return res.json(createdSimilar);
+}));
+historyRouter.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        const history = yield (0, history_service_1.updateHistory)(+id, data);
+        return res.json(history).status(http_status_codes_1.StatusCodes.OK);
+    }
+    catch (error) {
+        console.log(error);
+        return res.json('Update history failed').status(404);
+    }
 }));
 historyRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

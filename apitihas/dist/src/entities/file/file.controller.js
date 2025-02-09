@@ -18,6 +18,8 @@ const http_status_codes_1 = require("http-status-codes");
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const path_1 = __importDefault(require("path"));
 const lib_1 = require("./lib");
+const sharp_1 = __importDefault(require("sharp"));
+const promises_1 = require("fs/promises");
 const fileRouter = (0, express_1.Router)();
 exports.fileRouter = fileRouter;
 fileRouter.use((0, express_fileupload_1.default)());
@@ -31,24 +33,26 @@ fileRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 .json('Uncorrect name field')
                 .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR);
         }
-        const file = req.files.file;
+        let file = req.files.file;
         const date = `${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
         const folder = (0, lib_1.getFolderByFileType)(file.name);
         let pathDir = path_1.default.join(__dirname, '..', '..', '..', 'public', 'uploads', folder, date, file.name);
-        const isExist = yield (0, lib_1.fsExistOrCreate)(pathDir.slice(0, pathDir.lastIndexOf('/')));
-        if (isExist) {
-            console.log(pathDir);
-            return res
-                .json((0, lib_1.slicePathByDir)(pathDir, 'uploads'))
-                .status(http_status_codes_1.StatusCodes.OK);
-        }
+        yield (0, lib_1.fsExistOrCreate)(pathDir.slice(0, pathDir.lastIndexOf('/')));
         yield file.mv(pathDir);
         const isCreated = yield (0, lib_1.fsExistOrCreate)(pathDir);
         if (!isCreated) {
             const buffer = file.data;
             yield (0, lib_1.createFileByBuffer)(pathDir, buffer);
         }
-        return res.json((0, lib_1.slicePathByDir)(pathDir, 'uploads')).status(http_status_codes_1.StatusCodes.OK);
+        yield (0, sharp_1.default)(pathDir)
+            .webp({
+            quality: 75,
+        })
+            .toFile(pathDir.slice(0, pathDir.lastIndexOf('.')) + '.webp');
+        yield (0, promises_1.unlink)(pathDir);
+        return res
+            .json((0, lib_1.slicePathByDir)(pathDir.slice(0, pathDir.lastIndexOf('.')) + '.webp', 'uploads'))
+            .status(http_status_codes_1.StatusCodes.OK);
     }
     catch (error) {
         if (error instanceof Error) {

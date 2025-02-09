@@ -20,10 +20,10 @@ const variable_1 = require("./content/variable");
 try {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Начало создания`);
-        console.log(1, ' Генерация расположений контента');
-        yield (0, page_factory_1.generateLayout)(layout_1.LayoutContent);
-        console.log(2, ' Генерация пользователей');
+        console.log(1, ' Генерация пользователей');
         yield (0, user_factory_1.generateUsers)();
+        console.log(2, ' Генерация расположений контента');
+        yield (0, page_factory_1.generateLayout)(layout_1.LayoutContent);
         console.log(3, ' Генерация история');
         yield (0, history_factory_1.generateHistory)(history_1.historyContent);
         console.log(4, ' Генерация закладок');

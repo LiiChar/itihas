@@ -9,6 +9,7 @@ import {
 	teamsToUsers,
 	teamsToUsersRelation,
 	teamsToUsersRelations,
+	optionsUsers,
 } from '../entities/user/model/user';
 import {
 	likePages,
@@ -27,6 +28,9 @@ import {
 	tags,
 	tagsToPages,
 	tagsToPagesRelations,
+	layoutsRelation,
+	userHistoryProgreses,
+	userHistoryProgressRelations,
 } from '../entities/page/model/page';
 import {
 	histories,
@@ -71,7 +75,9 @@ import {
 export {
 	dignity,
 	layouts,
+	layoutsRelation,
 	users,
+	optionsUsers,
 	dignityRelations,
 	usersRelations,
 	histories,
@@ -129,4 +135,6 @@ export {
 	notificationEvents,
 	notificationEventsToUsers,
 	notificationUsersRelations,
+	userHistoryProgreses,
+	userHistoryProgressRelations,
 };

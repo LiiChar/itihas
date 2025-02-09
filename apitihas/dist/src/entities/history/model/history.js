@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.likesToHistoriesRelations = exports.likesToHistories = exports.genresToHistoriesRelations = exports.genresToHistories = exports.genresRelations = exports.genres = exports.commentsToCommentsRelations = exports.commentsToComments = exports.commentsRelations = exports.likeToCommentsCommentRelations = exports.likeToCommentComments = exports.likeToCommentsRelations = exports.likeToComments = exports.comments = exports.historyPointsRelations = exports.historyPoints = exports.similarHistoriesRelation = exports.similarHistories = exports.charactersToUsersRelations = exports.charactersToUsers = exports.charactersRelation = exports.characters = exports.bookmarksToHistoriesRelations = exports.bookmarksToHistories = exports.historiesRelations = exports.histories = void 0;
+exports.likesToHistoriesRelations = exports.likesToHistories = exports.tagsToHistoriesRelations = exports.tagsToHistories = exports.tags = exports.genresToHistoriesRelations = exports.genresToHistories = exports.genresRelations = exports.genres = exports.commentsToCommentsRelations = exports.commentsToComments = exports.commentsRelations = exports.likeToCommentsCommentRelations = exports.likeToCommentComments = exports.likeToCommentsRelations = exports.likeToComments = exports.comments = exports.historyPointsRelations = exports.historyPoints = exports.similarHistoriesRelation = exports.similarHistories = exports.charactersToUsersRelations = exports.charactersToUsers = exports.charactersRelation = exports.characters = exports.bookmarksToHistoriesRelations = exports.bookmarksToHistories = exports.historiesRelations = exports.histories = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const sqlite_core_1 = require("drizzle-orm/sqlite-core");
 const user_1 = require("../../user/model/user");
@@ -49,6 +49,7 @@ exports.historiesRelations = (0, drizzle_orm_1.relations)(exports.histories, ({ 
     comments: many(exports.comments),
     similarHistories: many(exports.similarHistories, { relationName: 'similar' }),
     genres: many(exports.genresToHistories),
+    progreses: many(page_1.userHistoryProgreses),
     bookmarks: many(exports.bookmarksToHistories),
     author: one(user_1.users, {
         fields: [exports.histories.authorId],
@@ -249,7 +250,7 @@ exports.commentsToComments = (0, sqlite_core_1.sqliteTable)('comments_to_comment
     id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
     commentId: (0, sqlite_core_1.integer)('comment_id')
         .notNull()
-        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+        .references(() => exports.comments.id, { onDelete: 'cascade' }),
     userId: (0, sqlite_core_1.integer)('user_id')
         .notNull()
         .references(() => user_1.users.id, { onDelete: 'cascade' }),
@@ -301,6 +302,32 @@ exports.genresToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.genres
     genre: one(exports.genres, {
         fields: [exports.genresToHistories.genreId],
         references: [exports.genres.id],
+    }),
+}));
+exports.tags = (0, sqlite_core_1.sqliteTable)('tags', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name').notNull().unique(),
+});
+exports.tagsToHistories = (0, sqlite_core_1.sqliteTable)('tags_to_histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => exports.histories.id, { onDelete: 'cascade' }),
+    genreId: (0, sqlite_core_1.integer)('genre_id')
+        .notNull()
+        .references(() => exports.tags.id, { onDelete: 'cascade' }),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.tagsToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.tagsToHistories, ({ one }) => ({
+    history: one(exports.histories, {
+        fields: [exports.tagsToHistories.historyId],
+        references: [exports.histories.id],
+    }),
+    genre: one(exports.tags, {
+        fields: [exports.tagsToHistories.genreId],
+        references: [exports.tags.id],
     }),
 }));
 exports.likesToHistories = (0, sqlite_core_1.sqliteTable)('like_to_history', {

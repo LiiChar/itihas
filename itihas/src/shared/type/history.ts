@@ -85,3 +85,23 @@ export type Genre = {
 	id: number;
 	name: string;
 };
+
+export type Progress = {
+	historyId: number;
+	pageId: number;
+	userId: number;
+	id: number;
+	name: string | null;
+	description: string | null;
+	wrapperStyle: string | null;
+	prevPageId: number | null;
+	nextPageId: number | null;
+};
+
+export type ProgreseHistory = Progress & {
+	page: Page;
+	history: History;
+	user: User;
+	nextPage: Page;
+	prevPage: Page;
+};

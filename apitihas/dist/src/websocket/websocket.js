@@ -9,12 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runWebsocket = void 0;
+exports.runWebsocket = exports.socketClients = void 0;
 const socket_io_1 = require("socket.io");
 const __1 = require("..");
 const db_1 = require("../database/db");
 const drizzle_orm_1 = require("drizzle-orm");
 const history_service_1 = require("../entities/history/history.service");
+const notification_1 = require("../entities/modules/socket/notification");
+const transcription_1 = require("../entities/modules/socket/transcription");
+exports.socketClients = {};
 const runWebsocket = () => {
     const io = new socket_io_1.Server(__1.server, {
         cors: {
@@ -23,7 +26,9 @@ const runWebsocket = () => {
         },
     });
     let socketEmmiter = null;
+    (0, notification_1.notificationFacade)();
     io.on('connection', socket => {
+        (0, transcription_1.handleTranscription)(socket);
         // handle like history
         socket.on('history_like_add', (_a) => __awaiter(void 0, [_a], void 0, function* ({ historyId, userId, variant, }) {
             yield (0, history_service_1.updateLikeHistory)({ historyId, userId, variant });
@@ -87,6 +92,20 @@ const runWebsocket = () => {
             }, { positiveLike: 0, negativeLike: 0 });
             io.to('history:' + commentsCommentId).emit('comments_comment_like_update', Object.assign({ userId, commentsCommentId, variant }, likes));
         }));
+        socket.on('notification_subscribe', (data) => {
+            if (!data.userId) {
+                return;
+            }
+            exports.socketClients[data.userId] = socket;
+            socket.join(`notification:${data.userId}`);
+        });
+        socket.on('notification_unscribe', (data) => {
+            if (!data.userId) {
+                return;
+            }
+            delete exports.socketClients[data.userId];
+            socket.leave(`notification:${data.userId}`);
+        });
         socket.on('room_join', ({ id, typeRoom, }) => {
             socket.join(`${typeRoom}:${id}`);
             socket.emit(`${typeRoom}_room_join`, `${typeRoom}:${id}`);

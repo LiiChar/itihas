@@ -5,6 +5,7 @@ import {
 	History,
 	HistoryAll,
 	HistoryPages,
+	ProgreseHistory,
 } from '../type/history';
 import { Layout } from '../type/layout';
 import { SimilarType, SimilarWithHistory } from '../type/similar';
@@ -92,6 +93,22 @@ export const updateSimilarHistoryRate = async (similarData: {
 		similarData
 	);
 	return similar;
+};
+
+export const getProgressHistory = async ({
+	historyId,
+	pageId,
+	userId,
+}: {
+	historyId?: number;
+	userId?: number;
+	pageId?: number;
+}) => {
+	const progreses = await axi.get<ProgreseHistory[]>(URL + '/progress', {
+		params: { historyId, pageId, userId },
+	});
+
+	return progreses.data;
 };
 
 export const getSimilarHistory = async (historyId: number) => {

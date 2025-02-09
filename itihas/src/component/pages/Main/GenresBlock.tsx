@@ -53,16 +53,26 @@ export const GenresBlock = () => {
 			promises.push(prom);
 		});
 		Promise.all(promises).then(data => {
+			let activeTab = '';
+
 			const histories: any = data.reduce((acc, h, i) => {
-				acc[tabs[i]] = h;
+				if (h.length > 0) {
+					acc[tabs[i]] = h;
+					const genres = h.reduce<string[]>((acc, el) => {
+						const genre = el.genres.find(g =>
+							tabs.includes(g.genre.name as any)
+						);
+						if (genre) {
+							acc.push(genre.genre.name);
+						}
+						return acc;
+					}, []);
+					activeTab = genres[0];
+				}
 				return acc;
 			}, {} as any);
 			setCasheHistoryTabs(histories);
-			setActiveTab(
-				(Object.entries(casheHistoryTabs).find(
-					([_k, t]) => t && t.length > 0
-				)?.[0] ?? 'Романтика') as (typeof tabs)[number]
-			);
+			setActiveTab(activeTab as any);
 			setHistory(histories[activeTab]);
 		});
 	});
@@ -76,56 +86,59 @@ export const GenresBlock = () => {
 	return (
 		<Tabs value={activeTab} className='w-full'>
 			<TabsList className='bg-transparent flex gap-3 flex-wrap w-full overflow-x-auto overflow-y-hidden text-md '>
-				{tabs.map((t, i) => (
-					<>
-						{casheHistoryTabs[t] && casheHistoryTabs[t].length ? (
-							<TabsTrigger
-								key={'header' + t + i}
-								className={`rounded-none relative px-0 block text-foreground ${
-									activeTab == t && 'text-accent'
-								}`}
-								value={t}
-								onClick={() => setActiveTab(t)}
-							>
-								{t}
-							</TabsTrigger>
-						) : (
-							''
-						)}
-					</>
-				))}
-			</TabsList>
-			{tabs.map((t, i) => (
-				<TabsContent
-					key={'content' + t + i}
-					className='empty:hidden text-foreground  p-0 px-4 font-normal text-sm  flex gap-2 flex-wrap flex-row'
-					value={t}
-				>
-					{history && history.length == 0 && <div>Пусто как в тумане</div>}
-					{history.map(history => (
-						<div className='w-[calc(20%-6px)] max-w-[120px] relative'>
-							<img
-								src={getFullUrl(history.image)}
-								onError={handleImageError}
-								loading='lazy'
-								className='object-cover rounded-t-sm w-full aspect-[3/4]'
-								alt={history.name}
-							/>
-							<div className='	 overflow-hidden pb-1 pt-1 text-md sm:text-sm md:text-md lg:text-lg'>
-								<p className='h-min text-muted-foreground text-[0.7em] leading-3'>
-									{history.genres &&
-										history.genres.length > 0 &&
-										history.genres[0].genre.name}
-								</p>
-								<h5 className='text-[0.78em]'>{history.name}</h5>
-							</div>
-							<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs pb-[4px] right-1'>
-								{history.rate}
-							</div>
-						</div>
+				{tabs &&
+					tabs.map((t, i) => (
+						<>
+							{casheHistoryTabs[t] && casheHistoryTabs[t].length ? (
+								<TabsTrigger
+									key={'header' + t + i}
+									className={`rounded-none relative px-0 block text-foreground ${
+										activeTab == t && 'text-accent'
+									}`}
+									value={t}
+									onClick={() => setActiveTab(t)}
+								>
+									{t}
+								</TabsTrigger>
+							) : (
+								''
+							)}
+						</>
 					))}
-				</TabsContent>
-			))}
+			</TabsList>
+			{tabs &&
+				tabs.map((t, i) => (
+					<TabsContent
+						key={'content' + t + i}
+						className='empty:hidden text-foreground  p-0 px-4 font-normal text-sm  flex gap-2 flex-wrap flex-row'
+						value={t}
+					>
+						{history && history.length == 0 && <div>Пусто как в тумане</div>}
+						{history &&
+							history.map(history => (
+								<div className='w-[calc(20%-6px)] max-w-[120px] relative'>
+									<img
+										src={getFullUrl(history.image)}
+										onError={handleImageError}
+										loading='lazy'
+										className='object-cover rounded-t-sm w-full aspect-[3/4]'
+										alt={history.name}
+									/>
+									<div className='	 overflow-hidden pb-1 pt-1 text-md sm:text-sm md:text-md lg:text-lg'>
+										<p className='h-min text-muted-foreground text-[0.7em] leading-3'>
+											{history.genres &&
+												history.genres.length > 0 &&
+												history.genres[0].genre.name}
+										</p>
+										<h5 className='text-[0.78em]'>{history.name}</h5>
+									</div>
+									<div className='bg-primary flex justify-center items-center w-[16px] h-[14px] rounded-sm absolute top-1 text-white text-xs pb-[4px] right-1'>
+										{history.rate}
+									</div>
+								</div>
+							))}
+					</TabsContent>
+				))}
 		</Tabs>
 	);
 };

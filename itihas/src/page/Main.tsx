@@ -9,13 +9,6 @@ import { PageUpdate } from '@/component/pages/Main/PageUpdate';
 export const Main = () => {
 	const { data: newHistory } = useQuery(() =>
 		getHistoriesFilter({
-			filter: [
-				{
-					field: 'updated_at',
-					operator: '>',
-					value: getCurrentDateAtMinute(60 * 24 * 30),
-				},
-			],
 			orders: [
 				{
 					order: 'desc',
@@ -39,30 +32,28 @@ export const Main = () => {
 	useBreadcrumble('/');
 
 	return (
-		<div>
-			<div className='px-3'>
+		<div className='mt-4'>
+			<div className=''>
 				{newHistory && (
-					<Slider
-						histories={newHistory}
-						title='Новые истории'
-						link={{ src: '/library', title: 'Все новые истории' }}
-					/>
+					<Slider histories={newHistory} link={{ src: '/library' }} />
 				)}
 			</div>
-			<div className='mt-4 mx-3'>
-				{popularHistory && (
-					<Slider
-						histories={popularHistory}
-						title='Популярные истории'
-						link={{ src: '/library', title: 'Все популярные истории' }}
-					/>
-				)}
-			</div>
-			<div className='my-8'>
-				<GenresBlock />
-			</div>
-			<div>
-				<PageUpdate />
+			<div className='md:px-10 sm:px-2 max-w-[1400px] lg:px-16 flex flex-col mt-8'>
+				<div className='mt-4 mx-3'>
+					{popularHistory && (
+						<Slider
+							histories={popularHistory}
+							title='Популярные истории'
+							link={{ src: '/library', title: 'Все популярные истории' }}
+						/>
+					)}
+				</div>
+				<div className='my-8'>
+					<GenresBlock />
+				</div>
+				<div>
+					<PageUpdate />
+				</div>
 			</div>
 		</div>
 	);

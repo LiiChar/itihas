@@ -148,7 +148,7 @@ export const generatePagePoint = async (
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});
@@ -288,7 +288,7 @@ export const generateLikePages = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});

@@ -4,6 +4,7 @@ exports.LayoutContent = void 0;
 const LayoutContentType = [
     {
         id: 150,
+        userId: 1,
         name: 'Диалог',
         layout: [
             {

@@ -160,7 +160,7 @@ export const generateComments = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(comments).values(data).returning())[0];
 			idx.push(id);
 		});
@@ -204,7 +204,7 @@ export const generateReplyComment = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});
@@ -247,7 +247,7 @@ export const generateSimilar = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});
@@ -293,7 +293,7 @@ export const generateCharacters = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});
@@ -338,7 +338,7 @@ export const generateBookmarkToHistory = async () => {
 
 	try {
 		const idx: number[] = [];
-		array.forEach(async data => {
+		array.forEach(async (data: any) => {
 			const { id } = (await db.insert(table).values(data).returning())[0];
 			idx.push(id);
 		});

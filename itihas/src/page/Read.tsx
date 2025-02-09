@@ -46,16 +46,9 @@ export const Read = () => {
 	const { history } = useHistoryStore();
 	const { user } = useUserStore();
 	const { currentPage, page } = usePageStore();
-	useQuery(
-		() =>
-			fetchCurrentStore(
-				+id!,
-				searchParams.has('page') ? +searchParams.get('page')! : currentPage
-			),
-		{
-			keys: ['currentPage'],
-		}
-	);
+	useQuery(() => fetchCurrentStore(+id!, currentPage), {
+		keys: ['currentPage'],
+	});
 	const { addCallback } = useListenerStore();
 	useMount(() => {
 		setVisibleFooter(false);
@@ -164,10 +157,7 @@ export const getComponent = (
 
 export const ContentLayout = ({ page, style }: ComponentLayoutDic) => {
 	return (
-		<div
-			style={parseInlineStyle(style ?? '')}
-			className='text-pretty overflow-y-auto'
-		>
+		<div style={parseInlineStyle(style ?? '')} className='text-pretty'>
 			{page.content}
 		</div>
 	);

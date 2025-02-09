@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersRelations = exports.users = exports.dignityRelations = exports.dignity = void 0;
+exports.teamsToUsersRelation = exports.teamsToHistoriesRelations = exports.teamsToHistories = exports.teamsToUsersRelations = exports.optionsUsers = exports.teamsToUsers = exports.teams = exports.usersRelations = exports.users = exports.dignityRelations = exports.dignity = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const sqlite_core_1 = require("drizzle-orm/sqlite-core");
 const history_1 = require("../../history/model/history");
@@ -63,4 +63,73 @@ exports.usersRelations = (0, drizzle_orm_1.relations)(exports.users, ({ many, on
     bookmarks: many(bookmark_1.bookmarks),
     characters: many(history_1.charactersToUsers),
     likes: many(page_1.likePages),
+    progreses: many(page_1.userHistoryProgreses),
+}));
+exports.teams = (0, sqlite_core_1.sqliteTable)('teams', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    name: (0, sqlite_core_1.text)('name'),
+    image: (0, sqlite_core_1.text)('image'),
+    description: (0, sqlite_core_1.text)('description').notNull(),
+    rating: (0, sqlite_core_1.integer)('rating').default(0),
+    createdAt: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.teamsToUsers = (0, sqlite_core_1.sqliteTable)('teams_to_users', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    teamsId: (0, sqlite_core_1.integer)('teams_id')
+        .notNull()
+        .references(() => exports.teams.id, { onDelete: 'cascade' }),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => exports.users.id, { onDelete: 'cascade' }),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.optionsUsers = (0, sqlite_core_1.sqliteTable)('options_users', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    options: (0, sqlite_core_1.text)('options').notNull().default(''),
+    userId: (0, sqlite_core_1.integer)('user_id')
+        .notNull()
+        .references(() => exports.users.id, { onDelete: 'cascade' }),
+    updated_at: (0, sqlite_core_1.text)('updated_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.teamsToUsersRelations = (0, drizzle_orm_1.relations)(exports.teamsToUsers, ({ one }) => ({
+    user: one(exports.users, {
+        fields: [exports.teamsToUsers.userId],
+        references: [exports.users.id],
+    }),
+    team: one(exports.teams, {
+        fields: [exports.teamsToUsers.teamsId],
+        references: [exports.teams.id],
+    }),
+}));
+exports.teamsToHistories = (0, sqlite_core_1.sqliteTable)('teams_to_histories', {
+    id: (0, sqlite_core_1.integer)('id').primaryKey({ autoIncrement: true }),
+    historyId: (0, sqlite_core_1.integer)('history_id')
+        .notNull()
+        .references(() => history_1.histories.id, { onDelete: 'cascade' }),
+    teamsId: (0, sqlite_core_1.integer)('teams_id')
+        .notNull()
+        .references(() => exports.teams.id, { onDelete: 'cascade' }),
+    created_at: (0, sqlite_core_1.text)('created_at')
+        .notNull()
+        .default((0, drizzle_orm_1.sql) `CURRENT_TIMESTAMP`),
+});
+exports.teamsToHistoriesRelations = (0, drizzle_orm_1.relations)(exports.teamsToHistories, ({ one }) => ({
+    histories: one(history_1.histories, {
+        fields: [exports.teamsToHistories.historyId],
+        references: [history_1.histories.id],
+    }),
+    team: one(exports.teams, {
+        fields: [exports.teamsToHistories.teamsId],
+        references: [exports.teams.id],
+    }),
+}));
+exports.teamsToUsersRelation = (0, drizzle_orm_1.relations)(exports.teams, ({ many, one }) => ({
+    users: many(exports.users),
+    histories: many(history_1.histories),
 }));

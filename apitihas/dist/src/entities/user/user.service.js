@@ -35,9 +35,10 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const token = (0, auth_1.getJwtToken)(userFind);
     res.cookie('token', token, {
-        maxAge: 60 * 60 * 60 * 24 * 30,
-        sameSite: false,
-        secure: false
+        maxAge: 60 * 60 * 24 * 30 * 1000,
+        sameSite: 'lax',
+        secure: false,
+        httpOnly: true,
     });
     res.setHeader('authorization', token);
     return res.status(http_status_codes_1.StatusCodes.OK).json({
@@ -76,9 +77,10 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     yield (0, default_1.createDefaulBookmarks)(user.id);
     res.setHeader('authorization', token);
     res.cookie('token', token, {
-        maxAge: 60 * 60 * 60 * 24 * 30,
-        sameSite: false,
+        maxAge: 60 * 60 * 24 * 30 * 1000,
+        sameSite: 'lax',
         secure: false,
+        httpOnly: true,
     });
     return res
         .json({

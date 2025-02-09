@@ -146,7 +146,7 @@ const run = (tokens_1, child_1, user_1, id_1, varMap_1, ...args_1) => __awaiter(
                 where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(page_1.variables.userId, user.id), (0, drizzle_orm_1.eq)(page_1.variables.historyId, id), (0, drizzle_orm_1.eq)(page_1.variables.variable, (yield (0, exports.run)(t.children, 0, user, id, varMap, isReturn)))),
             });
             if (!data) {
-                throw new error_1.ErrorBoundary('action: query, selector: t.value, Not found variable by name', http_status_codes_1.ReasonPhrases.BAD_REQUEST);
+                throw new error_1.ErrorBoundary(`action: query, selector: t.value, Not found variable by name`, http_status_codes_1.ReasonPhrases.BAD_REQUEST);
             }
             return data.data;
         }

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createReplyComment = exports.createComment = void 0;
+exports.getReplyComments = exports.createReplyComment = exports.createComment = void 0;
 const __1 = require("../..");
 const db_1 = require("../../database/db");
 const history_1 = require("../history/model/history");
@@ -19,8 +19,22 @@ const createComment = (comment) => __awaiter(void 0, void 0, void 0, function* (
     return commentCreated;
 });
 exports.createComment = createComment;
-const createReplyComment = (comment) => __awaiter(void 0, void 0, void 0, function* () {
+const createReplyComment = (comment, historyId) => __awaiter(void 0, void 0, void 0, function* () {
     const commentReplyCreated = (yield db_1.db.insert(history_1.commentsToComments).values(comment).returning())[0];
+    if (historyId) {
+        __1.socket.to('history:' + historyId).emit('history_add_comment');
+    }
     return commentReplyCreated;
 });
 exports.createReplyComment = createReplyComment;
+const getReplyComments = (commentId) => __awaiter(void 0, void 0, void 0, function* () {
+    const replyComment = yield db_1.db.query.commentsToComments.findMany({
+        where: (c, { eq }) => eq(c.commentId, commentId),
+        with: {
+            user: true,
+            // likes: true,
+        },
+    });
+    return replyComment;
+});
+exports.getReplyComments = getReplyComments;

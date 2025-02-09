@@ -11,18 +11,21 @@ import { getFullUrl } from '@/shared/lib/image';
 
 export const Header = () => {
 	const { user } = useUserStore();
-	console.log('---------');
 
 	return (
-		<header className='flex bg-secondary/20 backdrop-blur-[10px] drop-shadow-2xl  w-full justify-between px-4 items-center h-14 flex-row  sticky top-0 left-0 z-50'>
-			<div className='flex h-full items-center gap-2 justify-between w-2/3'>
+		<header className='flex bg-secondary/20 backdrop-blur-[10px] drop-shadow-2xl  w-full justify-between  items-center h-14 flex-row px-14  sticky top-0 left-0 z-50'>
+			<div className='flex h-full items-center gap-4 w-2/3'>
 				<Link to={'/'} className='relative'>
 					<img src={logo} height={40} width={40} />
-					<img
+					{/* <img
 						className='bg-transparent top-0 w-full h-auto scale-[2.5] left-[3px] absolute '
 						src={getFullUrl('/assets/hat.png')}
-					/>
+					/> */}
 				</Link>
+				<Link to={'/library'} className='ml-3'>
+					Библиотека
+				</Link>
+
 				<Search />
 			</div>
 

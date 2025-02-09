@@ -18,8 +18,8 @@ type Slider = {
 	keyTitle?: string;
 	title?: ReactNode;
 	link?: {
-		src: string;
-		title: string;
+		src?: string;
+		title?: string;
 	};
 	countView?: number;
 	onClickSlide?: (e: any, slide: HistoryAll) => void;
@@ -36,7 +36,7 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 		<section className='h-min w-full'>
 			<div className='flex justify-between items-center px-2'>
 				<h4>{title}</h4>
-				{link && ( 
+				{link && link.src && (
 					<div>
 						<Link title={link.title} to={link.src}>
 							<span className='md:inline hidden '>{link.title}</span>
@@ -64,7 +64,7 @@ export const Slider = memo(({ link, histories, title }: Slider) => {
 								className='basis-[30%] h-min sm:basis-[20%] md:basis-[14%] lg:basis-[10%] pl-0 bg-secondary rounded-sm text-secondary-foreground'
 							>
 								<HistoryElement
-									option={{ nameHeight: 1 }}
+									option={{ nameHeight: 1, variant: 'horizontal' }}
 									history={s}
 									link={`/history/${s.id}`}
 								/>

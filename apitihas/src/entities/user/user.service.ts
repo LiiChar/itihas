@@ -36,9 +36,10 @@ export const loginUser = async (req: Request, res: Response) => {
 	const token = getJwtToken(userFind);
 
 	res.cookie('token', token, {
-		maxAge: 60 * 60 * 60 * 24 * 30,
-		sameSite: false,
-		secure: false
+		maxAge: 60 * 60 * 24 * 30 * 1000,
+		sameSite: 'lax',
+		secure: false,
+		httpOnly: true,
 	});
 
 	res.setHeader('authorization', token);
@@ -93,9 +94,10 @@ export const registerUser = async (req: Request, res: Response) => {
 	res.setHeader('authorization', token);
 
 	res.cookie('token', token, {
-		maxAge: 60 * 60 * 60 * 24 * 30,
-		sameSite: false,
+		maxAge: 60 * 60 * 24 * 30 * 1000,
+		sameSite: 'lax',
 		secure: false,
+		httpOnly: true,
 	});
 
 	return res

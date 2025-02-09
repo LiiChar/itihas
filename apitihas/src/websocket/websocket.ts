@@ -13,6 +13,7 @@ import {
 	updateLikeHistory,
 } from '../entities/history/history.service';
 import { notificationFacade } from '../entities/modules/socket/notification';
+import { handleTranscription } from '../entities/modules/socket/transcription';
 
 export type SocketClient = Socket<
 	DefaultEventsMap,
@@ -43,6 +44,7 @@ export const runWebsocket = (): Server<
 	> | null = null;
 	notificationFacade();
 	io.on('connection', socket => {
+		handleTranscription(socket);
 		// handle like history
 		socket.on(
 			'history_like_add',

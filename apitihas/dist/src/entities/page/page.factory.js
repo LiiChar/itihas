@@ -193,6 +193,7 @@ const generateLayout = (layoutsContent) => __awaiter(void 0, void 0, void 0, fun
         return {
             name: faker_1.faker.lorem.sentence({ min: 1, max: 2 }),
             layout: defaultLayout,
+            userId: 1,
         };
     };
     const array = [

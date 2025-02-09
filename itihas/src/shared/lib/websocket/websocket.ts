@@ -19,6 +19,19 @@ export const joinToRoom = (room: TypeRoom, id: number) => {
 	});
 };
 
+export const websocketPath = [
+	'history_add',
+	'history_like',
+	'history_add_comment',
+	'history_room_join',
+	'page_room_join',
+	'read_room_join',
+	'transcription_send',
+	'transcription_receive',
+] as const;
+
+export type WebsocketPath = (typeof websocketPath)[number];
+
 export const socket = io(wsServerUrl);
 
 export const socketListener = () => {

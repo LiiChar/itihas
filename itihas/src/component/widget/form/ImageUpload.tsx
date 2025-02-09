@@ -3,6 +3,11 @@ import { getFullUrl } from '@/shared/lib/image';
 import React, { ComponentProps, memo, useRef, useState } from 'react';
 import placeholderImage from '@/assets/placeholder.png';
 import { cn } from '@/shared/lib/lib';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+import { Button } from '@/shared/ui/button';
+import { Lightbulb } from 'lucide-react';
+import { Input } from '@/shared/ui/input';
+import { axi } from '@/shared/api/axios/axios';
 
 export const ImageUpload = memo(
 	({
@@ -19,6 +24,7 @@ export const ImageUpload = memo(
 		};
 	}) => {
 		const inputFileRef = useRef<HTMLInputElement>(null);
+		const [generateText, setGenerateText] = useState('');
 		const [isDragOver, setIsDragOver] = useState(false);
 		const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 			if (e.target.files) {
@@ -82,7 +88,46 @@ export const ImageUpload = memo(
 						style={{ display: 'none' }}
 						accept='image/*'
 					/>
+					<Popover>
+						<PopoverTrigger onClick={e => e.stopPropagation()} asChild>
+							<Button
+								className='absolute right-1 p-0 top-2 hover:bg-transparent '
+								variant='ghost'
+							>
+								<Lightbulb className='hover:stroke-primary' />
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent
+							onClick={e => e.stopPropagation()}
+							className='w-80 z-[1000000] p-0'
+						>
+							<Input
+								className='z-[100000000] min-h-6 px-3 py-3 w-full h-full m-0'
+								autoFocus={true}
+								placeholder='Введите текст для генерации'
+							/>
+						</PopoverContent>
+					</Popover>
 				</div>
+				<Input
+					value={generateText}
+					onChange={e => setGenerateText(e.target.value)}
+				/>
+				<Button
+					onClick={async () => {
+						const res: any = await axi.post(
+							'https://api.craiyon.com/generate',
+							{
+								prompt: generateText,
+							}
+						);
+						if (inputFileRef && inputFileRef.current) {
+							inputFileRef.current.src = res.images;
+						}
+					}}
+				>
+					Сгенерировать
+				</Button>
 			</div>
 		);
 	}

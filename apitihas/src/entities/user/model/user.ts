@@ -6,7 +6,12 @@ import {
 	commentsToComments,
 	histories,
 } from '../../history/model/history';
-import { likePages, pageComments } from '../../page/model/page';
+import {
+	likePages,
+	pageComments,
+	pageCommentsToPageComments,
+	userHistoryProgreses,
+} from '../../page/model/page';
 import { bookmarks } from '../../bookmark/model/bookmark';
 
 export const dignity = sqliteTable('dignity', {
@@ -69,6 +74,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 	bookmarks: many(bookmarks),
 	characters: many(charactersToUsers),
 	likes: many(likePages),
+	progreses: many(userHistoryProgreses),
 }));
 
 export const teams = sqliteTable('teams', {

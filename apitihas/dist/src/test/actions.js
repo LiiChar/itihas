@@ -21,6 +21,5 @@ const actionsTest = () => __awaiter(void 0, void 0, void 0, function* () {
     const variablesList = yield db_1.db.query.variables.findFirst({
         where: (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(scheme_1.variables.userId, user.id), (0, drizzle_orm_1.eq)(scheme_1.variables.historyId, 1)),
     });
-    console.log(variablesList);
 });
 exports.actionsTest = actionsTest;
