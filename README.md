@@ -38,43 +38,9 @@ npm run dev
 
 🛠 Технологии
 Frontend: React + TypeScript
-
 Backend: Node.js/Express
-
-База данных: MongoDB
-
-Визуализация: D3.js
-
+База данных: sqlite
 Стили: Tailwind CSS
-
-Инструменты: ESLint, Prettier
-
-📚 Структура проекта
-Copy
-itihas/
-├── client/           # Frontend приложение
-├── server/           # Backend сервер
-├── data/             # Исторические данные (JSON/CSV)
-├── docs/             # Документация
-└── public/           # Статические ресурсы
-🤝 Как помочь проекту
-Мы приветствуем вклад сообщества! Пожалуйста, ознакомьтесь с:
-
-Руководство по вкладу
-
-Кодекс поведения
-
-Как помочь:
-
-Форкните репозиторий
-
-Создайте ветку для своей фичи (git checkout -b feature/amazing-feature)
-
-Сделайте коммит изменений (git commit -m 'Add some amazing feature')
-
-Запушьте в форк (git push origin feature/amazing-feature)
-
-Откройте Pull Request
 
 📄 Лицензия
 Этот проект распространяется под лицензией MIT. Подробнее см. в LICENSE.
