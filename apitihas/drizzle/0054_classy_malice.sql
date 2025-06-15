@@ -1,0 +1,1 @@
+ALTER TABLE `battles` ADD `status` text NOT NULL;

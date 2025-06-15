@@ -1,0 +1,420 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 3.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		--primary: 142.1 76.2% 36.3%;
+		--primary-foreground: 355.7 100% 97.3%;
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
+		--accent: 240 4.8% 95.9%;
+		--accent-foreground: 240 5.9% 10%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 90%;
+		--ring: 142.1 76.2% 36.3%;
+		--radius: 0.3rem;
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+	}
+
+	.dark {
+		--background: 30 18% 8%;
+		--foreground: 0 0% 95%;
+		--card: 24 9.8% 10%;
+		--card-foreground: 0 0% 95%;
+		--popover: 0 0% 9%;
+		--popover-foreground: 0 0% 95%;
+		--primary: 142.1 70.6% 45.3%;
+		--primary-foreground: 144.9 80.4% 10%;
+		--secondary: 240 3.7% 15.9%;
+		--secondary-foreground: 0 0% 98%;
+		--muted: 0 0% 15%;
+		--muted-foreground: 240 5% 64.9%;
+		--accent: 12 6.5% 15.1%;
+		--accent-foreground: 0 0% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 85.7% 97.3%;
+		--border: 240 3.7% 15.9%;
+		--input: 240 3.7% 15.9%;
+		--ring: 142.4 71.8% 29.2%;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
+
+	h1 {
+		@apply text-4xl font-bold mb-4;
+	}
+
+	h2 {
+		@apply text-3xl font-semibold mb-3;
+	}
+
+	h3 {
+		@apply text-2xl font-medium mb-2;
+	}
+
+	h4 {
+		@apply text-xl font-medium mb-2;
+	}
+
+	h5 {
+		@apply text-lg font-medium mb-1;
+	}
+
+	h6 {
+		@apply text-base font-medium mb-1;
+	}
+
+	strong {
+		@apply font-semibold;
+	}
+
+	em {
+		@apply italic;
+	}
+}
+
+@layer utilities {
+	.text-shadow {
+		text-shadow: 2px 2px 4px;
+	}
+	.text-shadow-md {
+		text-shadow: 4px 4px 8px;
+	}
+	.text-shadow-lg {
+		text-shadow: 6px 6px 12px;
+	}
+	.animate-ding {
+		animation: dingAnimation 0.7s cubic-bezier(1, 0.5, 0.5, 1) infinite;
+	}
+
+	.text-shadow-inset {
+		text-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+	}
+
+	.shadow-inset-bottom::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 40px;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.5) 25%,
+			transparent 100%
+		);
+		pointer-events: none;
+	}
+
+	.shadow-inset-bottom-full::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		right: 0;
+		height: 100%;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.6) 40%,
+			transparent 100%
+		);
+		pointer-events: none;
+	}
+
+	.shadow-inset-bottom-md::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		right: 0;
+		height: 40%;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.6) 50%,
+			transparent 100%
+		);
+		pointer-events: none;
+	}
+}
+
+@keyframes dingAnimation {
+	0% {
+		rotate: -10deg;
+	}
+	25% {
+		rotate: 0deg;
+	}
+	50% {
+		rotate: 10deg;
+	}
+	75% {
+		rotate: 0deg;
+	}
+	100% {
+		rotate: -10deg;
+	}
+}
+
+@keyframes attackAnimation {
+	0% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(20px);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+.attack {
+	animation: attackAnimation 0.3s ease-in-out;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	font-size: 1.8em;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+h4 {
+	font-size: 1.3em;
+}
+h5 {
+	font-size: 1.05em;
+}
+a {
+	@apply text-foreground;
+	transition: color 200ms ease;
+}
+
+a:hover {
+	@apply text-primary;
+}
+
+@layer base {
+	* {
+		@apply border-border box-border font-normal;
+	}
+	body {
+		@apply bg-background text-foreground transition-all;
+		font-family: 'PT Sans', sans-serif;
+	}
+	html,
+	body,
+	#root {
+		@apply min-h-screen;
+	}
+}
+
+.content-height {
+	@apply min-h-[calc(100vh-85px)] h-full;
+}
+
+@media (max-width: 400px) {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		word-break: break-word;
+	}
+	h1 {
+		font-size: 1.6em;
+	}
+
+	h2 {
+		font-size: 1.35em;
+	}
+
+	h3 {
+		font-size: 1.2em;
+	}
+	h4 {
+		font-size: 1.05em;
+	}
+	h5 {
+		font-size: 1.01em;
+	}
+}
+
+::-webkit-scrollbar {
+	background: transparent;
+	width: 6px;
+	height: 3px;
+}
+
+@media (max-width: 600) {
+	::-webkit-scrollbar {
+		width: 4px;
+	}
+}
+
+::-webkit-scrollbar-button {
+	display: none;
+}
+::-webkit-scrollbar-thumb {
+	@apply bg-foreground;
+}
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
+
+button:disabled {
+	@apply cursor-not-allowed;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-Italic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'PT Sans';
+	src: url('./assets/PTSans-BoldItalic.ttf') format('truetype');
+	font-weight: bold;
+	font-style: italic;
+}
+
+.icon-btn {
+	@apply bg-background border border-border p-[2px] cursor-pointer;
+}
+
+body.light .light-hidden {
+	display: none;
+}
+
+body.dark .dark-hidden {
+	display: none;
+}
+
+.markdown {
+	@apply text-foreground;
+}
+
+.markdown strong {
+	@apply text-foreground;
+}
+
+.markdown .inline {
+	display: block;
+}
+
+.markdown li {
+	margin: 0;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5 {
+	@apply text-foreground;
+}
+
+.markdown h1 {
+	font-size: 1.6em;
+}
+
+.markdown h2 {
+	font-size: 1.35em;
+}
+
+.markdown h3 {
+	font-size: 1.2em;
+}
+.markdown h4 {
+	font-size: 1.05em;
+}
+.markdown h5 {
+	font-size: 1.01em;
+}
+
+.markdown hr {
+	@apply border-foreground;
+}
+
+.markdown blockquote p {
+	@apply text-foreground;
+}
+
+.markdown code {
+	@apply bg-background text-foreground rounded-md text-nowrap px-4 py-2;
+}
+
+.markdown pre {
+	@apply bg-background text-center;
+}
+
+.markdown pre code {
+	@apply bg-secondary whitespace-normal;
+}
+
+.markdown a {
+	@apply text-foreground underline;
+}
+
+.markdown a:hover {
+	@apply text-primary;
+}
+
+div[role='dialog'] > button > svg > path {
+	@apply fill-background;
+}
+
+html body[data-scroll-locked] {
+	overflow: visible !important;
+	position: relative !important;
+	padding-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	margin-left: 0;
+	margin-top: 0;
+	margin-right: 0px !important;
+}
