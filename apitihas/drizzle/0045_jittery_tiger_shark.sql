@@ -1,0 +1,1 @@
+ALTER TABLE `notification_events_to_users` ADD `is_read` text DEFAULT 'false' NOT NULL;

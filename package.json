@@ -1,0 +1,13 @@
+{
+	"name": "mono_itihas",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"itihas": "cd itihas && npm run dev && cd ../itihas_api && npm run dev",
+		"apitihas": "cd ./apitihas/ && npm i && cd ./dist/src && node index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}
