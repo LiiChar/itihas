@@ -140,11 +140,11 @@ export const TextareaHelper = forwardRef<
 						finish: 'Дописать',
 					};
 
-					const active = {
-						corrected,
-						rewrited,
-						finished,
-					};
+					// const active = {
+					// 	corrected,
+					// 	rewrited,
+					// 	finished,
+					// };
 
 					return (
 						<Button

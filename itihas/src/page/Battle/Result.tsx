@@ -5,7 +5,6 @@ import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { BattleParticipant, ResultJsonType } from '@/shared/type/battle';
 import { Button } from '@/shared/ui/button';
 import { useQuery } from '@siberiacancode/reactuse';
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
 export const Results = () => {
@@ -20,7 +19,7 @@ export const Results = () => {
 	const log: LogResultType[] = JSON.parse(result.log);
 	const participansResult: ResultJsonType[] = JSON.parse(result.result);
 
-	const getStatusPar = (part: BattleParticipant): ResultJsonType['status'] => {
+	const getStatusPar = (_part: BattleParticipant): ResultJsonType['status'] => {
 		const finded = participansResult.find(
 			r => r.participantId == result.battle.participants[0].id
 		);

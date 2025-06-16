@@ -3,12 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { setHistory, useHistoryStore } from '@/shared/store/HistoryStore';
 import { getHistory, updateHistory } from '@/shared/api/history';
-import { getFullUrl, handleImageError } from '@/shared/lib/image';
+import { getFullUrl } from '@/shared/lib/image';
 import { Wallpaper } from '@/component/pages/History/Wallpaper';
 import { getYear } from '@/shared/lib/data';
 import { Similar } from '@/component/pages/History/Similar';
 import { Input } from '@/shared/ui/input';
-import { Genres } from '@/component/pages/History/Genres';
 import { memo, useState } from 'react';
 import { Genre, HistoryPages } from '@/shared/type/history';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
@@ -16,7 +15,6 @@ import { ReplyIcon } from 'lucide-react';
 import { CommentWithUser } from '@/shared/type/comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { getTimeAgo } from '@/shared/lib/time';
-import { Textarea } from '@/shared/ui/textarea';
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel';
 import {
 	Select,
@@ -30,10 +28,7 @@ import { CharacterElement } from '@/component/widget/character/CharacterElement'
 import { MarkdownEditor } from '@/shared/ui/markdown-editor';
 import { MultiSelect } from '@/shared/ui/multi-select';
 import { getGenres } from '@/shared/api/genre';
-import Markdown from 'react-markdown';
 import { cn } from '@/shared/lib/lib';
-import remarkGfm from 'remark-gfm';
-import { Stats } from 'fs';
 export const HistoryEdit = () => {
 	const { id } = useParams();
 	const { history } = useHistoryStore();

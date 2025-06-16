@@ -20,7 +20,7 @@ import { DialogFooter } from '@/shared/ui/dialog';
 import { PageInsert } from '@/shared/type/page';
 import { HistoryPage } from '@/shared/type/history';
 import { useParams } from 'react-router-dom';
-import { TextareaHelper } from '../../GigaChat/TextareaHelper';
+import { MarkdownEditor } from '@/shared/ui/markdown-editor';
 
 const pageloginFormScheme = z.object({
 	name: z.string().min(3, 'Имя слишком короткое'),
@@ -112,7 +112,7 @@ export const CreatePageForm = ({
 							<FormItem>
 								<FormLabel className='text-foreground'>Содержание</FormLabel>
 								<FormControl>
-									<TextareaHelper
+									<MarkdownEditor
 										className='bg-background -translate-y-2'
 										placeholder='Введите содержание страницы'
 										{...field}

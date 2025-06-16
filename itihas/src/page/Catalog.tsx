@@ -7,27 +7,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/shared/ui/select';
-import { getHistories } from '@/shared/api/history';
-import {
-	updateLibraryHistories,
-	useLibraryStore,
-} from '@/shared/store/LibraryStore';
-import { useMount } from '@siberiacancode/reactuse';
-import { useSearchParams } from 'react-router-dom';
+import { useLibraryStore } from '@/shared/store/LibraryStore';
 import { ArrowUpDown } from 'lucide-react';
 import { useLayout } from '@/shared/hooks/useLayout';
 import { ScrollTop } from '@/shared/ui/scroll-top';
 
 export const Catalog = () => {
-	const [searchParams] = useSearchParams();
-	const {
-		histories,
-		setCountHistory,
-		setOptions,
-		ordering,
-		setOrdering,
-		setIsScrolling,
-	} = useLibraryStore();
+	const { histories, setOptions, ordering, setOrdering, setIsScrolling } =
+		useLibraryStore();
 	useLayout({
 		components: [{ id: 66, component: ScrollTop as any }],
 		option: { always: false },

@@ -83,7 +83,7 @@ const rarityStyles = {
 
 export const CharacterElement: React.FC<CharacterCardProps> = ({
 	character,
-	variant = 'default',
+	// variant = 'default',
 	className,
 	onClick,
 	isFavorite = false,

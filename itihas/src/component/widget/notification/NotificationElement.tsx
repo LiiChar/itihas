@@ -89,10 +89,7 @@ const NotificationElementSmall: React.FC<Props> = ({
 
 // === 🟩 DEFAULT VARIANT ===
 
-const NotificationElementDefault: React.FC<Props> = ({
-	notification: n,
-	placeholderImage = '/public/assets/guest.png',
-}) => {
+const NotificationElementDefault: React.FC<Props> = ({ notification: n }) => {
 	const data: any = n.data;
 
 	const isRead = (n.isRead || n.isRead === 'true') && n.isRead !== 'false';

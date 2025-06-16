@@ -1,6 +1,5 @@
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { cn } from '@/shared/lib/lib';
-import { getTimeAgo } from '@/shared/lib/time';
 import { HistoryAll } from '@/shared/type/history';
 import { Star } from 'lucide-react';
 import { HTMLAttributes, ReactElement } from 'react';
@@ -61,13 +60,12 @@ export const HistoryElement = ({
 export const HistoryElementInner = ({
 	history,
 	link,
-	option,
 	...attr
 }: HistoryElementProps & HTMLAttributes<HTMLDivElement>) => {
 	const navigate = useNavigate();
-	const wrapperVariant = Classes[option?.variant ?? 'vertical'].wrapper;
-	const imageVariant = Classes[option?.variant ?? 'vertical'].image;
-	const infoVariant = Classes[option?.variant ?? 'vertical'].info;
+	// const wrapperVariant = Classes[option?.variant ?? 'vertical'].wrapper;
+	// const imageVariant = Classes[option?.variant ?? 'vertical'].image;
+	// const infoVariant = Classes[option?.variant ?? 'vertical'].info;
 	return (
 		<div
 			{...attr}
@@ -130,7 +128,7 @@ export const HistoryElementOuter = ({
 	...attr
 }: HistoryElementProps & HTMLAttributes<HTMLDivElement>) => {
 	const navigate = useNavigate();
-	const wrapperVariant = Classes[option?.variant ?? 'vertical'].wrapper;
+	// const wrapperVariant = Classes[option?.variant ?? 'vertical'].wrapper;
 	const imageVariant = Classes[option?.variant ?? 'vertical'].image;
 	const infoVariant = Classes[option?.variant ?? 'vertical'].info;
 	return (

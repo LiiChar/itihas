@@ -6,20 +6,9 @@ import {
 import { Genre } from '@/shared/type/history';
 import { Button } from '@/shared/ui/button';
 import { MultiSelect } from '@/shared/ui/multi-select';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/shared/ui/select';
 import { useQuery, useMount } from '@siberiacancode/reactuse';
 import { Trash2Icon } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-
-const types = ['Аниме', 'Манга', 'Ранобэ'];
-const statuses = ['Завершён', 'Выпускается', 'Анонс'];
-const ageRatings = ['0', '6', '12', '16', '18']; // без +, чтобы проще в URL
 
 export const LibraryAside = () => {
 	const { setOptions, options } = useLibraryStore();
@@ -29,17 +18,11 @@ export const LibraryAside = () => {
 	// Установка фильтров из URL при монтировании
 	useMount(() => {
 		const genres = searchParams.get('genres')?.split(',') ?? [];
-		const type = searchParams.get('type') ?? undefined;
-		const status = searchParams.get('status') ?? undefined;
-		const minAge = searchParams.get('minAge') ?? undefined;
 
 		setOptions({
 			genres: genres.length
 				? genres.map(g => ({ genre: g, allow: 'true' }))
 				: undefined,
-			type,
-			status,
-			minAge: minAge ? parseInt(minAge) : undefined,
 		});
 	});
 
@@ -78,7 +61,9 @@ export const LibraryAside = () => {
 					variant='inverted'
 					placeholder='Выберите жанр'
 					animation={0}
-					options={data.map(d => ({ label: d.name, value: d.name }))}
+					options={
+						data ? data.map(d => ({ label: d.name, value: d.name })) : []
+					}
 					onValueChange={s => {
 						updateSearchParams({
 							genres: s.join(','),
@@ -91,7 +76,7 @@ export const LibraryAside = () => {
 				/>
 
 				{/* Тип */}
-				<Select
+				{/* <Select
 					defaultValue={options.type}
 					onValueChange={type => {
 						updateSearchParams({ type });
@@ -108,10 +93,10 @@ export const LibraryAside = () => {
 							</SelectItem>
 						))}
 					</SelectContent>
-				</Select>
+				</Select> */}
 
 				{/* Статус */}
-				<Select
+				{/* <Select
 					defaultValue={options.status}
 					onValueChange={status => {
 						updateSearchParams({ status });
@@ -128,10 +113,10 @@ export const LibraryAside = () => {
 							</SelectItem>
 						))}
 					</SelectContent>
-				</Select>
+				</Select> */}
 
 				{/* Возраст */}
-				<Select
+				{/* <Select
 					defaultValue={options.minAge?.toString()}
 					onValueChange={age => {
 						updateSearchParams({ minAge: age });
@@ -148,7 +133,7 @@ export const LibraryAside = () => {
 							</SelectItem>
 						))}
 					</SelectContent>
-				</Select>
+				</Select> */}
 			</div>
 		</div>
 	);

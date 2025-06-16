@@ -1,10 +1,8 @@
 import { getHistoriesFilter } from '@/shared/api/history';
-import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { HistoryAll } from '@/shared/type/history';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { useMount } from '@siberiacancode/reactuse';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { HistoryElement } from '../History/HistoryElement';
 
 export const GenresBlock = () => {
@@ -15,7 +13,7 @@ export const GenresBlock = () => {
 		'Хоррор',
 		'Приключения',
 	] as const;
-	let [casheHistoryTabs, setCasheHistoryTabs] = useState<
+	const [casheHistoryTabs, setCasheHistoryTabs] = useState<
 		Record<(typeof tabs)[number], HistoryAll[]>
 	>({
 		'Боевые искусства': [],

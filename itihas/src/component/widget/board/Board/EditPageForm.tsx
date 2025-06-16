@@ -20,7 +20,6 @@ import { DialogFooter } from '@/shared/ui/dialog';
 import { Page, PagePointInsert } from '@/shared/type/page';
 import { HistoryPage } from '@/shared/type/history';
 import { useListenerStore } from '@/shared/store/ListenerStore';
-import { TextareaHelper } from '../../GigaChat/TextareaHelper';
 import { MarkdownEditor } from '@/shared/ui/markdown-editor';
 
 const loginFormScheme = z.object({

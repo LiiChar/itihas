@@ -5,7 +5,7 @@ import { Heart, Swords } from 'lucide-react';
 import { CharacterBattleForm } from './CharacterBattleForm';
 
 const CharacterDetails = ({ character }: { character: CharacterAll }) => {
-	const handleStartBattle = (opponentId: number) => {
+	const handleStartBattle = (_opponentId: number) => {
 		// TODO
 		// Логика для начала сражения
 	};

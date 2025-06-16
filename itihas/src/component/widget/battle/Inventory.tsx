@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 // Тип для предмета
 type Item = {
 	id: number;

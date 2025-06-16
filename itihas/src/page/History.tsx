@@ -20,7 +20,6 @@ import { motion } from 'framer-motion';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 

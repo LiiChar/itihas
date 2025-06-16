@@ -1,30 +1,28 @@
 import BattleScreen from '@/component/widget/battle/BattleScreen';
-import {
-	getBattleById,
-	getBattleParticipants,
-	updateBattle,
-} from '@/shared/api/battle';
+import { getBattleById, updateBattle } from '@/shared/api/battle';
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { BattleAll, BattleParticipant } from '@/shared/type/battle';
 import { Button } from '@/shared/ui/button';
-import { useMount, useStep } from '@siberiacancode/reactuse';
+import { useMount } from '@siberiacancode/reactuse';
 import { Heart, Shield, Swords } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const Screen = () => {
 	const { id } = useParams();
 	const [battle, setBattle] = useState<BattleAll>();
 
+	useMount(() => {
+		if (id) {
+			getBattleById(+id).then(data => {
+				setBattle(data);
+			});
+		}
+	});
+
 	if (!id) {
 		return <Button>Ошибка</Button>;
 	}
-
-	useMount(() => {
-		getBattleById(+id).then(data => {
-			setBattle(data);
-		});
-	});
 
 	return (
 		<div>

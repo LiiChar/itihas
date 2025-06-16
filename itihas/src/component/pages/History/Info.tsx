@@ -56,12 +56,10 @@ const tileVariants = {
 const Tile = ({
 	label,
 	value,
-	icon,
 	index,
 }: {
 	label: string;
 	value: React.ReactNode;
-	icon: React.ReactNode;
 	index: number;
 }) => (
 	<motion.div
@@ -108,7 +106,6 @@ export const Info = memo(({ history, className }: InfoProps) => {
 					key={item.label}
 					label={item.label}
 					value={item.value}
-					icon={item.icon}
 					index={i}
 				/>
 			))}

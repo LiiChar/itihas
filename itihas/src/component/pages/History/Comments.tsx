@@ -1,12 +1,9 @@
 import { memo, useState } from 'react';
 import { CommentWithUser } from '../../../shared/type/comment';
-import { Comment } from './Comment';
 
-import ReactMarkdown from 'react-markdown';
 import { createComment } from '@/shared/api/comment';
 import { useHistoryStore } from '@/shared/store/HistoryStore';
 import { useUserStore } from '@/shared/store/UserStore';
-import { Textarea } from '@/shared/ui/textarea';
 import { MarkdownEditor } from '@/shared/ui/markdown-editor';
 import { ReplyComment } from './ReplyComment';
 

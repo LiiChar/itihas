@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Readable } from 'stream';
 
-type NeuralimgStatus = 'WAITING' | 'RUNNING' | 'SUCCESS';
+// type NeuralimgStatus = 'WAITING' | 'RUNNING' | 'SUCCESS';
 
 type NeuralimgRes =
 	| {

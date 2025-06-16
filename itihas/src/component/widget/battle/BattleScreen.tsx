@@ -1,22 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
-import {
-	AnimationControls,
-	motion,
-	TargetAndTransition,
-	Transition,
-	useAnimation,
-} from 'framer-motion'; // Импортируем framer-motion
+import { AnimationControls, motion, useAnimation } from 'framer-motion'; // Импортируем framer-motion
 import BattleActions from './BattleActions';
 import { CharacterElement } from '../character/CharacterElement';
 import { useMount } from '@siberiacancode/reactuse';
 import { addBattleResult, getBattleParticipants } from '@/shared/api/battle';
 import { BattleParticipant } from '@/shared/type/battle';
 import { getRandomBackgroundImage } from '@/shared/lib/backgroundImage';
-import Inventory from './Inventory';
 import { useUserStore } from '@/shared/store/UserStore';
 import { Button } from '@/shared/ui/button';
 import { useLayout } from '@/shared/hooks/useLayout';
-import { toast } from 'sonner';
 import { sleep } from '@/shared/lib/promise';
 import { Heart, LucideSwords, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -49,13 +41,13 @@ const BattleScreen = ({
 	const [enemy, setEnemy] = useState<PlayerCharacter | null>();
 	const [battleLog, setBattleLog] = useState<LogResultType[]>([]);
 	const [winner, setWinner] = useState<null | PlayerCharacter>(null);
-	const [items, setItems] = useState<any[]>([
-		{ id: 1, name: 'Зелье здоровья', effect: { health: 20 } },
-		{ id: 2, name: 'Зелье защиты', effect: { defense: 10 } },
-	]);
+	// const [_tems, setItems] = useState<any[]>([
+	// 	{ id: 1, name: 'Зелье здоровья', effect: { health: 20 } },
+	// 	{ id: 2, name: 'Зелье защиты', effect: { defense: 10 } },
+	// ]);
 
-		const controlsPlayer = useAnimation();
-		const controlsEnemy = useAnimation();
+	const controlsPlayer = useAnimation();
+	const controlsEnemy = useAnimation();
 	const [participants, setParticipants] = useState<PlayerCharacter[]>(() => {
 		let player = parcipiant.find(parcipiant => parcipiant.userId === user!.id);
 		let enemy = parcipiant.find(p => p.userId !== user!.id);
@@ -69,8 +61,6 @@ const BattleScreen = ({
 		setEnemy({ ...enemy, animate: controlsEnemy });
 		return parcipiant;
 	});
-
-
 
 	const setLog = (log: string) => {
 		if (!enemy || !player) return;
@@ -183,22 +173,22 @@ const BattleScreen = ({
 		}
 	});
 
-	const getNextPlayer = () => {
-		const currentParticipiantIndex = participants.findIndex(
-			p => p.userId === player?.userId
-		);
-		if (currentParticipiantIndex == -1) {
-			toast('Произошла ошибка при выборе следующего игрока');
-			return player;
-		}
-		const currentParticipiantNextIndex = participants.find(
-			p => p.userId === currentParticipiantIndex + 1
-		);
-		if (!currentParticipiantNextIndex) {
-			return participants[currentParticipiantIndex];
-		}
-		return currentParticipiantNextIndex;
-	};
+	// const getNextPlayer = () => {
+	// 	const currentParticipiantIndex = participants.findIndex(
+	// 		p => p.userId === player?.userId
+	// 	);
+	// 	if (currentParticipiantIndex == -1) {
+	// 		toast('Произошла ошибка при выборе следующего игрока');
+	// 		return player;
+	// 	}
+	// 	const currentParticipiantNextIndex = participants.find(
+	// 		p => p.userId === currentParticipiantIndex + 1
+	// 	);
+	// 	if (!currentParticipiantNextIndex) {
+	// 		return participants[currentParticipiantIndex];
+	// 	}
+	// 	return currentParticipiantNextIndex;
+	// };
 
 	// Проверка окончания сражения
 	useEffect(() => {
@@ -291,27 +281,27 @@ const BattleScreen = ({
 		);
 	};
 
-	const handleUseItem = (item: any) => {
-		if (winner || !player) return;
+	// const handleUseItem = (item: any) => {
+	// 	if (winner || !player) return;
 
-		if (item.effect.health) {
-			player.character.health = Math.min(
-				100,
-				player.character.health + item.effect.health
-			);
-			setLog(
-				`${player.user.name} использовал ${item.name} и восстановил ${item.effect.health} здоровья!`
-			);
-		}
-		if (item.effect.defense) {
-			player.character.armor += item.effect.defense;
-			setLog(
-				`${player.user.name} использовал ${item.name} и увеличил защиту на ${item.effect.defense}!`
-			);
-		}
+	// 	if (item.effect.health) {
+	// 		player.character.health = Math.min(
+	// 			100,
+	// 			player.character.health + item.effect.health
+	// 		);
+	// 		setLog(
+	// 			`${player.user.name} использовал ${item.name} и восстановил ${item.effect.health} здоровья!`
+	// 		);
+	// 	}
+	// 	if (item.effect.defense) {
+	// 		player.character.armor += item.effect.defense;
+	// 		setLog(
+	// 			`${player.user.name} использовал ${item.name} и увеличил защиту на ${item.effect.defense}!`
+	// 		);
+	// 	}
 
-		setItems(prevItems => prevItems.filter(i => i.id !== item.id));
-	};
+	// 	setItems(prevItems => prevItems.filter(i => i.id !== item.id));
+	// };
 
 	if (!user) {
 		return <Button>Не зарегестрированы</Button>;

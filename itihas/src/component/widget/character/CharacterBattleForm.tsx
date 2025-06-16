@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -50,10 +50,11 @@ export const CharacterBattleForm = ({
 
 						await addParticipantToBattle(battle.id, character.id, userId);
 
-						particialIdx &&
+						if (particialIdx) {
 							particialIdx.forEach(async id => {
 								await addParticipantToBattle(battle.id, character.id, id);
 							});
+						}
 
 						navigate(`/battle/${battle.id}`);
 					}}

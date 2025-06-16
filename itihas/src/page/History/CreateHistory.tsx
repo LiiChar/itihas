@@ -1,4 +1,4 @@
-import { Genre, History, HistoryPages } from '@/shared/type/history';
+import { Genre, History } from '@/shared/type/history';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { memo, useState } from 'react';
 import { create } from 'zustand';

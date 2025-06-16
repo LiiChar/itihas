@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const UserAgreement = () => {
 	return (
 		<section className='p-3'>

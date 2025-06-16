@@ -1,4 +1,3 @@
-import { NotificationElement } from '@/component/widget/notification/NotificationElement';
 import { NotificationList } from '@/component/widget/notification/NotificationList';
 import { getNotification } from '@/shared/api/notification';
 import { readNotification } from '@/shared/lib/websocket/websocket';

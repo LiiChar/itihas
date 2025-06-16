@@ -2,7 +2,6 @@ import { CharacterElement } from '@/component/widget/character/CharacterElement'
 import { getCharacters } from '@/shared/api/character';
 import { Button } from '@/shared/ui/button';
 import { useQuery } from '@siberiacancode/reactuse';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const Characters = () => {

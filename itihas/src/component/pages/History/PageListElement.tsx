@@ -1,7 +1,7 @@
 import { getFullUrl, handleImageError } from '@/shared/lib/image';
 import { formatDate } from '@/shared/lib/time';
 import { Page } from '@/shared/type/page';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface PageElementProps {
 	page: Page;
@@ -15,7 +15,7 @@ interface PageElementProps {
 	};
 }
 
-export const PageListElement = ({ page, link, option }: PageElementProps) => {
+export const PageListElement = ({ page }: PageElementProps) => {
 	return (
 		<div
 			className='relative min-w-[150px] flex-grow rounded-md overflow-hidden'

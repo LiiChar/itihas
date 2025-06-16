@@ -1,7 +1,6 @@
 import { HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { cn } from '../lib/lib';
 import {
-	Code,
 	Image,
 	Link,
 	ListIcon,
@@ -316,15 +315,15 @@ export const MarkdownEditor = ({
 	};
 
 	// Код инлайн (`code`)
-	const handleInlineCodeClick = () => {
-		const textarea = textareaRef.current;
-		if (!textarea) return;
+	// const handleInlineCodeClick = () => {
+	// 	const textarea = textareaRef.current;
+	// 	if (!textarea) return;
 
-		const { selectionStart, selectionEnd } = textarea;
-		const result = applyWrap(value, selectionStart, selectionEnd, '`', '`');
-		onChange && onChange(result.text);
-		cursorPositionRef.current = result.cursor;
-	};
+	// 	const { selectionStart, selectionEnd } = textarea;
+	// 	const result = applyWrap(value, selectionStart, selectionEnd, '`', '`');
+	// 	onChange && onChange(result.text);
+	// 	cursorPositionRef.current = result.cursor;
+	// };
 
 	// Блок кода (```code```)
 	const handleCodeBlockClick = () => {

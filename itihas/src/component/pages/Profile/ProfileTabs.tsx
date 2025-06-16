@@ -98,7 +98,7 @@ export const ProfileTabs = memo(({ user }: { user: UserAll }) => {
 					>
 						{user.comments.map(c => {
 							const comment = Object.assign({ user: user }, c);
-							return <Comment comment={comment} />;
+							return <Comment comment={comment as any} />;
 						})}
 					</div>
 				</TabsContent>
